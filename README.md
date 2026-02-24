@@ -76,6 +76,6 @@ LCOM Project for group GRUPO_2LEIC<m><n>_<p>.
 Group members:
 
 <first name> <family name> (<email address>)
-<first name> <family name> (<email address>)
+Miguel Rocha up202405484@up.pt
 <first name> <family name> (<email address>)
 Rafael Silva up202406334@up.pt
