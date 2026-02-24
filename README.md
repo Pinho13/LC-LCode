@@ -75,8 +75,8 @@ Date: `<date>`
 LCOM Project for group GRUPO_2LEIC<m><n>_<p>.
 Group members:
 
-Pedro Teixeira (up202404987@up.pt)
+Luís Costa (up202404078@up.pt)
 Miguel Rocha (up202405484@up.pt)
-<first name> <family name> (<email address>)
+Pedro Teixeira (up202404987@up.pt)
 Rafael Silva (up202406334@up.pt)
 
