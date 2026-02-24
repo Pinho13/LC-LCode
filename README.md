@@ -78,4 +78,4 @@ Group members:
 <first name> <family name> (<email address>)
 <first name> <family name> (<email address>)
 <first name> <family name> (<email address>)
-<first name> <family name> (<email address>)
+<first Rafael> <family Silva> (<email up202406334@up.pt>)
