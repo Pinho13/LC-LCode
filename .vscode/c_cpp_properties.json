@@ -1,28 +1,25 @@
 {
   "env": {
-    //Mudar o working directory baseado no workspace do vscode
-    "minix.include": "${workspaceFolder}/.minix-src/include"
+    "minix_include": "/home/miguel-rocha/Faculdade/LCOM/MINIX-LCOM/shared/.minix-src/include"
   },
-  "configurations": [{
-    "name": "Minix",
-    "compilerPath": "/usr/bin/gcc",
-    "cStandard": "c11",
-    "defines": ["__minix", "_MINIX", "_NETBSD_SOURCE", "__i386__"],
-    "includePath": [
-      "${workspaceFolder}",
-      "${env:minix.include}",
-      "${workspaceFolder}/.minix-src/include"
-    ],
-    "browse": {
-      "path": [
-        "${workspaceFolder}",
-        "${env:minix.include}",
-        "${workspaceFolder}/.minix-src/include"
+  "configurations": [
+    {
+      "name": "Minix",
+      "compilerPath": "",
+      "cStandard": "c11",
+      "defines": ["__minix", "_MINIX", "_NETBSD_SOURCE", "__i386__"],
+      "includePath": [
+        "${workspaceFolder}/**", 
+        "${env:minix_include}/**"
       ],
-      "limitSymbolsToIncludedHeaders": false,
-      "databaseFilename": ""
+      "browse": {
+        "path": [
+          "${workspaceFolder}/**", 
+          "${env:minix_include}/**"
+        ],
+        "limitSymbolsToIncludedHeaders": false
+      }
     }
-  }],
+  ],
   "version": 4
 }
-
