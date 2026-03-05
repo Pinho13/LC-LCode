@@ -3,6 +3,8 @@
 
 #define TODO return 255
 
+// >> n shifts bits n times to the right
+// << n shifts bits n times to the left
 uint8_t clear(uint8_t msk, int pos) { 
   uint8_t ans = 00000001;
   ans = ans << pos;

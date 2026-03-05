@@ -16,10 +16,14 @@
 
 
 static int bcd_to_bin(uint8_t bcd) {
+  //BCD means Binary Coded Decimal. 0010 0100 is read in blocks of 4. 
+  //First block is 2, second block is 4, so number is 2*10 + 4 = 24.
+  // >> n shifts bits n times to the right
   return (((bcd >> 4) * 10)+(bcd & 0x0F));
 }
 
 int rtc_read_reg(uint8_t reg, uint8_t *value) {
+  //Writes to the sys_outb the register which we want to read, then read with sys_inb the value of it. 
     if (sys_outb(RTC_ADDR_REG, reg) != 0) return 1;
     uint32_t temp;
     if (sys_inb(RTC_DATA_REG, &temp) != 0) return 1;
@@ -28,6 +32,7 @@ int rtc_read_reg(uint8_t reg, uint8_t *value) {
 }
 
 int rtc_read_date(rtc_date *date) {
+  //While RTC updating stay in loop
   uint8_t statusA, statusB, day, month, year;
   if (rtc_read_reg(RTC_REG_A, &statusA)) return 1;
   while (statusA & RTC_UIP_MSK){
@@ -35,11 +40,13 @@ int rtc_read_date(rtc_date *date) {
     if (rtc_read_reg(RTC_REG_A, &statusA)) return 1;
   }
 
+  //Read Values of registers
   rtc_read_reg(RTC_REG_DAY, &day);
   rtc_read_reg(RTC_REG_MONTH, &month);
   rtc_read_reg(RTC_REG_YEAR, &year);
   rtc_read_reg(RTC_REG_B, &statusB);
 
+  //Convert if in BCD
   if (!(statusB & RTC_DM_MSK)) {
         date->day = (uint8_t) bcd_to_bin(day);
         date->month = (uint8_t) bcd_to_bin(month);
