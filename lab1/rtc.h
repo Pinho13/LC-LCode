@@ -1,6 +1,8 @@
 #pragma once
 
 #include <stdint.h>
+#include <stdbool.h>
+#include <lcom/lcf.h>
 
 typedef struct {
   uint8_t day;
