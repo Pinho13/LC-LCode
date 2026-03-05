@@ -1,0 +1,17 @@
+O ciclo completo do RTC é de 1 segundo (1.000.000 microsegundos).
+UIP = 1 (Update In Progress): 244 microsegundos (enquanto atualiza a data/hora)
+UIP = 0 (dados válidos): 999.756 microsegundos (resto do segundo)
+
+para ler uma lista variável de argumentos da função:
+va_list args;
+va_start(args,pos);//prepara a lista para ler argumentos após pos, por isso se quiser ler o Pos tenho de ler antes
+int next = va_arg(args,int);//extrai o proximo argumento do tipo int
+acaba em MSK_END
+
+
+(1 << pos) dá shift para a esquerda pos vezes ex: uint8_t aux = (1 << pos);
+(1 >> pos) dá shift para a direita pos vezes
+em vez de ser 1, podia ser qualquer numero
+
+return (uint8_t) wide_msk; imaginando que wide_msk era 16 ou 32 bits, dava return aos 8 bits menos significativos
+
