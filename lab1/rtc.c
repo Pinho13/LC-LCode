@@ -18,26 +18,31 @@ static uint8_t bcd_to_bin(uint8_t bcd) {
   uint8_t lower = bcd & 0x0F;//unidades
   return upper * 10 + lower;//converte para decimal
 }
-uint8_t busca(int reg){
-  uint8_t res;
+int busca(uint8_t reg, uint8_t* res){
   int ret;
-  ret = sys_outb(RTC_ADDR_REG, reg);//porta e depois o que quero receber
-  ret = sys_inb(RTC_DATA_REG, &res);//porta e o que recebo
-  return res;
+  uint32_t aux;
+
+  ret = sys_outb(RTC_ADDR_REG, reg);
+  if (ret != OK) return -1; 
+  ret = sys_inb(RTC_DATA_REG, &aux);
+  if (ret != OK) return -1;
+  
+  *res = (uint8_t)aux;  // passa o valor lido para res
+  return 0; 
 }
 
 int rtc_read_date(rtc_date *date) { 
   uint8_t bcd_bin;//0 se bcd, 1 se binary
   uint8_t regA,regB, day, month, year;
-  regB = busca(RTC_REG_B);
+  if(busca(RTC_REG_B,&regB)==-1) return -1;
   bcd_bin = regB & RTC_DM_MSK ? 1 : 0;
-  regA = busca(RTC_REG_A);
+  if(busca(RTC_REG_A,&regA)==-1) return -1;
   if (regA & RTC_UIP_MSK){
     tickdelay(micros_to_ticks(244));
   }
-  day = busca(RTC_REG_DAY);
-  month = busca(RTC_REG_MONTH);
-  year = busca(RTC_REG_YEAR);
+  if(busca(RTC_REG_DAY,&day)==-1) return -1;
+  if(busca(RTC_REG_MONTH,&month)==-1) return -1;
+  if(busca(RTC_REG_YEAR,&year)==-1) return -1;
   if (!bcd_bin){
     day = bcd_to_bin(day);
     month = bcd_to_bin(month);
