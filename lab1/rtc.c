@@ -35,13 +35,13 @@ static int rtc_read_reg(uint8_t reg, uint8_t *val) {
 int rtc_read_date(rtc_date *date) {
   if (!date) return 1;
 
-  uint8_t regB, day, month, year;
+  uint8_t regA, regB, day, month, year;
 
   do {
     tickdelay(micros_to_ticks(50));
-    if (rtc_read_reg(RTC_REG_A, &regB) != 0)
+    if (rtc_read_reg(RTC_REG_A, &regA) != 0)
       return 1;
-  } while (regB & 0x80);
+  } while (regA & 0x80);
 
   if (rtc_read_reg(RTC_REG_B, &regB) != 0)
     return 1;
