@@ -18,22 +18,31 @@ static int bcd_to_bin(uint8_t bcd) {
 }
 
 int rtc_read_date(rtc_date *date) {
+    if(!date) return 1;
+
     uint32_t regA, regB;
     do {
-        sys_outb(RTC_ADDR_REG,RTC_REG_A);
-        sys_inb(RTC_DATA_REG, &regA);
+        if (!(sys_outb(RTC_ADDR_REG,RTC_REG_A) == 0)) return 1;
+        if (!(sys_inb(RTC_DATA_REG, &regA) == 0)) return 1;
     } while (regA & RTC_UIP_MSK);
-
-    sys_outb(RTC_ADDR_REG, RTC_REG_B);
-    sys_inb(RTC_DATA_REG, &regB);
+        
+    if (!(sys_outb(RTC_ADDR_REG, RTC_REG_B) == 0)) return 1;
+    if (!(sys_inb(RTC_DATA_REG, &regB) == 0)) return 1;
     bool is_binary = regB & RTC_DM_MSK;
 
     uint32_t day, month, year;
-    sys_outb(RTC_ADDR_REG, RTC_REG_DAY); sys_inb(RTC_DATA_REG, &day);
-    sys_outb(RTC_ADDR_REG, RTC_REG_MONTH); sys_inb(RTC_DATA_REG, &month);
-    sys_outb(RTC_ADDR_REG, RTC_REG_YEAR); sys_inb(RTC_DATA_REG, &year);
+    if (!(sys_outb(RTC_ADDR_REG, RTC_REG_DAY) == 0)) return 1; 
+    if (!(sys_inb(RTC_DATA_REG, &day) == 0)) return 1;
+
+    if (!(sys_outb(RTC_ADDR_REG, RTC_REG_MONTH) == 0)) return 1; 
+    if (!(sys_inb(RTC_DATA_REG, &month) == 0)) return 1;
+
+    if (!(sys_outb(RTC_ADDR_REG, RTC_REG_YEAR) == 0)) return 1; 
+    if (!(sys_inb(RTC_DATA_REG, &year) == 0)) return 1;
+
     date->day = is_binary ? day : bcd_to_bin(day);
     date->month = is_binary ? month : bcd_to_bin(month);
     date->year = is_binary ? year : bcd_to_bin(year);
+    
     return 0;
 }
