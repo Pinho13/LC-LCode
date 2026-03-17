@@ -22,6 +22,7 @@ int rtc_read_date(rtc_date *date) {
 
     uint32_t regA, regB;
     do {
+        tickdelay(micros_to_ticks(50));
         if (!(sys_outb(RTC_ADDR_REG,RTC_REG_A) == 0)) return 1;
         if (!(sys_inb(RTC_DATA_REG, &regA) == 0)) return 1;
     } while (regA & RTC_UIP_MSK);
