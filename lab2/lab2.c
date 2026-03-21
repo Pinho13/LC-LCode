@@ -5,7 +5,6 @@
 #include <stdbool.h>
 #include <stdint.h>
 
-extern int int_counter;
 
 int main(int argc, char *argv[]) {
   // sets the language of LCF messages (can be either EN-US or PT-PT)
@@ -59,7 +58,7 @@ int(timer_test_int)(uint8_t time) {
   int ipc_status;
   message msg;
 
-  int_counter = 0;
+  set_counter(0);
 
   if (timer_subscribe_int(&bit_no) != 0)
     return 1;
@@ -67,7 +66,7 @@ int(timer_test_int)(uint8_t time) {
   int irq_set = BIT(bit_no);
 
   int r;
-  while (int_counter < time * 60) {
+  while (get_counter() < time * 60) {
     
     if ((r = driver_receive(ANY, &msg, &ipc_status)) != 0) {
       printf("driver_receive failed with: %d", r);
@@ -83,7 +82,7 @@ int(timer_test_int)(uint8_t time) {
             
             timer_int_handler();
 
-            if(int_counter % 60 == 0)
+            if(get_counter() % 60 == 0)
               timer_print_elapsed_time();
           }
           break;

@@ -8,6 +8,14 @@
 int int_counter = 0;
 int hook_id = 0;
 
+int get_counter() {
+  return int_counter;
+}
+
+void set_counter(int value) {
+  int_counter = value;
+}
+
 int(timer_set_frequency)(uint8_t timer, uint32_t freq) {
   if (freq == 0 && freq > TIMER_FREQ) return 1;
 
@@ -64,7 +72,7 @@ int(timer_unsubscribe_int)() {
 }
 
 void(timer_int_handler)() {
-  int_counter++;
+  set_counter(get_counter()+1);
 }
 
 int(timer_get_conf)(uint8_t timer, uint8_t *st) {
