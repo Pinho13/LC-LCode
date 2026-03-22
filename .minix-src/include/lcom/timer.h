@@ -4,8 +4,6 @@
 #include <stdbool.h>
 #include <stdint.h>
 
-uint32_t get_counter();
-void set_counter(uint32_t value); 
 
 /** @defgroup timer timer
  * @{
