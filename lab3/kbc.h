@@ -9,12 +9,17 @@
 
 // STATUS
 #define OBF     BIT(0)
+#define IBF     BIT(0)
 #define PAR_ERR BIT(7)
 #define TO_ERR  BIT(6)
 
 // SCANCODE CONSTANTS
 #define TWO_BYTE 0xE0
 #define ESC_BREAK 0x81
+
+// COMMAND BYTE
+#define KBC_READ_CMD   0x20
+#define KBC_WRITE_CMD  0x60
 
 uint8_t get_scancode_byte();
 void set_scancode_byte(uint8_t byte);

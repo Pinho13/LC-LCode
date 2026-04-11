@@ -101,10 +101,84 @@ int(kbd_test_scan)() {
 }
 
 int(kbd_test_poll)() {
-  /* To be completed by the students */
-  printf("%s is not yet implemented!\n", __func__);
 
-  return 1;
+  uint8_t status, data = 0x00;
+
+  uint8_t size;
+  bool make;
+
+  while (data != ESC_BREAK) {
+    if (util_sys_inb(KBC_STATUS_REG, &status) != OK) {
+      tickdelay(micros_to_ticks(20000));
+      continue;
+    }
+    
+    if (!(status & OBF)){
+      tickdelay(micros_to_ticks(20000));
+      continue;
+    }
+    
+    if (status & (PAR_ERR | TO_ERR)){
+      tickdelay(micros_to_ticks(20000));
+      continue;
+    }
+
+    if (util_sys_inb(KBC_OUT_BUF, &data) != OK) {
+      tickdelay(micros_to_ticks(20000));
+      continue;
+    }
+
+    if (data == 0xE0) {
+      two_byte = true;
+      bytes[0] = data;
+      size = 1;
+      continue;
+    } else {
+      bytes[0] = data;
+      size = 1;
+    }
+    
+    make = !(data & BIT(7));
+
+    kbd_print_scancode(make, size, bytes);
+
+    tickdelay(micros_to_ticks(20000));
+  }
+
+  
+  do {
+    util_sys_inb(0x64, &status);
+  } while (status & IBF); // wait while IBF is full
+
+  uint8_t cmd_byte;
+
+  // Ask to read command byte
+  if (sys_outb(KBC_STATUS_REG, KBC_READ_CMD) != OK) {
+    return 1;
+  }
+
+  // Reading command byte
+  if (util_sys_inb(KBC_OUT_BUF, &cmd_byte) != OK) {
+    return 1;
+  }
+  
+  cmd_byte |= BIT(0);  // enable keyboard interrupts
+
+  // Ask to write command byte
+  if (sys_outb(KBC_STATUS_REG, KBC_WRITE_CMD) != OK) {
+    return 1;
+  }
+
+  // Write command byte
+  if (sys_outb(KBC_OUT_BUF, cmd_byte) != OK) {
+    return 1;
+  }
+
+  cmd_byte |= BIT(0) ;
+
+
+
+  return 0;
 }
 
 int(kbd_test_timed_scan)(uint8_t n) {
