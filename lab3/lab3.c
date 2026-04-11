@@ -182,8 +182,91 @@ int(kbd_test_poll)() {
 }
 
 int(kbd_test_timed_scan)(uint8_t n) {
-  /* To be completed by the students */
-  printf("%s is not yet implemented!\n", __func__);
+  uint32_t timer_counter = 0;
 
-  return 1;
+  uint8_t kbd_bit_no;
+  uint8_t timer_bit_no;
+
+  uint8_t byte;
+  uint8_t size;
+  bool make;
+
+  int ipc_status;
+  message msg;
+
+  if (kbd_subscribe_int(&kbd_bit_no) != 0)
+    return 1;
+
+  if (timer_subscribe_int(&timer_bit_no) != 0)
+    return 1;
+
+  int kbd_irq_set = BIT(kbd_bit_no);
+  int timer_irq_set = BIT(timer_bit_no);
+
+  int r;
+  while (1) {
+    if ((r = driver_receive(ANY, &msg, &ipc_status)) != OK) {
+      printf("driver_receive failed with: %d", r);
+      continue;
+    }
+
+    if (is_ipc_notify(ipc_status)) {
+      switch (_ENDPOINT_P(msg.m_source)) {
+        case HARDWARE:
+          if (msg.m_notify.interrupts & kbd_irq_set) {
+            kbc_ih();
+
+            timer_counter = 0;
+
+            byte = get_scancode_byte();
+
+            if (byte == TWO_BYTE) {
+              two_byte = true;
+              bytes[0] = byte;
+              continue;
+            }
+
+            if (two_byte) {
+              bytes[1] = byte;
+              size = 2;
+              two_byte = false;
+            } else {
+              bytes[0] = byte;
+              size = 1;
+            }
+
+            make = !(byte & BIT(7));
+
+            kbd_print_scancode(make, size, bytes);
+
+            if (bytes[0] == ESC_BREAK) {
+              kbd_unsubscribe_int();
+              timer_unsubscribe_int();
+              return 0;
+            }
+          }
+
+          if (msg.m_notify.interrupts & timer_irq_set) {
+            timer_int_handler();
+
+            timer_counter++;
+
+            if (timer_counter >= n * 60) {
+              kbd_unsubscribe_int();
+              timer_unsubscribe_int();
+              return 0;
+            }
+
+          }
+          break;
+        default:
+          break;
+      }
+    }
+  }
+
+  // Should not reach this
+  kbd_unsubscribe_int();
+  timer_unsubscribe_int();
+  return 0;
 }
