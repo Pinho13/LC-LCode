@@ -1,0 +1,120 @@
+Resumo para tratar de uma interrupção:
+
+1) Subscrever:
+  int hook_id = bit_no; 
+  sys_irqsetpolicy(IRQ_LINE, POLICY, &hook_id);
+  
+  O parâmetro hook_id funciona como um Porte de Entrada e um Bilhete de Identidade.
+  Porte de Entrada- o Kernel permite que se escolha um bit (0 a 31) para eu ser avisado, por exemplo se eu puser hook_id = 1, estou a dizer: "Kernel, quando o teclado disparar, põe o bit 1 a '1' na mensagem que me vais enviar".
+  Bilhete de Identidade- O Kernel apaga o meu "1" e escreve por cima um número interno (ex: 4352),esse número é preciso para mais tarde dizer: "Quero cancelar o contrato ID 4352".
+ 
+
+2) Ciclo
+  
+  Um ciclo while infinito ou com uma condição para parar
+
+
+3) Dormir até haver novidades
+  if ((r = driver_receive(ANY, &msg, &ipc_status)) != 0) continue;
+  
+  Esta será a 1ª linha do ciclo while, É o "Wait". O programa para aqui e não gasta CPU. Ele fica "congelado" até o Kernel quiser comunicar.
+  Como o 1º parametro é ANY então o programa pode acordar com qualquer mensagem, com o timer, com o sistema de ficheiros, com um erro interno,etc,etc.
+  Só nos passos asseguir é que faço a filtragem para saber que é a mensagem que eu preciso
+  É preciso declarar isto antes do ciclo while:
+  int r, ipc_status;
+  message msg;
+
+
+4) Filtrar a novidade
+  if (is_ipc_notify(ipc_status)) 
+      switch (_ENDPOINT_P(msg.m_source)) 
+          case HARDWARE:
+  
+  o is_ipc_notify(ipc_status) serve para verificar se foi uma interrupção, interrupções vêm mascaradas de notificações do sistema.
+  o _ENDPOINT_P(msg.m_source) serve para extrair o ID (o ENDPOINT) porque em MINIX tudo são processos com um tal ENDPOINT, os que vêm do I/O têm o id de HARDWARE.
+
+5) Confirmar que a novidade é para mim
+  if (msg.m_notify.interrupts & kbd_set)
+  dentro do HARDWARE sabendo já que se trata de uma interrupt vejo se o bit que eu quando subscrevi a interrupção está ligado, assim sendo a interrupt é para o meu I/o
+  Aqui dentro é que meto o handler
+  Quando for para trabalhar com multiplos I/O terei de fazer varios if's
+
+6) Tirar a subscrição
+  if (sys_irqrmpolicy(&hook_id)!=0) return 1;
+  Com o hook_id que o kernel inicialmente atribuio  
+
+
+Ver o exemplo do código na função int(kbd_test_scan)()
+
+Passo a passo do que acontece:
+- When a key is pressed or released, the C@KBD generates the corresponding scancode and stores it temporarily in its buffer
+- If the KBC Output Buffer is empty, the C@KBD transmits the scancode at the head of its buffer to the KBC
+- The KBC then places this scancode into its Output Buffer, making it accessible
+- Finally, the KBC signals the arrival of new keyboard data to the CPU by raising interrupt IRQ1
+- After reading the scancode in the Interrupt Handler, KBC signals the C@KBD via serial bus that the Output Buffer is now empty
+
+O kbd é o controlador dentro do keyboard, o kbc é o que está na placa mãe
+No handler fazer if (status&KBC_OUT_BUFF) é um mecanismo de defesa para ver se a interrupção era mesmo verdadeira, por exemplo em sistemas modernos vários dispositivos podem partilhar a mesma linha de interrupção, e o meu driver acorda e com esta linha percebe que não era para ele. Não é so por esta razão, existe várias mas esta é uma delas.
+
+Se o teu handler detetar TOUT ou PAR, o byte no porto 0x60 deve ser lido (para "limpar" o buffer e permitir que o teclado mande a próxima tecla), mas o valor deve ser deitado ao "lixo".
+O erro de Timeout é quando a meio de um envio entre o KBD e o KBC, o KBC não recebe os bits todos, espera um tempo pré-definido e se não receber nada mete o bit 6 a 1 para dizer que o valor não é valido.
+O bit de paridade (faz parte do protocolo PS/2)é apenas mais uma verificação para ver se o valor recebido bate certo com o valor enviado pelo KBD, se não bater certo então mete o bit 7 do Status register a 1. 
+
+O scancode que o KBD manda pode ter 1 ou 2 bytes, se tiver 2 bytes, então o 1 byte é sempre 0xE0. No fundo é como existisse duas tabelas com 256 combinações cada uma.
+Para verificar se é breakcode (soltar tecla) é verificar se o bit mais significativo está a 1. No caso de o scancode ter 2 bytes, tem de vericar no 2º byte.
+
+Quer na porta de 0x60 quer na porta 0x64 tem um input e output buffer.
+Os buffers de Output já sabemos como funciona, na porta 0x64 tenho acesso ao status register e na porta 0x60 tenho acesso ao scancode em si.
+Os buffers de input em cada uma das portas servem para controlar o Kbc ou o kbd:
+Para controlar o KBC , esses comandos devem ser gravados no Registro de Comandos(input buffer) no endereço 0x64 . Dependendo do comando emitido, o KBC pode precisar de um argumento adicional ou retornar um valor. Se um argumento for necessário, ele deve ser gravado no buffer de input no endereço 0x60 . Finalmente, se o comando for respondido, o valor de retorno deve ser lido do buffer de output no endereço 0x60.
+Ou seja, o output buffer na porta 0x60 serve tanto para mostar o scancode como também para dar return a certos comandos.
+Lista de Comandos:
+- 0x20, Read Command Byte, Returns Command Byte (na porta 0x60)
+- 0x60,	Write Command Byte,	Takes Command Byte as Arg (mete no input buffer da porta 0x60)
+- 0xAA,	Check KBC (Self-test),	Returns 0x55 if OK, Returns 0xFC if error 
+- 0xAB,	Check Keyboard Interface,	Returns 0 if OK
+- 0xAD,	Disable KBD Interface, não retorna nem precisa de argumentos
+- 0xAE,	Enable KBD Interface, não retorna nem precisa de argumentos
+
+Um Command Byte tem apenas 4 bits uteis para controlar ou ver:
+(bit, nome, o que faz se tiver liagdo)
+- 5	DIS2	Disable mouse interface
+- 4	DIS	Disable keyboard interface
+- 1	INT2	Enable interrupts from mouse
+- 0	INT	Enable interrupts from keyboard
+
+Surge um problema, se as interrupções estiverem ligadas, o Interrupt Handler (IH) está sempre "à espreita". Assim que aparece algo na gaveta (Output Buffer), o IH corre e "limpa" a gaveta.
+Outro problema seria, enviar um comando ao KBC a perguntar "Qual é a tua configuração?". O KBC processa e mete a resposta na gaveta. Mas, nesse exato milésimo de segundo, o utilizador toca numa tecla. Surge um conflito do o que é que vai estar na "gaveta" da porta 0x60.
+Solução: Para evitar que o IH se meta no meio, desativo as interrupções ou a interface do teclado antes de mandares comandos que esperam resposta.
+
+O problema do tempo: O processador é ordens de magnitude mais rápido que o controlador do teclado. Se tu escreves um comando e tentas ler a resposta na linha seguinte do código, a resposta ainda não vai estar lá. O hardware demora tempo a processar (até 20 ms). O sleep nao resulta então usa-se o tickdelay(micros_to_ticks(20000)) para esperar 20ms
+
+Para escrever para o KBC devo verificar se o input buffer está vazio então:
+while ( 1 ) {
+    sys_inb(KBC_ST_REG, &stat); 
+    if( (stat & KBC_ST_IBF) == 0 ) {//se tiver vazio entra aqui
+        sys_outb(KBC_CMD_REG, cmd); /* no args command */
+        return 0;
+    }
+    tickdelay(micros_to_ticks(20000));
+}
+
+Para ler resposta do KBC, é usar a logica inversa:
+while( 1 ) {
+    sys_inb(KBC_ST_REG, &stat); 
+    if( stat & KBC_OBF ) {//esperar até o output buffer da porta 0x60 
+        sys_inb(KBC_OUT_BUF, &data);
+        if ((stat &(KBC_PARITY_ERR | KBC_TIMEOUT_ERR)))
+            return -1;
+        else
+            return data;
+    }
+    tickdelay(micros_to_ticks(20000));
+}
+Assim que lês, confirmas se os bits de Paridade ou Timeout estão a 0. Se estiverem a 1, a resposta veio com "lixo".
+
+
+
+
+        
+
