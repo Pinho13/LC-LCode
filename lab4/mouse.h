@@ -3,6 +3,8 @@
 
 #include <lcom/lcf.h>
 
+#include <stdbool.h>
+
 // REGISTERS
 #define KBC_STATUS_REG 0x64
 #define KBC_OUT_BUF    0x60
@@ -34,10 +36,16 @@
 #define WRITE_MOUSE 0xD4
 
 uint8_t *get_packet();
+bool is_packet_ready();
 
 int mouse_subscribe_int(uint8_t *bit_no);
 int mouse_unsubscribe_int();
 
+void mouse_parse_packet(struct packet *pp);
+
 void (mouse_ih)();
+
+int my_mouse_enable_data_reporting();
+int my_mouse_disable_data_reporting();
 
 #endif

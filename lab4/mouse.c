@@ -1,14 +1,16 @@
 #include "mouse.h"
 
-#include <stdbool.h>
-
 static int hook_id = 1;
 static int packet_index = 0;
 static bool packet_ready = false;
-static uint8_t packet[MOUSE_PACKET_SIZE];
+static uint8_t packet_bytes[MOUSE_PACKET_SIZE];
 
 uint8_t *get_packet() {
-  return packet;
+  return packet_bytes;
+}
+
+bool is_packet_ready() {
+  return packet_ready;
 }
 
 int mouse_subscribe_int(uint8_t *bit_no) {
@@ -52,11 +54,11 @@ void (mouse_ih)() {
   if (util_sys_inb(KBC_OUT_BUF, &data) != OK)
     return;
   
-  // This makes sure the first packet is the right one
+  // This makes sure the first packet_bytes is the right one
   // bit 3 is always 1
   if (packet_index == 0 && !(data & BIT(3))) return;
 
-  packet[packet_index] = data;
+  packet_bytes[packet_index] = data;
   packet_index++;
 
   if (packet_index == MOUSE_PACKET_SIZE) {
@@ -122,10 +124,29 @@ int (mouse_write_command)(uint8_t cmd) {
   return 1;
 }
 
-int (mouse_enable_data_reporting)() {
+int my_mouse_enable_data_reporting() {
     return mouse_write_command(MOUSE_ENABLE);
 }
 
-int (mouse_disable_data_reporting)() {
+int my_mouse_disable_data_reporting() {
     return mouse_write_command(MOUSE_DISABLE);
+}
+
+// Build packet struct
+void mouse_parse_packet(struct packet *pp) {
+  pp->bytes[0] = packet_bytes[0];
+  pp->bytes[1] = packet_bytes[1];
+  pp->bytes[2] = packet_bytes[2];
+
+  pp->lb = packet_bytes[0] & BIT(0);
+  pp->rb = packet_bytes[0] & BIT(1);
+  pp->mb = packet_bytes[0] & BIT(2);
+
+  pp->x_ov = packet_bytes[0] & BIT(6);
+  pp->y_ov = packet_bytes[0] & BIT(7);
+
+  // Sign extension
+  pp->delta_x = (packet_bytes[0] & BIT(4)) ? (0xFF00 | packet_bytes[1]) : packet_bytes[1];
+
+  pp->delta_y = (packet_bytes[0] & BIT(5)) ? (0xFF00 | packet_bytes[2]) : packet_bytes[2];
 }
