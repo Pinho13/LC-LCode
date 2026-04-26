@@ -49,7 +49,7 @@ int(kbd_test_scan)() {
 
   irq_set = BIT(bit_no);
 
-  int r;
+  int r;\
   while (1) {
     if ((r = driver_receive(ANY, &msg, &ipc_status)) != OK) {
       printf("driver_receive failed with: %d", r);
