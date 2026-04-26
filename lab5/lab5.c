@@ -6,6 +6,8 @@
 #include <stdint.h>
 #include <stdio.h>
 
+#include "video.h"
+
 // Any header files included below this line should have been created by you
 
 int main(int argc, char *argv[]) {
@@ -33,10 +35,14 @@ int main(int argc, char *argv[]) {
 }
 
 int(video_test_init)(uint16_t mode, uint8_t delay) {
-    /* To be completed */
-    printf("%s(0x%03x, %u): under construction\n", __func__, mode, delay);
+  
+  if (set_graphics_mode(mode) != OK) return 1;
 
-    return 1;
+  sleep(delay);
+
+  if (set_text_mode() != OK) return 1;
+
+  return 0;
 }
 
 int(video_test_rectangle)(uint16_t mode, uint16_t x, uint16_t y,
