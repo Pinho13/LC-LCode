@@ -1,0 +1,8 @@
+Pormenor:
+bytes[0] && X_SIGN calcula se bytes[0]!=0 e se X_SIGN!=0
+bytes[0] & X_SIGN devolve o valor do bit X_SIGN dentro do bytes[0]
+
+Quando tento fazer pp.bytes = bytes; não é possivel porque em C, não podes atribuir um array diretamente a outro usando o operador =, porque os nomes dos arrays comportam-se como ponteiros constantes para o primeiro elemento.
+
+
+
