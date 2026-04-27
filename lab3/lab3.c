@@ -7,7 +7,6 @@
 #include "i8042.h"
 #include "keyboard.h"
 
-bool error=false;
 uint32_t get_counter();//tive que dar esta declaração para conseguir compilar
 
 int main(int argc, char *argv[]) {
@@ -43,9 +42,7 @@ int(kbd_test_scan)() {
   int r, ipc_status;
   message msg;
 
-  bool make;
-  uint8_t size=0;
-  uint8_t bytes[2];
+  struct packet_scancode ps;
 
   bool running = true;
   
@@ -57,28 +54,19 @@ int(kbd_test_scan)() {
         case HARDWARE:
           if (msg.m_notify.interrupts & kbd_set) {
             
-            kbc_ih(); // 1. O handler lê o byte do teclado
+            kbc_ih(); 
 
-            if (error) continue;
+            if (get_error_keyboard()) continue;
 
             uint8_t scancode = get_scancode();
-            bytes[size]=scancode;
-            size++;
             
-            if (scancode==0xE0) continue;
-      
-            //chegando aqui então o bytes já está prenchido quer por 1 ou 2 bytes
-
-            if (scancode&BREAKCODE) make=false;
-            else make=true;
+            if (build_scancode(&ps)==1) continue;
             
-            kbd_print_scancode(make, size, bytes);
+            kbd_print_scancode(ps.make, ps.size, ps.bytes);
 
             if (scancode == 0x81){
               running = false;
             } 
-            
-            size=0;
 
           }
           break;
@@ -94,78 +82,52 @@ int(kbd_test_scan)() {
 }
 
 int(kbd_test_poll)() {
-  bool make;
-  uint8_t size=0;
-  uint8_t bytes[2];
+  struct packet_scancode ps;
   bool running=true;
 
   while (running){
-    error=false;
     kbc_ih(); 
 
-    if (error){
+    if (get_error_keyboard()){
       tickdelay(micros_to_ticks(20000));
       continue;
     } 
 
     uint8_t scancode = get_scancode();
-    bytes[size]=scancode;
-    size++;
+    
+    if (build_scancode(&ps)==1){
+      tickdelay(micros_to_ticks(20000));
+      continue;
+    } 
             
-    if (scancode==0xE0) continue;
-      
-    //chegando aqui então o bytes já está prenchido quer por 1 ou 2 bytes
-
-    if (scancode&BREAKCODE) make=false;
-    else make=true;
-            
-    kbd_print_scancode(make, size, bytes);
+    kbd_print_scancode(ps.make, ps.size, ps.bytes);
 
     if (scancode == 0x81){
       running = false;
     } 
-            
-    size=0;
+  
     tickdelay(micros_to_ticks(20000));
   }
   
   //voltar a logar as interrupções
-  uint8_t stat;
-  uint8_t cmd;
-  while ( 1 ) {
-    if (util_sys_inb(KBC_STATUS_REG, &stat) != 0) return 1;
-    if( (stat & KBC_ST_IBF) == 0 ) {//se tiver vazio entra aqui
-        if(sys_outb(KBC_STATUS_REG, RD_CMD)!=0)return 1;
-        tickdelay(micros_to_ticks(20000));
-        if (util_sys_inb(KBC_DATA_REG, &cmd) != 0) return 1;
-        cmd = cmd | BIT(0);
-        if(sys_outb(KBC_STATUS_REG, WR_CMD)!=0)return 1;
-        if(sys_outb(KBC_DATA_REG, cmd)!=0)return 1;
-        return 0;
-    }
-    tickdelay(micros_to_ticks(20000));
-  }
+  if (kbc_enable_interrupts()!=0) return 1;
   return 0;
 }
 
 int(kbd_test_timed_scan)(uint8_t n) {
-
-  uint8_t hook_id_kbc = 1, hook_id_timer=0;
-  uint32_t timer_set = BIT(hook_id_timer);
-  uint32_t kbd_set = BIT(hook_id_kbc);
+  uint8_t bit_no_kbd = 1, bit_no_timer = 0;
+  uint32_t kbd_set = BIT(bit_no_kbd);
+  uint32_t timer_set = BIT(bit_no_timer);
   
-  if (keyboard_subscribe_int(&hook_id_kbc)!=0) return 1;
-  if (timer_subscribe_int(&hook_id_timer)!=0) return 1;
+  if (keyboard_subscribe_int(&bit_no_kbd) != 0) return 1;
+  if (timer_subscribe_int(&bit_no_timer) != 0) return 1;
 
   int r, ipc_status;
   message msg;
-
-  bool make;
-  uint8_t size=0;
-  uint8_t bytes[2];
-
+  struct packet_scancode ps;
   bool running = true;
-  uint32_t last;
+
+  uint32_t last = get_counter(); 
   
   while (running) {
     if ((r = driver_receive(ANY, &msg, &ipc_status)) != 0) continue;
@@ -173,36 +135,25 @@ int(kbd_test_timed_scan)(uint8_t n) {
     if (is_ipc_notify(ipc_status)) {
       switch (_ENDPOINT_P(msg.m_source)) {
         case HARDWARE:
-          if (msg.m_notify.interrupts & timer_set){
-            timer_int_handler();
-            if (get_counter()-last >= (uint32_t)(n * 60)) {
-              running = false;
+      
+          if (msg.m_notify.interrupts & kbd_set) {
+            kbc_ih(); 
+            
+            if (!get_error_keyboard()) {
+              last = get_counter(); 
+              if (build_scancode(&ps) == 0) {
+                kbd_print_scancode(ps.make, ps.size, ps.bytes);
+                if (get_scancode() == 0x81) running = false;
+              }
             }
           }
-          if (msg.m_notify.interrupts & kbd_set) {
-            kbc_ih(); // 1. O handler lê o byte do teclado
-            last=get_counter();
 
-            if (error) continue;
-
-            uint8_t scancode = get_scancode();
-            bytes[size]=scancode;
-            size++;
+          if (msg.m_notify.interrupts & timer_set) {
+            timer_int_handler();
             
-            if (scancode==0xE0) continue;
-      
-            //chegando aqui então o bytes já está prenchido quer por 1 ou 2 bytes
-
-            if (scancode&BREAKCODE) make=false;
-            else make=true;
-            
-            kbd_print_scancode(make, size, bytes);
-
-            if (scancode == 0x81){//se for ESC
+            if (get_counter() - last >= (uint32_t)(n * 60)) {
               running = false;
-            } 
-            
-            size=0;
+            }
           }
           break;
         default:
@@ -211,8 +162,8 @@ int(kbd_test_timed_scan)(uint8_t n) {
     }
   }
 
-  if (keyboard_unsubscribe_int()!=0) return 1;
-  if (timer_unsubscribe_int()!=0) return 1;
+  timer_unsubscribe_int();
+  keyboard_unsubscribe_int();
 
   return 0;
 }

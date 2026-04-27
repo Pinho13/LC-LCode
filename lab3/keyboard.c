@@ -1,14 +1,35 @@
 #include "keyboard.h"
 
-extern bool error;
+static bool error=false;
 static int hook_id;
 static uint8_t scancode;
+
+static uint8_t size=0;
+static uint8_t bytes[2];
 
 void set_scancode(uint8_t code){
   scancode=code;
 }
 uint8_t get_scancode(){
   return scancode;
+}
+
+bool get_error_keyboard(){
+  return error;
+}
+
+int build_scancode(struct packet_scancode *ps){
+  bytes[size]=scancode;
+  if (scancode==0xE0){
+    size++;
+    return 1;
+  }
+  ps->make = scancode&BREAKCODE ? false : true;
+  ps->size=size+1;
+  ps->bytes[0]=bytes[0];
+  ps->bytes[1]=bytes[1];
+  size=0;
+  return 0;
 }
 
 
@@ -19,7 +40,7 @@ void (kbc_ih)(){
     return;
   }
 
-  if (status&KBC_OUT_BUFF){//se o buffer estiver cheio
+  if (status&KBC_ST_OBF){//se o buffer estiver cheio
     uint8_t data;
     if (util_sys_inb(KBC_DATA_REG,&data)!=0){//mesmo que possa haver erro, ler sempre valor
       error=true;
@@ -30,7 +51,8 @@ void (kbc_ih)(){
       error=true;
       return;
     }
-
+    
+    error=false;
     set_scancode(data);
   }
   else{
