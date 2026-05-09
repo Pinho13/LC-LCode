@@ -1,4 +1,5 @@
 #include <lcom/lcf.h>
+#include <lcom/utils.h>
 
 #include <stdint.h>
 
