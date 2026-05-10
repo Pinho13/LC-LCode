@@ -1,46 +1,28 @@
-CC ?= clang
-AR ?= ar
+# name of the program (Minix service)
+PROG=proj
+# source code files to be compiled
+SRCS = main.c
 
-LIB_NAME := liblcomfw.a
+# additional compilation flags
+# "-Wall -Wextra -Werror -I . -std=c11 -Wno-unused-parameter" are already set
+CFLAGS += -pedantic -I./includes
 
-INCLUDE_DIR := includes
+# list of library dependencies
+DPADD += ${LIBLCF} ${LIB_NAME}              # Let make track the versions of the new target
+LDADD += -llcf -L.                          # Tell the compiler to look in the current directory for libraries
+LDADD += -llcomfw                            #   and link the library named libtimers.a
 
-LIB_SRCS := src/common/utils.c \
-            src/drivers/rtc.c \
-            src/drivers/timer.c
-LIB_OBJS := $(LIB_SRCS:.c=.o)
+LIB_NAME = liblcomfw.a                       # The name filename for your library
+LIB_SRCS = utils.c rtc.c timer.c # The source files to include
+LIB_OBJS = ${LIB_SRCS:.c=.o}                # The rule used to convert your .c source files in .o object files
+.PATH: src/common src/drivers
+CLEANFILES += ${LIB_NAME} ${LIB_OBJS}       # Add the library file and object files to the files to be cleaned
 
-PROG := ex_rtc
-SRCS := ex_rtc.c
-.PATH: examples
-
-CFLAGS += -std=c11 -Wall -Wextra -Werror \
-           -pedantic -I$(INCLUDE_DIR)
-DPADD += ${LIBLCF}
-LDADD += -L. -llcomfw -llcf
-
-.PHONY: all examples
-
-all: $(LIB_NAME)
-
-# Build library
-$(LIB_NAME): $(LIB_OBJS)
-	$(AR) rcs $@ $(LIB_OBJS)
-
-# Compile object files (explicit rules for Minix make compatibility)
-src/common/utils.o: src/common/utils.c
-	$(CC) $(CFLAGS) -c $< -o $@
-
-src/drivers/rtc.o: src/drivers/rtc.c
-	$(CC) $(CFLAGS) -c $< -o $@
-
-src/drivers/timer.o: src/drivers/timer.c
-	$(CC) $(CFLAGS) -c $< -o $@
-
-# Build all examples
-examples: $(LIB_NAME) $(PROG)
-
-CLEANFILES += $(LIB_OBJS) $(LIB_NAME)
+all: lib                                    # Instruct make run the lib compilation target before building the srcs program
+lib: ${LIB_OBJS}                            # Define the lib compilation target, with its dependency source files
+	ar rcs ${LIB_NAME} ${LIB_OBJS}          # Package the library
+# ^ This MUST be a Tab character, not spaces
+# Otherwise you will get a "missing separator" error!
 
 # include LCOM's makefile that does all the "heavy lifting"
 .include <minix.lcom.mk>
