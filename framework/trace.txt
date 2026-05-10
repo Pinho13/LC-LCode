@@ -1,0 +1,4 @@
+@lcflib.a:2019, lcf_start
+  proj_main_loop(argc, argv)
+> proj_main_loop(0, [NULL])
+< proj_main_loop(0, [NULL]) -> (ret: 0)
