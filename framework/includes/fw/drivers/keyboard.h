@@ -1,6 +1,6 @@
 #include <lcom/lcf.h>
 #include <stdint.h>
-#include "../hw/i8042.h"
+#include "fw/hw/i8042.h"
 
 struct packet_scancode {
   bool make;
