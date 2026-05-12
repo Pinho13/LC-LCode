@@ -1,4 +1,4 @@
-#include "../../includes/fw/drivers/rtc.h"
+#include "fw/drivers/rtc.h"
 
 static int bcd_to_bin(uint8_t bcd) {
   uint8_t ones = bcd & 0x0F;
