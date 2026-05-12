@@ -1,14 +1,8 @@
 #include <lcom/lcf.h>
-#include <minix/syslib.h>
-#include <minix/sysutil.h>
-#include <stdio.h>
-#include <stdlib.h>
-#include <time.h>
-
 
 #include "fw/drivers/rtc.h"
 
-#define ASSERT(x, msg)                                                         \
+#define ASS(x, msg)                                                         \
   if (!(x)) {                                                                  \
     printf("%s FAILED!\n", msg);                                               \
     exit(1);                                                                   \
@@ -36,14 +30,18 @@ void test_rtc_date() {
   clock_gettime(CLOCK_REALTIME, &ts);
   struct tm *tm_info = localtime(&ts.tv_sec);
 
-  ASSERT(abs((int)date.day - (int)tm_info->tm_mday) < 2, "rtc read day");
-  ASSERT(abs((int)date.month - (int)tm_info->tm_mon) < 2, "rtc read month");
-  ASSERT(date.year == tm_info->tm_year % 100, "rtc read year");
+  ASS(abs((int)date.day - (int)tm_info->tm_mday) < 2, "rtc read day");
+  ASS(abs((int)date.month - (int)tm_info->tm_mon) < 2, "rtc read month");
+  ASS(date.year == tm_info->tm_year % 100, "rtc read year");
 }
 
 int(proj_main_loop)(int argc, char *argv[]) {
   (void)argc;
   (void)argv;
+
+  rtc_example();
+  test_rtc_date();
+
   return 0;
 }
 
@@ -51,12 +49,9 @@ int(main)(int argc, char *argv[]) {
   lcf_set_language("EN-US");
   lcf_trace_calls("/home/lcom/labs/framework/trace.txt");
   lcf_log_output("/home/lcom/labs/framework/output.txt");
-
+  
   if (lcf_start(argc, argv))
     return 1;
-  
-  rtc_example();
-  test_rtc_date();
 
   lcf_cleanup();
   return 0;
