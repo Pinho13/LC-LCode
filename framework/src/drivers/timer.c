@@ -13,7 +13,7 @@ int(timer_set_frequency)(uint8_t timer, uint32_t freq) {
 
   uint8_t st;
 
-  if (timer_get_conf(timer, &st) != 0)
+  if (timer_get_conf(timer, &st) != OK)
     return 1;
   
   uint16_t counter = TIMER_FREQ / freq;
@@ -33,14 +33,14 @@ int(timer_set_frequency)(uint8_t timer, uint32_t freq) {
 
   uint8_t lsb, msb;
 
-  if (util_get_LSB(counter, &lsb) != 0) return 1;
-  if (util_get_MSB(counter, &msb) != 0) return 1;
+  if (util_get_LSB(counter, &lsb) != OK) return 1;
+  if (util_get_MSB(counter, &msb) != OK) return 1;
 
 
-  if (sys_outb(TIMER_CTRL, control) != 0) return 1;
+  if (sys_outb(TIMER_CTRL, control) != OK) return 1;
 
-  if (sys_outb(TIMER_0 + timer, lsb) != 0) return 1;
-  if (sys_outb(TIMER_0 + timer, msb) != 0) return 1;
+  if (sys_outb(TIMER_0 + timer, lsb) != OK) return 1;
+  if (sys_outb(TIMER_0 + timer, msb) != OK) return 1;
 
   return 0;
 }
@@ -49,7 +49,7 @@ int(timer_subscribe_int)(uint8_t *bit_no) {
   
   *bit_no = hook_id;
 
-  if (sys_irqsetpolicy(TIMER0_IRQ, IRQ_REENABLE, &hook_id) != 0)
+  if (sys_irqsetpolicy(TIMER0_IRQ, IRQ_REENABLE, &hook_id) != OK)
     return 1;
 
   return 0;
@@ -57,7 +57,7 @@ int(timer_subscribe_int)(uint8_t *bit_no) {
 
 int(timer_unsubscribe_int)() {
   
-  if (sys_irqrmpolicy(&hook_id) != 0)
+  if (sys_irqrmpolicy(&hook_id) != OK)
     return 1;
 
   return 0;
@@ -74,10 +74,10 @@ int(timer_get_conf)(uint8_t timer, uint8_t *st) {
   // TIMER_RB_SEL(timer) -> Selects timer
   uint8_t cmd = TIMER_RB_CMD | TIMER_RB_COUNT_ | TIMER_RB_SEL(timer);
 
-  if (sys_outb(TIMER_CTRL, cmd) != 0)
+  if (sys_outb(TIMER_CTRL, cmd) != OK)
     return 1;
 
-  if (util_sys_inb(TIMER_0 + timer, st) != 0)
+  if (util_sys_inb(TIMER_0 + timer, st) != OK)
     return 1;
   
 
