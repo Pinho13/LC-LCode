@@ -1,7 +1,8 @@
 #include <lcom/lcf.h>
-#include <lcom/utils.h>
 
 #include <stdint.h>
+
+#include "fw/common/utils.h"
 
 // Reads value from port
 int (util_sys_inb)(int port, uint8_t *value) {
@@ -15,3 +16,10 @@ int (util_sys_inb)(int port, uint8_t *value) {
 
   return 0;
 }
+
+// Prints message before fail
+int fail(const char *msg) {
+  fprintf(stderr, "Error: %s\n", msg);
+  return 1;
+}
+
