@@ -17,9 +17,42 @@ int (util_sys_inb)(int port, uint8_t *value) {
   return 0;
 }
 
+void print_err_type(ErrorType error_type) {
+  switch (error_type)
+  {
+    case ERR:
+      fprintf(stderr, "\nError\n");
+      break;
+    
+    case ERR_RTC:
+      fprintf(stderr, "\nRTC Error\n");
+      break;
+    
+    case ERR_TIMER:
+      fprintf(stderr, "\nTimer Error\n");
+      break;
+    
+    case ERR_KEYBOARD:
+      fprintf(stderr, "\nKeyboard Error\n");
+      break;
+    
+    case ERR_MOUSE:
+      fprintf(stderr, "\nMouse Error\n");
+      break;
+    
+    case ERR_VIDEO:
+      fprintf(stderr, "\nVideo Error\n");
+      break;
+
+    default:
+      break;
+  }
+}
+
 // Prints message before fail
-int fail(const char *msg) {
-  fprintf(stderr, "Error: %s\n", msg);
+int fail(ErrorType error_type, const char *msg) {
+  print_err_type(error_type);
+  fprintf(stderr, "%s\n", msg);
   return 1;
 }
 

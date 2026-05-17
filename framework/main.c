@@ -2,6 +2,7 @@
 #include <minix/sysutil.h>
 
 #include "fw/drivers/rtc.h"
+#include "fw/common/utils.h"
 
 #ifdef ASSERT
   #undef ASSERT
@@ -15,13 +16,13 @@
     printf("%s passed.\n", msg);                                               \
   }
 
+void error_example();
 int rtc_example();
 void test_rtc_date();
 
 int(proj_main_loop)(int argc, char *argv[]) {
-  (void)argc;
-  (void)argv;
 
+  error_example();
   rtc_example();
   test_rtc_date();
 
@@ -67,4 +68,13 @@ void test_rtc_date() {
   ASSERT(abs((int)date.day - (int)tm_info->tm_mday) < 2, "rtc read day");
   ASSERT(abs((int)date.month - (int)tm_info->tm_mon) < 2, "rtc read month");
   ASSERT(date.year == tm_info->tm_year % 100, "rtc read year");
+}
+
+void error_example() {
+  fail(ERR, "This is an Error");
+  fail(ERR_RTC, "This is a RTC Error");
+  fail(ERR_TIMER, "This is a Timer Error");
+  fail(ERR_MOUSE, "This is a Mouse Error");
+  fail(ERR_KEYBOARD, "This is a Keybooard Error");
+  fail(ERR_VIDEO, "This is a Video Error");
 }

@@ -2,4 +2,14 @@
 
 #include <lcom/utils.h>
 
-int fail(const char *msg);
+typedef enum {
+  ERR,
+  ERR_RTC,
+  ERR_TIMER,
+  ERR_KEYBOARD,
+  ERR_MOUSE,
+  ERR_VIDEO
+} ErrorType;
+
+void print_err_type(ErrorType error_type);
+int fail(ErrorType error_type, const char *msg);

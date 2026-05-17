@@ -1,7 +1,25 @@
 
+Error
+This is an Error
+
+RTC Error
+This is a RTC Error
+
+Timer Error
+This is a Timer Error
+
+Mouse Error
+This is a Mouse Error
+
+Keyboard Error
+This is a Keybooard Error
+
+Video Error
+This is a Video Error
+
 
 RTC EXAMPLE 
-day: 14 
+day: 17 
 month: 5 
 year: 26
 
