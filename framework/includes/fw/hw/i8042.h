@@ -5,7 +5,7 @@
 
 /* I/O port addresses */
 
-#define KBC_STATUS_REG   0x64 
+#define KBC_STATUS_REG  0x64 
 #define KBC_DATA_REG    0x60 
 
 /* Mouse selection */
@@ -31,7 +31,7 @@
 /* KBC Status */
 
 #define KBC_ST_OBF      BIT(0)
-#define KBC_ST_IBF      BIT(1) //se estiver a 1 não se pode escrever nada
+#define KBC_ST_IBF      BIT(1)
 #define KBC_MOUSE_DATA  BIT(5)
 #define KBC_TOUT_ERR    BIT(6)
 #define KBC_PAR_ERR     BIT(7)
@@ -51,6 +51,5 @@ int (kbc_wait_input_empty)();
 int (kbc_wait_output_full)(uint8_t* data);
 int (kbc_enable_interrupts)();
 
-/**@}*/
 
 #endif /* _LCOM_I8042_H_ */
