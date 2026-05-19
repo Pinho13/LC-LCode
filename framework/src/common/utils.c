@@ -36,6 +36,10 @@ void print_err_type(ErrorType error_type) {
       fprintf(stderr, "\nTimer Error\n");
       break;
     
+    case ERR_KBC:
+      fprintf(stderr, "\nKBC Error\n");
+      break;
+    
     case ERR_KEYBOARD:
       fprintf(stderr, "\nKeyboard Error\n");
       break;

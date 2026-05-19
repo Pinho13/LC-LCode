@@ -7,6 +7,7 @@ typedef enum {
   ERR,
   ERR_RTC,
   ERR_TIMER,
+  ERR_KBC,
   ERR_KEYBOARD,
   ERR_MOUSE,
   ERR_VIDEO

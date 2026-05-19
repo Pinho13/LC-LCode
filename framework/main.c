@@ -75,7 +75,8 @@ void error_example() {
   fail(ERR, "This is an Error");
   fail(ERR_RTC, "This is a RTC Error");
   fail(ERR_TIMER, "This is a Timer Error");
-  fail(ERR_MOUSE, "This is a Mouse Error");
+  fail(ERR_KBC, "This is a KBC Error");
   fail(ERR_KEYBOARD, "This is a Keybooard Error");
+  fail(ERR_MOUSE, "This is a Mouse Error");
   fail(ERR_VIDEO, "This is a Video Error");
 }
