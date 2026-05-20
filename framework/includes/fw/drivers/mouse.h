@@ -4,6 +4,7 @@
 #include <stdint.h>
 #include "fw/hw/i8042.h"
 
+#define MOUSE_PACKET_SIZE 3
 
 void (mouse_ih)(void);
 bool get_error();
