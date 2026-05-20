@@ -1,5 +1,4 @@
-#ifndef __VBE_H
-#define __VBE_H
+#pragma once
 
 #define VBE_768p_INDEXED 0x105
 #define VBE_480p_DC 0x110
@@ -16,4 +15,3 @@
 #define BIOS_SET_VIDEOMODE 0x00
 #define BIOS_VIDEOCARD_SERV 0x10
 
-#endif

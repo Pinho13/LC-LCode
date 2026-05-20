@@ -1,6 +1,4 @@
-#ifndef _LCOM_I8042_H_
-#define _LCOM_I8042_H_
-
+#pragma once
 #include <lcom/lcf.h>
 
 /* I/O port addresses */
@@ -53,6 +51,3 @@
 int (kbc_wait_input_empty)();
 int (kbc_wait_output_full)(uint8_t* data);
 int (kbc_enable_interrupts)();
-
-
-#endif /* _LCOM_I8042_H_ */
