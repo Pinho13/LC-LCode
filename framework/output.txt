@@ -1,31 +1,7 @@
 
-Warning
-This is a Warning
-
-Error
-This is an Error
-
-RTC Error
-This is a RTC Error
-
-Timer Error
-This is a Timer Error
-
-KBC Error
-This is a KBC Error
-
-Keyboard Error
-This is a Keybooard Error
-
-Mouse Error
-This is a Mouse Error
-
-Video Error
-This is a Video Error
-
 
 RTC EXAMPLE 
-day: 19 
+day: 21 
 month: 5 
 year: 26
 
