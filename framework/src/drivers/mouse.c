@@ -1,5 +1,6 @@
 #include "fw/drivers/mouse.h"
 #include "fw/common/utils.h"
+#include "fw/hw/i8042.h"
 
 #define MOUSE_MAX_TRIES 5
 
@@ -8,6 +9,15 @@ static int packet_index = 0;
 static bool packet_ready = false;
 static bool error = false;
 static uint8_t packet_bytes[MOUSE_PACKET_SIZE];
+
+
+uint8_t *get_packet() {
+  return packet_bytes;
+}
+
+bool is_packet_ready() {
+  return packet_ready;
+}
 
 static void mouse_parse_packet(struct packet *pp) {
   pp->bytes[0] = packet_bytes[0];
@@ -32,11 +42,11 @@ bool get_error() {
 
 int build_packet(struct packet *pp) {
   if (!pp) return fail(ERR_MOUSE, "build_packet: NULL packet pointer");
-  if (!packet_ready) return 0;
+  if (!packet_ready) return fail(ERR_MOUSE, "build_packet: packet not ready");
 
   mouse_parse_packet(pp);
   packet_ready = false;
-  return 1;
+  return 0;
 }
 
 int mouse_subscribe_int(uint8_t *bit_no) {
@@ -140,10 +150,10 @@ int (mouse_write_command)(uint8_t cmd) {
   return fail(ERR_MOUSE, "mouse_write_command: retries exceeded");
 }
 
-int mouse_enable_data_reporting_1() {
+int my_mouse_enable_data_reporting() {
   return mouse_write_command(ENABLE_DR);
 }
 
-int mouse_disable_data_reporting() {
+int my_mouse_disable_data_reporting() {
   return mouse_write_command(DISABLE_DR);
 }

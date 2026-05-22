@@ -6,6 +6,7 @@
 #include "fw/drivers/timer.h"
 #include "fw/common/utils.h"
 #include "fw/drivers/keyboard.h"
+#include "fw/drivers/mouse.h"
 
 #ifdef ASSERT
   #undef ASSERT
@@ -33,6 +34,9 @@ int timer_example();
 #define ESC_BREAK 0x81
 int keyboard_example();
 
+// Mouse
+int mouse_example();
+
 int(proj_main_loop)(int argc, char *argv[]) {
   if (argc != 1) {
     printf("Usage:\n");
@@ -54,6 +58,7 @@ int(proj_main_loop)(int argc, char *argv[]) {
       keyboard_example();
 
     } else if (strcmp(argv[0], "mouse") == 0) {
+      mouse_example();
 
     } else if (strcmp(argv[0], "video") == 0) {
 
@@ -187,7 +192,7 @@ int keyboard_example() {
   int irq_set = BIT(bit_no);
 
   int r;
-  while (1) {
+  while (true) {
     if ((r = driver_receive(ANY, &msg, &ipc_status)) != 0) {
       printf("driver_receive failed with: %d", r);
       continue;
@@ -234,5 +239,68 @@ int keyboard_example() {
 
   // Should not reach this
   keyboard_unsubscribe_int();
+  return 0;
+}
+
+int mouse_example() {
+  printf("\n\n");
+  printf("Mouse Example \n");
+
+  uint8_t bit_no;
+  int ipc_status;
+  message msg;
+  int r;
+
+  uint32_t packets_read = 0;
+
+  if (mouse_subscribe_int(&bit_no) != OK)
+    return fail(ERR_MOUSE, "mouse_example: unable to subscribe mouse interrupt");
+  if (my_mouse_enable_data_reporting() != OK)
+    return fail(ERR_MOUSE, "mouse_example: unable to enable data reporting");
+
+  uint8_t irq_set = BIT(bit_no);
+
+  while (true) {
+    if ((r = driver_receive(ANY, &msg, &ipc_status)) != OK)
+      continue;
+
+    if (is_ipc_notify(ipc_status)) {
+      switch (_ENDPOINT_P(msg.m_source)) {
+        case HARDWARE:
+          if (msg.m_notify.interrupts & irq_set) {
+            mouse_ih();
+
+            if (is_packet_ready()) {
+              struct packet pp;
+              if (build_packet(&pp) != OK) {
+                fail(ERR_MOUSE, "mouse_example: unable to build packet");
+                continue;
+              }
+              mouse_print_packet(&pp);
+
+              packets_read++;
+
+              if (pp.rb && pp.lb) {
+                if (my_mouse_disable_data_reporting() != OK)
+                  return fail(ERR_MOUSE, "mouse_example: unable to disable data reporting");
+                if (mouse_unsubscribe_int() != OK)
+                  return fail(ERR_MOUSE, "mouse_example: unable to unsubscribe mouse interrupt");
+
+                return 0;
+              }
+            }
+          }
+          break;
+        default:
+          break;
+      }
+    }
+  }
+
+  if (my_mouse_disable_data_reporting() != OK)
+    return fail(ERR_MOUSE, "mouse_example: unable to disable data reporting");
+  if (mouse_unsubscribe_int() != OK)
+    return fail(ERR_MOUSE, "mouse_example: unable to unsubscribe mouse interrupt");
+
   return 0;
 }
