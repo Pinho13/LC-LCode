@@ -7,6 +7,8 @@
 #include "fw/common/utils.h"
 #include "fw/drivers/keyboard.h"
 #include "fw/drivers/mouse.h"
+#include "fw/drivers/video.h"
+#include "fw/hw/vbe.h"
 
 #ifdef ASSERT
   #undef ASSERT
@@ -37,6 +39,9 @@ int keyboard_example();
 // Mouse
 int mouse_example();
 
+// Video
+int video_example(uint16_t mode);
+
 int(proj_main_loop)(int argc, char *argv[]) {
   if (argc != 1) {
     printf("Usage:\n");
@@ -61,7 +66,7 @@ int(proj_main_loop)(int argc, char *argv[]) {
       mouse_example();
 
     } else if (strcmp(argv[0], "video") == 0) {
-
+      video_example(VBE_864p_DC);
     } else {
       return fail(ERR, "argv[1]: invalid argument");
     }
@@ -301,6 +306,26 @@ int mouse_example() {
     return fail(ERR_MOUSE, "mouse_example: unable to disable data reporting");
   if (mouse_unsubscribe_int() != OK)
     return fail(ERR_MOUSE, "mouse_example: unable to unsubscribe mouse interrupt");
+
+  return 0;
+}
+
+int video_example(uint16_t mode) {
+  printf("\n\n");
+  printf("Mouse Example \n");
+
+  if (vg_map_vram(mode) != OK) return 1;
+
+  if (set_graphics_mode(mode) != OK) return 1;
+
+  if (vg_draw_rectangle(10, 10, 100, 100, 0xFF0000) != OK) return 1;
+
+  if (keyboard_example() != OK) {
+    set_text_mode();
+    return 1;
+  }
+
+  if (set_text_mode() != OK) return 1;
 
   return 0;
 }
