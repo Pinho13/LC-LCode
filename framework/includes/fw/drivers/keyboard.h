@@ -11,8 +11,7 @@ typedef struct {
   unsigned char bytes[2];
 } packet_scancode;
 
-char scancode_to_char(unsigned char scancode);
-const char *scancode_to_name(uint8_t scancode, bool two_byte);
+const char *scancode_to_char(uint8_t scancode, bool two_byte);
 void print_scancode_value();
 
 void set_scancode(uint8_t code);
