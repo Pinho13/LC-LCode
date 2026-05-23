@@ -5,9 +5,6 @@ static bool error=false;
 static int hook_id=1;
 static uint8_t scancode;
 
-//static uint8_t size=0;
-//static uint8_t bytes[2];
-
 void set_scancode(uint8_t code){
   scancode=code;
 }
@@ -19,21 +16,32 @@ bool did_error_occur(){
   return error;
 }
 
-/* REFACTOR LATER
-int build_scancode(struct packet_scancode *ps){
-  bytes[size]=scancode;
-  if (scancode==TWO_BYTE){
-    size++;
-    return 1;
+
+int build_scancode(packet_scancode *ps){
+  if (ps->size > 2)
+    return fail(ERR_KEYBOARD, "build_scancode: invalid scancode size");
+  
+  uint8_t byte = get_scancode();
+
+  if (byte == TWO_BYTE) {
+    ps->two_byte = true;
+    ps->bytes[0] = byte;
+    return 0;
   }
-  ps->make = scancode&BREAKCODE ? false : true;
-  ps->size=size+1;
-  ps->bytes[0]=bytes[0];
-  ps->bytes[1]=bytes[1];
-  size=0;
+
+  if (ps->two_byte) {
+    ps->bytes[1] = byte;
+    ps->size = 2;
+    ps->two_byte = false;
+  } else {
+    ps->bytes[0] = byte;
+    ps->size = 1;
+  }
+  
+  ps->make = !(byte & BIT(7));
   return 0;
 }
-*/
+
 
 void (keyboard_ih)() {
   uint8_t status;
@@ -81,17 +89,17 @@ int (keyboard_unsubscribe_int)() {
   return 0;
 }
 
-int (keyboard_print_scancode)(bool make, uint8_t size, uint8_t *bytes) {
-    if (bytes == NULL || size == 0) {
-        return fail(ERR_KEYBOARD, "Invalid scancode bytes or size");
+int (keyboard_print_scancode)(packet_scancode ps) {
+    if (ps.size == 0) {
+        return fail(ERR_KEYBOARD, "keyboard_print_scancode: invalid scancode size");
     }
 
-    printf("%s code: ", make ? "MAKE" : "BREAK");
+    printf("%s code: ", ps.make ? "MAKE" : "BREAK");
 
-    for (uint8_t i = 0; i < size; i++) {
-        printf("0x%02X", bytes[i]);
+    for (uint8_t i = 0; i < ps.size; i++) {
+        printf("0x%02X", ps.bytes[i]);
 
-        if (i < size - 1) {
+        if (i < ps.size - 1) {
             printf(" ");
         }
     }

@@ -181,12 +181,13 @@ int keyboard_example() {
 
 
   uint8_t bit_no;
-  uint8_t byte;
-  uint8_t size;
-  bool make;
 
-  uint8_t bytes[2];
-  bool two_byte = false;
+  packet_scancode ps = {
+    .two_byte = false,
+    .make = false,
+    .size = 0,
+    .bytes = {0, 0}
+  };
 
   int ipc_status;
   message msg;
@@ -208,29 +209,17 @@ int keyboard_example() {
         case HARDWARE:
           if (msg.m_notify.interrupts & irq_set) {
             keyboard_ih();
+            
+            if (build_scancode(&ps) != OK)
+              continue;
 
-            byte = get_scancode();
-
-            if (byte == TWO_BYTE) {
-              two_byte = true;
-              bytes[0] = byte;
+            if (ps.two_byte) {
               continue;
             }
 
-            if (two_byte) {
-              bytes[1] = byte;
-              size = 2;
-              two_byte = false;
-            } else {
-              bytes[0] = byte;
-              size = 1;
-            }
+            keyboard_print_scancode(ps);
 
-            make = !(byte & BIT(7));
-
-            keyboard_print_scancode(make, size, bytes);
-
-            if (bytes[0] == ESC_BREAK) {
+            if (ps.bytes[0] == ESC_BREAK) {
               keyboard_unsubscribe_int();
               return 0;
             }
