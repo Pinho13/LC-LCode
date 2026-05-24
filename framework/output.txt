@@ -1,9 +1,0 @@
-
-
-Mouse Example 
-
-
-Keyboard Example 
-BREAK code: 0x9C - ENTER
-MAKE code: 0x01 - ESC
-BREAK code: 0x81 - ESC

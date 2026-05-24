@@ -1,0 +1,15 @@
+# All files without extension
+*
+!*.*
+!/**/
+
+# LCF output
+
+output.txt
+trace.txt
+
+# Artifacts
+
+*.d
+*.o
+*.a
