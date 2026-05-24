@@ -1,12 +1,16 @@
 # name of the program (Minix service)
 PROG=proj
 
+# Framework path
+FRAMEWORK = ../../framework/liblcomfw.a
+FRAMEWORK_INCLUDES = ../../framework/includes
+
 # additional compilation flags
 # "-Wall -Wextra -Werror -I . -std=c11 -Wno-unused-parameter" are already set
-CFLAGS += -pedantic -D __LCOM_OPTIMIZED__
+CFLAGS += -pedantic -D __LCOM_OPTIMIZED__ -I${FRAMEWORK_INCLUDES} -I${FRAMEWORK_INCLUDES}
 
 # list of library dependencies (LCF)
-DPADD += ${LIBLCF}
+DPADD += ${LIBLCF} ${FRAMEWORK}
 LDADD += -llcf
 LDLIBS += -lm
 

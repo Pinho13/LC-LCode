@@ -1,4 +1,5 @@
 #include <lcom/lcf.h>
+#include "fw/common/utils.h"
 
 int(proj_main_loop)(int argc, char *argv[]) {
   
