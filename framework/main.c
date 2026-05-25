@@ -22,6 +22,12 @@
     printf("%s passed.\n", msg);                                               \
   }
 
+void print_usage() {
+  printf("\n  Usage:\n");
+  printf("    ./proj <driver>\n");
+  printf("    <driver>: error | rtc | timer | keyboard | mouse | video\n");
+}
+
 // Errors
 void error_example();
 
@@ -44,10 +50,8 @@ int video_example(uint16_t mode);
 
 int(proj_main_loop)(int argc, char *argv[]) {
   if (argc != 1) {
-    printf("Usage:\n");
-    printf("./proj <driver>\n");
-    printf("<driver>: error | rtc | timer | keyboard | mouse | video\n");
-    return 1;
+    print_usage();
+    return fail(ERR, "argv[1]: missing argument");
   } else {
     if (strcmp(argv[0], "error") == 0) {
       error_example();
@@ -68,6 +72,7 @@ int(proj_main_loop)(int argc, char *argv[]) {
     } else if (strcmp(argv[0], "video") == 0) {
       video_example(VBE_864p_DC);
     } else {
+      print_usage();
       return fail(ERR, "argv[1]: invalid argument");
     }
   }
@@ -80,8 +85,10 @@ int(main)(int argc, char *argv[]) {
   lcf_trace_calls("/home/lcom/labs/framework/trace.txt");
   lcf_log_output("/home/lcom/labs/framework/output.txt");
   
-  if (lcf_start(argc, argv))
+  if (lcf_start(argc, argv) != OK) {
+    lcf_cleanup();
     return 1;
+  }
 
   lcf_cleanup();
   return 0;
