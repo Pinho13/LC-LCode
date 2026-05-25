@@ -10,8 +10,8 @@ FRAMEWORK_INCLUDES = ../../framework/includes
 CFLAGS += -pedantic -I${FRAMEWORK_INCLUDES}
 
 # list of library dependencies (LCF)
-DPADD += ${LIBLCF} ${FRAMEWORK}
-LDADD += -llcf -Wl,--whole-archive ${FRAMEWORK} -Wl,--no-whole-archive
+DPADD += ${FRAMEWORK} ${LIBLCF}
+LDADD += ${FRAMEWORK} -llcf
 LDLIBS += -lm
 
 # define headers dependencies
