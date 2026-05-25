@@ -146,7 +146,7 @@ int timer_example() {
   uint32_t seconds_to_quit = 5;
 
   if (timer_subscribe_int(&bit_no) != 0)
-    return 1;
+    return fail(ERR, "timer_example: unable to subscribe timer interrupt");
 
   int irq_set = BIT(bit_no);
 
