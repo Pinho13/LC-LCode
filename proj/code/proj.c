@@ -39,8 +39,8 @@ int(proj_main_loop)(int argc, char *argv[]) {
 
 int(main)(int argc, char *argv[]) {
   lcf_set_language("EN-US");
-  lcf_trace_calls("/home/lcom/labs/framework/trace.txt");
-  lcf_log_output("/home/lcom/labs/framework/output.txt");
+  lcf_trace_calls("/home/lcom/labs/proj/trace.txt");
+  lcf_log_output("/home/lcom/labs/proj/output.txt");
   
   if (lcf_start(argc, argv) != OK) {
     lcf_cleanup();
