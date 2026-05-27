@@ -8,7 +8,7 @@
 int(proj_main_loop)(int argc, char *argv[]) {
   int ipc_status, r;
   message msg;
-  
+  get_int_counter();
   if (subscribe_interrupts() != OK)
     return fail(ERR, "proj_main_loop: unable to subscribe interrupts");
 
@@ -22,8 +22,9 @@ int(proj_main_loop)(int argc, char *argv[]) {
     if (is_ipc_notify(ipc_status)) {
       switch (_ENDPOINT_P(msg.m_source)) {
         case HARDWARE:
-          printf("a");
+          interrupts_handler(msg.m_notify.interrupts);
           break;
+
         default:
           break;
       }

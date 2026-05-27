@@ -4,6 +4,12 @@
 #include "fw/common/utils.h"
 
 static uint8_t irq_timer = 0, irq_keyboard = 0, irq_mouse = 0;
+packet_scancode ps = {
+  .two_byte = false,
+  .make = false,
+  .size = 0,
+  .bytes = {0, 0}
+};
 
 int subscribe_interrupts() {
   uint8_t bit_no; // used once per interrupt, no need to create one per driver
@@ -60,3 +66,48 @@ int unsubscribe_interrupts() {
 
   return errors;
 }
+
+void timer_handler() {
+  timer_int_handler();
+}
+
+void keyboard_handler() {
+  keyboard_ih();
+            
+  if (build_scancode(&ps) != OK) {
+    return;
+  }
+
+  if (ps.two_byte) {
+    return;
+  }
+
+  keyboard_print_scancode(ps);
+}
+
+void mouse_handler() {
+  mouse_ih();
+
+  if (is_packet_ready()) {
+    struct packet pp;
+  
+    if (build_packet(&pp) != OK) {
+      fail(ERR_MOUSE, "mouse_example: unable to build packet");
+      return;
+    }
+    mouse_print_packet(&pp);
+  }
+}
+
+void interrupts_handler(uint8_t irq_mask) {
+  if (irq_mask & irq_timer) {
+    timer_handler();
+  }
+  if (irq_mask & irq_keyboard) {
+    keyboard_handler();
+  }
+  if (irq_mask & irq_mouse) {
+    mouse_handler();
+  }
+}
+
