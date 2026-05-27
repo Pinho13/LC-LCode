@@ -99,7 +99,7 @@ void mouse_handler() {
   }
 }
 
-void interrupts_handler(uint8_t irq_mask) {
+void interrupts_handler(uint32_t irq_mask) {
   if (irq_mask & irq_timer) {
     timer_handler();
   }

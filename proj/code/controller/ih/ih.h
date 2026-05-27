@@ -11,4 +11,4 @@ void timer_handler();
 void keyboard_handler();
 void mouse_handler();
 
-void interrupts_handler(uint8_t irq_mask);
+void interrupts_handler(uint32_t irq_mask);
