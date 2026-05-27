@@ -17,7 +17,7 @@ build_fw() {
 build_proj() {
   cd proj/code/
   echo "  Building project:"
-  make
+  make run
 }
 
 clean_all() {

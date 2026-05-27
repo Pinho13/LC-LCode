@@ -15,14 +15,19 @@ LDADD += ${FRAMEWORK} -llcf
 LDLIBS += -lm
 
 # define headers dependencies
-HDRS = $(find . -name *.h)
+HDRS = $(find . -name *.c)
 
-# compilation rules for each source file
-proj.o: proj.c ${HDRS}
-	${CC} ${CFLAGS} -c $< -o $@
+SRCS = proj.c ih.c
+OBJS = ${SRCS:.c=.o}
+.PATH: controller/ih
 
-controller/ih/ih.o: controller/ih/ih.c controller/ih/ih.h
-	${CC} ${CFLAGS} -c $< -o $@
+.PHONY: run
+
+run: all
+	for obj in $(OBJS); do \
+		mkdir -p build; \
+		mv $$obj build/$$obj; \
+	done
 
 # include LCOM's makefile that does all the "heavy lifting"
 .include <minix.lcom.mk>
