@@ -262,8 +262,10 @@ int mouse_example() {
 
   if (mouse_subscribe_int(&bit_no) != OK)
     return fail(ERR_MOUSE, "mouse_example: unable to subscribe mouse interrupt");
-  if (my_mouse_enable_data_reporting() != OK)
+  if (my_mouse_enable_data_reporting() != OK) {
+    mouse_unsubscribe_int();
     return fail(ERR_MOUSE, "mouse_example: unable to enable data reporting");
+  }
 
   uint8_t irq_set = BIT(bit_no);
 
