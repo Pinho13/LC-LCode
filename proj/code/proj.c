@@ -5,12 +5,19 @@
 #include "controller/ih/ih.h"
 
 
+#define TIMER_HZ 60
+
 int(proj_main_loop)(int argc, char *argv[]) {
   int ipc_status, r;
   message msg;
   get_int_counter();
   if (subscribe_interrupts() != OK)
     return fail(ERR, "proj_main_loop: unable to subscribe interrupts");
+
+  if (timer_set_frequency(0, TIMER_HZ) != OK) {
+    unsubscribe_interrupts();
+    return fail(ERR_TIMER, "proj_main_loop: unable to set timer frequency");
+  }
 
   while (1)
   {
