@@ -104,21 +104,30 @@ int (vg_draw_rectangle)(uint16_t x,
 
 int (print_xpm)(xpm_map_t xpm, uint16_t x, uint16_t y) {
   xpm_image_t img;
+  enum xpm_image_type type;
+  switch (bytes_per_pixel) {
+    case 1:  type = XPM_INDEXED; break;  // indexed / palette mode
+    case 3:  type = XPM_8_8_8;   break;  // 24-bit direct color
+    case 4:  type = XPM_8_8_8_8; break;  // 32-bit direct color
+    default:
+      return fail(ERR_VIDEO, "print_xpm: unsupported bytes_per_pixel");
+  }
 
-  uint8_t *colors = xpm_load(xpm, XPM_INDEXED, &img);
+  uint8_t *raw = xpm_load(xpm, type, &img);
 
-  if (colors == NULL)
+  if (raw == NULL)
     return fail(ERR_VIDEO, "print_xpm: xpm_load failed");
+
+
+  uint32_t *colors = (uint32_t *) raw;
 
   for (int h = 0; h < img.height; h++) {
     for (int w = 0; w < img.width; w++) {
+      int idx = w + h * img.width;
+      uint32_t color = (type == XPM_INDEXED) ? raw[idx] : colors[idx];
 
-      if (vg_draw_pixel(x + w,
-                        y + h,
-                        colors[w + h * img.width]) != OK) {
-
+      if (vg_draw_pixel(x + w, y + h, color) != OK)
         return fail(ERR_VIDEO, "print_xpm: vg_draw_pixel failed");
-      }
     }
   }
 
