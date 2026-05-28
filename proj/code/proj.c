@@ -3,8 +3,10 @@
 #include "fw/common/utils.h"
 
 #include "controller/ih/ih.h"
+#include "controller/commands.h"
 #include "view/video.h"
 #include "view/scene.h"
+#include "model/editor.h"
 #include "render_flag.h"
 
 
@@ -13,6 +15,9 @@
 int(proj_main_loop)(int argc, char *argv[]) {
   int ipc_status, r;
   message msg;
+
+  if (editor_init() != OK)
+    return fail(ERR, "proj_main_loop: editor_init failed");
 
   if (video_init() != OK)
     return fail(ERR_VIDEO, "proj_main_loop: video_init failed");
@@ -48,7 +53,7 @@ int(proj_main_loop)(int argc, char *argv[]) {
       }
     }
 
-    if (get_dirty())
+    if (get_render())
       view_render();
   }
 
