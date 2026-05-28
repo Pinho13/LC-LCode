@@ -7,6 +7,8 @@
 int subscribe_interrupts();
 int unsubscribe_interrupts();
 
+bool get_quit();
+
 void timer_handler();
 void keyboard_handler();
 void mouse_handler();

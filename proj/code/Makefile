@@ -30,6 +30,7 @@ HDRS = $(find . -name *.c)
 SRCS = proj.c ih.c render_flag.c video.c scene.c font.c
 OBJS = ${SRCS:.c=.o}
 .PATH: controller/ih view
+.PATH.o: build
 
 .PHONY: run
 

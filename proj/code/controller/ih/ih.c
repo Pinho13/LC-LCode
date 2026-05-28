@@ -4,7 +4,14 @@
 #include "fw/common/utils.h"
 #include "render_flag.h"
 
+#define SCANCODE_ESC 0x01
+#define SCANCODE_Q 0x10
+#define SCANCODE_LCTRL 0x1D
+#define SCANCODE_RCTRL 0x1D
+
 static int blink_tick = 0;
+static bool ctrl_pressed = false;
+static bool quit_flag = false;
 
 static uint8_t irq_timer = 0, irq_keyboard = 0, irq_mouse = 0;
 packet_scancode ps = {
@@ -47,11 +54,6 @@ int subscribe_interrupts() {
 int unsubscribe_interrupts() {
   int errors = 0;
 
-  if (my_mouse_disable_data_reporting() != OK) {
-    errors = 1;
-    fail(ERR_MOUSE, "unsubscribe_interrupts: unable to disable mouse data reporting");
-  }
-
   if (mouse_unsubscribe_int() != OK) {
     errors = 1;
     fail(ERR_MOUSE, "unsubscribe_interrupts: unable to unsubscribe mouse interrupt");
@@ -67,6 +69,11 @@ int unsubscribe_interrupts() {
     fail(ERR_TIMER, "unsubscribe_interrupts: unable to unsubscribe timer interrupt");
   }
 
+  if (my_mouse_disable_data_reporting() != OK) {
+    errors = 1;
+    fail(ERR_MOUSE, "unsubscribe_interrupts: unable to disable mouse data reporting");
+  }
+
   return errors;
 }
 
@@ -77,16 +84,28 @@ void timer_handler() {
     set_dirty(DIRTY_CURSOR);
 }
 
+bool get_quit() { return quit_flag; }
+
 void keyboard_handler() {
   keyboard_ih();
-            
-  if (build_scancode(&ps) != OK) {
+
+  if (build_scancode(&ps) != OK) return;
+
+  if (ps.two_byte) {
+    if ((ps.bytes[1] & 0x7F) == SCANCODE_RCTRL)
+      ctrl_pressed = ps.make;
     return;
   }
 
-  if (ps.two_byte) {
+  if (ps.bytes[0] == SCANCODE_LCTRL) {
+    ctrl_pressed = ps.make;
     return;
   }
+
+  if (!ps.make) return;
+
+  if (ps.bytes[0] == SCANCODE_ESC || (ps.bytes[0] == SCANCODE_Q && ctrl_pressed))
+    quit_flag = true;
 
   keyboard_print_scancode(ps);
 }

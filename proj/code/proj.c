@@ -30,7 +30,7 @@ int(proj_main_loop)(int argc, char *argv[]) {
     return fail(ERR_TIMER, "proj_main_loop: unable to set timer frequency");
   }
 
-  while (1)
+  while (!get_quit())
   {
     if ((r = driver_receive(ANY, &msg, &ipc_status))!= OK) {
       printf("driver_receive failed with: %d", r);
@@ -52,9 +52,12 @@ int(proj_main_loop)(int argc, char *argv[]) {
       view_render();
   }
 
+  scene_cleanup();
+  video_cleanup();
+
   if (unsubscribe_interrupts() != OK)
     return fail(ERR, "proj_main_loop: unable to unsubscribe interrupts");
-  
+
   return 0;
 }
 
