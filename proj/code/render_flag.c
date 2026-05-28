@@ -1,7 +1,10 @@
 #include "render_flag.h"
 
-static DirtyFlags dirty = DIRTY_ALL;
+static int render_mode = RENDER_NONE;
 
-void set_dirty(DirtyFlags flags) { dirty |= flags; }
-DirtyFlags get_dirty() { return dirty; }
-void clear_dirty() { dirty = DIRTY_NONE; }
+void set_render(int mode) {
+  if (mode > render_mode) render_mode = mode;
+}
+
+int get_render() { return render_mode; }
+void clear_render() { render_mode = RENDER_NONE; }

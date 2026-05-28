@@ -2,52 +2,80 @@
 #include "video.h"
 #include "font.h"
 #include "render_flag.h"
-#include "fw/drivers/timer.h"
-#include "fw/common/utils.h"
+#include "model/editor.h"
 
 #define COLOR_BG 0x1E1E1E
-#define COLOR_CURSOR 0xFFFFFF
+#define COLOR_TEXT 0xFFFFFF
 
-#define CURSOR_X 10
-#define CURSOR_Y 10
-#define CURSOR_BAR_W 2
+#define EDITOR_X 10
+#define EDITOR_Y 10
 
 static SceneID current_scene = SCENE_EDITOR;
+static int prev_col = 0;
+static int prev_row = 0;
 
-static void render_full() {
-  bb_clear(COLOR_BG);
+static void draw_cell(int col, int row) {
+  int x = EDITOR_X + col * FONT_W;
+  int y = EDITOR_Y + row * FONT_H;
+  bb_draw_rect(x, y, FONT_W, FONT_H, COLOR_BG);
+  const char *line = editor_get_line(row);
+  if (line[col]) draw_char(x, y, line[col], COLOR_TEXT);
 }
 
-static void render_cursor() {
-  bool visible = (get_int_counter() / BLINK_TICKS) % 2 == 0;
-  bb_draw_rect(CURSOR_X, CURSOR_Y, CURSOR_BAR_W, FONT_H,
-               visible ? COLOR_CURSOR : COLOR_BG);
+static void draw_cursor(int col, int row) {
+  int x = EDITOR_X + col * FONT_W;
+  int y = EDITOR_Y + row * FONT_H;
+  bb_draw_rect(x, y, FONT_W, FONT_H, COLOR_TEXT);
 }
 
-static void render_lines() {
-  draw_string(10, 40, "THE FORGE \n OHHHH SIMMMMM", COLOR_CURSOR);
+static void flip_cell(int col, int row) {
+  vg_flip_region(EDITOR_X + col * FONT_W, EDITOR_Y + row * FONT_H, FONT_W, FONT_H);
 }
 
 int scene_init(SceneID id) {
   current_scene = id;
-  set_dirty(DIRTY_ALL | DIRTY_LINE | DIRTY_CURSOR);
+  set_render(RENDER_FULL);
   return 0;
 }
 
 void scene_cleanup() {}
 
 void view_render() {
-  DirtyFlags flags = get_dirty();
-  clear_dirty();
-  bool drew = false;
+  int mode = get_render();
+  clear_render();
+
+  int col = editor_get_cursor_col();
+  int row = editor_get_cursor_row();
 
   switch (current_scene) {
     case SCENE_EDITOR:
-      if (flags & DIRTY_ALL) { render_full(); drew = true; }
-      if (flags & DIRTY_LINE) { render_lines(); drew = true; }
-      if (flags & DIRTY_CURSOR) { render_cursor(); drew = true; }
+      switch (mode) {
+        case RENDER_FULL:
+          bb_clear(COLOR_BG);
+          for (int r = 0; r < editor_get_row_count(); r++)
+            draw_string(EDITOR_X, EDITOR_Y + r * FONT_H, editor_get_line(r), COLOR_TEXT);
+          draw_cursor(col, row);
+          vg_flip_buffer();
+          prev_col = col;
+          prev_row = row;
+          break;
+
+        case RENDER_CHAR:
+          draw_cell(prev_col, prev_row);
+          flip_cell(prev_col, prev_row);
+          draw_cursor(col, row);
+          flip_cell(col, row);
+          prev_col = col;
+          prev_row = row;
+          break;
+
+        case RENDER_CURSOR:
+          draw_cursor(col, row);
+          flip_cell(col, row);
+          break;
+
+        default: break;
+      }
       break;
   }
-
-  if (drew) vg_flip_buffer();
 }

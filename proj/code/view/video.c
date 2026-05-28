@@ -59,6 +59,16 @@ void bb_draw_rect(uint16_t x, uint16_t y, uint16_t w, uint16_t h, uint32_t color
   }
 }
 
+void vg_flip_region(uint16_t x, uint16_t y, uint16_t w, uint16_t h) {
+  unsigned bpp = vg_get_bytes_per_pixel();
+  unsigned h_res = vg_get_h_res();
+  uint8_t *vram = vg_get_video_mem();
+  for (uint16_t row = y; row < y + h; row++) {
+    unsigned offset = (row * h_res + x) * bpp;
+    memcpy(vram + offset, back_buffer + offset, w * bpp);
+  }
+}
+
 void bb_clear(uint32_t color) {
   if (color == 0) {
     memset(back_buffer, 0, vg_get_frame_size());

@@ -2,15 +2,12 @@
 
 #include <lcom/lcf.h>
 
-typedef uint8_t DirtyFlags;
 
-#define BLINK_TICKS 15
+#define RENDER_NONE   0
+#define RENDER_CURSOR 1
+#define RENDER_CHAR   2
+#define RENDER_FULL   3
 
-#define DIRTY_NONE   0
-#define DIRTY_CURSOR (1 << 0)
-#define DIRTY_LINE (1 << 1)
-#define DIRTY_ALL (1 << 2)
-
-void set_dirty(DirtyFlags flags);
-DirtyFlags get_dirty();
-void clear_dirty();
+void set_render(int mode);
+int get_render();
+void clear_render();
