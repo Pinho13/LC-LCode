@@ -40,6 +40,18 @@ void editor_delete_char() {
   }
 }
 
+void editor_delete_word() {
+  if (cursor_col == 0) return;
+  while (cursor_col > 0 && lines[cursor_row][cursor_col - 1] == ' ') {
+    cursor_col--;
+    lines[cursor_row][cursor_col] = '\0';
+  }
+  while (cursor_col > 0 && lines[cursor_row][cursor_col - 1] != ' ') {
+    cursor_col--;
+    lines[cursor_row][cursor_col] = '\0';
+  }
+}
+
 const char *editor_get_line(int row) {
   if (row < 0 || row >= MAX_LINES) return "";
   return lines[row];

@@ -56,9 +56,10 @@ void keyboard_process() {
 
   if (!ps.make) return;
 
-  KeyEvent ev = {0};
-  ev.ctrl  = ctrl_pressed;
-  ev.shift = shift_pressed;
+  KeyEvent ev = {
+    .c = 0, .ctrl = ctrl_pressed, .shift = shift_pressed,
+    .backspace = false, .enter = false, .escape = false
+  };
 
   if (code == SCANCODE_ESC) { ev.escape = true; commands_dispatch(ev); return; }
   if (code == SCANCODE_BACKSPACE) { ev.backspace= true; commands_dispatch(ev); return; }

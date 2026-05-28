@@ -69,6 +69,17 @@ void view_render() {
           prev_row = row;
           break;
 
+        case RENDER_WORD: {
+          int end = prev_col;
+          for (int c = col; c <= end; c++) draw_cell(c, prev_row);
+          draw_cursor(col, row);
+          vg_flip_region(EDITOR_X + col * FONT_W, EDITOR_Y + prev_row * FONT_H,
+                         (end - col + 1) * FONT_W, FONT_H);
+          prev_col = col;
+          prev_row = row;
+          break;
+        }
+
         case RENDER_CURSOR:
           draw_cursor(col, row);
           flip_cell(col, row);

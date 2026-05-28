@@ -12,13 +12,18 @@ void commands_dispatch(KeyEvent ev) {
     return;
   }
 
-  if (ev.ctrl) return;
-
   if (ev.backspace) {
-    editor_delete_char();
-    set_render(RENDER_CHAR);
+    if (ev.ctrl) {
+      editor_delete_word();
+      set_render(RENDER_WORD);
+    } else {
+      editor_delete_char();
+      set_render(RENDER_CHAR);
+    }
     return;
   }
+
+  if (ev.ctrl) return;
 
   if (ev.enter) {
     editor_insert_char('\n');
