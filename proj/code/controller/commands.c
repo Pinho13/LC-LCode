@@ -23,6 +23,18 @@ void commands_dispatch(KeyEvent ev) {
     return;
   }
 
+  if (ev.dir != DIR_NONE) {
+    switch (ev.dir) {
+      case DIR_LEFT:  ev.ctrl ? editor_move_word_left()  : editor_move_left();  break;
+      case DIR_RIGHT: ev.ctrl ? editor_move_word_right() : editor_move_right(); break;
+      case DIR_UP:    editor_move_up();   break;
+      case DIR_DOWN:  editor_move_down(); break;
+      default: break;
+    }
+    set_render(RENDER_CHAR);
+    return;
+  }
+
   if (ev.ctrl) return;
 
   if (ev.enter) {

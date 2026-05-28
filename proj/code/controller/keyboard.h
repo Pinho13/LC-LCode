@@ -2,6 +2,8 @@
 
 #include <lcom/lcf.h>
 
+typedef enum { DIR_NONE, DIR_LEFT, DIR_RIGHT, DIR_UP, DIR_DOWN } Direction;
+
 typedef struct {
   char c;
   bool ctrl;
@@ -9,6 +11,7 @@ typedef struct {
   bool backspace;
   bool enter;
   bool escape;
+  Direction dir;
 } KeyEvent;
 
 void keyboard_process();

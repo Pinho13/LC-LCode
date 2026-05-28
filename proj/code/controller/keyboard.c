@@ -9,6 +9,10 @@
 #define SCANCODE_RCTRL 0x1D
 #define SCANCODE_LSHIFT 0x2A
 #define SCANCODE_RSHIFT 0x36
+#define SCANCODE_UP     0x48
+#define SCANCODE_DOWN   0x50
+#define SCANCODE_LEFT   0x4B
+#define SCANCODE_RIGHT  0x4D
 
 static const char sc_lower[58] = {
   0,    0,   '1', '2', '3', '4', '5', '6',  /* 0x00-0x07 */
@@ -43,26 +47,38 @@ void keyboard_process() {
   keyboard_ih();
   if (build_scancode(&ps) != OK) return;
 
-  if (ps.two_byte) {
-    if ((ps.bytes[1] & 0x7F) == SCANCODE_RCTRL)
-      ctrl_pressed = ps.make;
+  if (ps.two_byte) return;
+
+  if (ps.size == 2) {
+    uint8_t code2 = ps.bytes[1] & 0x7F;
+    if (code2 == SCANCODE_RCTRL) { ctrl_pressed = ps.make; return; }
+    if (!ps.make) return;
+    KeyEvent ev = {
+      .c = 0, .ctrl = ctrl_pressed, .shift = shift_pressed,
+      .backspace = false, .enter = false, .escape = false, .dir = DIR_NONE
+    };
+    if (code2 == SCANCODE_LEFT) ev.dir = DIR_LEFT;
+    else if (code2 == SCANCODE_RIGHT) ev.dir = DIR_RIGHT;
+    else if (code2 == SCANCODE_UP) ev.dir = DIR_UP;
+    else if (code2 == SCANCODE_DOWN) ev.dir = DIR_DOWN;
+    if (ev.dir != DIR_NONE) commands_dispatch(ev);
     return;
   }
 
   uint8_t code = ps.bytes[0] & 0x7F;
 
-  if (code == SCANCODE_LCTRL){ ctrl_pressed  = ps.make; return; }
+  if (code == SCANCODE_LCTRL) { ctrl_pressed = ps.make; return; }
   if (code == SCANCODE_LSHIFT || code == SCANCODE_RSHIFT) { shift_pressed = ps.make; return; }
 
   if (!ps.make) return;
 
   KeyEvent ev = {
     .c = 0, .ctrl = ctrl_pressed, .shift = shift_pressed,
-    .backspace = false, .enter = false, .escape = false
+    .backspace = false, .enter = false, .escape = false, .dir = DIR_NONE
   };
 
   if (code == SCANCODE_ESC) { ev.escape = true; commands_dispatch(ev); return; }
-  if (code == SCANCODE_BACKSPACE) { ev.backspace= true; commands_dispatch(ev); return; }
+  if (code == SCANCODE_BACKSPACE) { ev.backspace = true; commands_dispatch(ev); return; }
   if (code == SCANCODE_ENTER) { ev.enter = true; commands_dispatch(ev); return; }
 
   if (code < 58) {

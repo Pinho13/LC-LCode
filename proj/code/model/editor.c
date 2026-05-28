@@ -52,6 +52,48 @@ void editor_delete_word() {
   }
 }
 
+void editor_move_left() {
+  if (cursor_col > 0) cursor_col--;
+  else if (cursor_row > 0) { cursor_row--; cursor_col = strlen(lines[cursor_row]); }
+}
+
+void editor_move_right() {
+  int len = strlen(lines[cursor_row]);
+  if (cursor_col < len) cursor_col++;
+  else if (cursor_row < row_count - 1) { cursor_row++; cursor_col = 0; }
+}
+
+void editor_move_up() {
+  if (cursor_row > 0) {
+    cursor_row--;
+    int len = strlen(lines[cursor_row]);
+    if (cursor_col > len) cursor_col = len;
+  }
+}
+
+void editor_move_down() {
+  if (cursor_row < row_count - 1) {
+    cursor_row++;
+    int len = strlen(lines[cursor_row]);
+    if (cursor_col > len) cursor_col = len;
+  }
+}
+
+void editor_move_word_left() {
+  while (cursor_col > 0 && lines[cursor_row][cursor_col - 1] == ' ')
+    cursor_col--;
+  while (cursor_col > 0 && lines[cursor_row][cursor_col - 1] != ' ')
+    cursor_col--;
+}
+
+void editor_move_word_right() {
+  int len = strlen(lines[cursor_row]);
+  while (cursor_col < len && lines[cursor_row][cursor_col] != ' ')
+    cursor_col++;
+  while (cursor_col < len && lines[cursor_row][cursor_col] == ' ')
+    cursor_col++;
+}
+
 const char *editor_get_line(int row) {
   if (row < 0 || row >= MAX_LINES) return "";
   return lines[row];
