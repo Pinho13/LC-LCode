@@ -3,6 +3,9 @@
 #include "fw/common/utils.h"
 
 #include "controller/ih/ih.h"
+#include "view/video.h"
+#include "view/scene.h"
+#include "render_flag.h"
 
 
 #define TIMER_HZ 60
@@ -10,7 +13,15 @@
 int(proj_main_loop)(int argc, char *argv[]) {
   int ipc_status, r;
   message msg;
-  get_int_counter();
+
+  if (video_init() != OK)
+    return fail(ERR_VIDEO, "proj_main_loop: video_init failed");
+
+  if (scene_init(SCENE_EDITOR) != OK) {
+    video_cleanup();
+    return fail(ERR, "proj_main_loop: scene_init failed");
+  }
+
   if (subscribe_interrupts() != OK)
     return fail(ERR, "proj_main_loop: unable to subscribe interrupts");
 
@@ -36,6 +47,9 @@ int(proj_main_loop)(int argc, char *argv[]) {
           break;
       }
     }
+
+    if (get_dirty())
+      view_render();
   }
 
   if (unsubscribe_interrupts() != OK)

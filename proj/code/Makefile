@@ -2,22 +2,32 @@
 PROG=proj
 
 # Framework path
-FRAMEWORK = ../../framework/liblcomfw.a
-FRAMEWORK_INCLUDES = ../../framework/includes
+FRAMEWORK_DIR      = ../../framework
+FRAMEWORK_INCLUDES = ${FRAMEWORK_DIR}/includes
+
+# Link .o files directly — linking the .a causes LCF stubs to win over framework
+# implementations due to static archive scan order. This way implementations aren't missing at runtime.
+FW_OBJS = ${FRAMEWORK_DIR}/timer.o \
+          ${FRAMEWORK_DIR}/keyboard.o \
+          ${FRAMEWORK_DIR}/mouse.o \
+          ${FRAMEWORK_DIR}/kbc.o \
+          ${FRAMEWORK_DIR}/video.o \
+          ${FRAMEWORK_DIR}/utils.o \
+          ${FRAMEWORK_DIR}/rtc.o
 
 # additional compilation flags
 # "-Wall -Wextra -Werror -I . -std=c11 -Wno-unused-parameter" are already set
 CFLAGS += -pedantic -I${FRAMEWORK_INCLUDES}
 
 # list of library dependencies (LCF)
-DPADD += ${FRAMEWORK} ${LIBLCF}
-LDADD += ${FRAMEWORK} -llcf
+DPADD += ${FW_OBJS} ${LIBLCF}
+LDADD += ${FW_OBJS} -llcf
 LDLIBS += -lm
 
 # define headers dependencies
 HDRS = $(find . -name *.c)
 
-SRCS = proj.c ih.c video.c
+SRCS = proj.c ih.c render_flag.c video.c scene.c
 OBJS = ${SRCS:.c=.o}
 .PATH: controller/ih view
 

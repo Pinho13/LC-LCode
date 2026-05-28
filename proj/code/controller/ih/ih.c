@@ -2,6 +2,11 @@
 
 #include "ih.h"
 #include "fw/common/utils.h"
+#include "render_flag.h"
+
+#define BLINK_TICKS 30  //every half sec
+
+static int blink_tick = 0;
 
 static uint8_t irq_timer = 0, irq_keyboard = 0, irq_mouse = 0;
 packet_scancode ps = {
@@ -69,6 +74,9 @@ int unsubscribe_interrupts() {
 
 void timer_handler() {
   timer_int_handler();
+  blink_tick++;
+  if (blink_tick % BLINK_TICKS == 0)
+    set_dirty(DIRTY_CURSOR);
 }
 
 void keyboard_handler() {
