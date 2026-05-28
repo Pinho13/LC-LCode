@@ -1,12 +1,17 @@
 #include <lcom/lcf.h>
 
 #include "fw/common/utils.h"
+#include <unistd.h>
+#include <sys/stat.h>
+
+#define WORK_DIR "/home/lcom/labs/proj/docs"
 
 #include "controller/ih/ih.h"
 #include "controller/commands.h"
 #include "view/video.h"
 #include "view/scene.h"
 #include "model/editor.h"
+#include "model/command_bar.h"
 #include "render_flag.h"
 
 
@@ -15,6 +20,11 @@
 int(proj_main_loop)(int argc, char *argv[]) {
   int ipc_status, r;
   message msg;
+
+  mkdir(WORK_DIR, 0755);
+  chdir(WORK_DIR);
+
+  command_bar_init(argc > 1 ? argv[1] : "untitled");
 
   if (editor_init() != OK)
     return fail(ERR, "proj_main_loop: editor_init failed");
