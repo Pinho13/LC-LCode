@@ -4,8 +4,6 @@
 #include "fw/common/utils.h"
 #include "render_flag.h"
 
-#define BLINK_TICKS 30  //every half sec
-
 static int blink_tick = 0;
 
 static uint8_t irq_timer = 0, irq_keyboard = 0, irq_mouse = 0;

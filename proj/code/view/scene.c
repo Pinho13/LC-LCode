@@ -1,5 +1,6 @@
 #include "scene.h"
 #include "video.h"
+#include "font.h"
 #include "render_flag.h"
 #include "fw/drivers/timer.h"
 #include "fw/common/utils.h"
@@ -9,9 +10,7 @@
 
 #define CURSOR_X 10
 #define CURSOR_Y 10
-#define CURSOR_W 10
-#define CURSOR_H 20
-#define BLINK_TICKS 30
+#define CURSOR_BAR_W 2
 
 static SceneID current_scene = SCENE_EDITOR;
 
@@ -21,17 +20,17 @@ static void render_full() {
 
 static void render_cursor() {
   bool visible = (get_int_counter() / BLINK_TICKS) % 2 == 0;
-  bb_draw_rect(CURSOR_X, CURSOR_Y, CURSOR_W, CURSOR_H,
+  bb_draw_rect(CURSOR_X, CURSOR_Y, CURSOR_BAR_W, FONT_H,
                visible ? COLOR_CURSOR : COLOR_BG);
 }
 
 static void render_lines() {
-  // stub — implemented when model/editor.c exists
+  draw_string(10, 40, "THE FORGE \n OHHHH SIMMMMM", COLOR_CURSOR);
 }
 
 int scene_init(SceneID id) {
   current_scene = id;
-  set_dirty(DIRTY_ALL);
+  set_dirty(DIRTY_ALL | DIRTY_LINE | DIRTY_CURSOR);
   return 0;
 }
 

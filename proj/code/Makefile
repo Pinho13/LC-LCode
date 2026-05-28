@@ -27,7 +27,7 @@ LDLIBS += -lm
 # define headers dependencies
 HDRS = $(find . -name *.c)
 
-SRCS = proj.c ih.c render_flag.c video.c scene.c
+SRCS = proj.c ih.c render_flag.c video.c scene.c font.c
 OBJS = ${SRCS:.c=.o}
 .PATH: controller/ih view
 

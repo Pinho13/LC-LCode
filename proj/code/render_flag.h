@@ -4,6 +4,8 @@
 
 typedef uint8_t DirtyFlags;
 
+#define BLINK_TICKS 15
+
 #define DIRTY_NONE   0
 #define DIRTY_CURSOR (1 << 0)
 #define DIRTY_LINE (1 << 1)
