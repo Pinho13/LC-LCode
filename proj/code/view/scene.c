@@ -1,11 +1,16 @@
 #include "scene.h"
 #include "video.h"
 #include "font.h"
+#include "fw/drivers/video.h"
 #include "render_flag.h"
 #include "model/editor.h"
+#include "model/command_bar.h"
+#include <string.h>
 
 #define COLOR_BG 0x1E1E1E
 #define COLOR_TEXT 0xFFFFFF
+#define COLOR_STATUS_BG 0x007ACC
+#define COLOR_STATUS_FG 0xFFFFFF
 
 #define EDITOR_X 10
 #define EDITOR_Y 10
@@ -32,6 +37,29 @@ static void flip_cell(int col, int row) {
   vg_flip_region(EDITOR_X + col * FONT_W, EDITOR_Y + row * FONT_H, FONT_W, FONT_H);
 }
 
+static void render_status_bar() {
+  unsigned h_res = vg_get_h_res();
+  unsigned v_res = vg_get_v_res();
+  int sy = (int)v_res - FONT_H;
+
+  bb_draw_rect(0, sy, h_res, FONT_H, COLOR_STATUS_BG);
+
+  if (command_bar_get_mode() == MODE_COMMAND) {
+    const char *input = command_bar_get_input();
+    draw_string(4, sy, ":", COLOR_STATUS_FG);
+    int px = 4 + FONT_W;
+    draw_string(px, sy, input, COLOR_STATUS_FG);
+    int cx = px + (int)strlen(input) * FONT_W;
+    bb_draw_rect(cx, sy, FONT_W, FONT_H, COLOR_STATUS_FG);
+  } else {
+    draw_string(4, sy, command_bar_get_filename(), COLOR_STATUS_FG);
+  }
+}
+
+static void flip_status_bar() {
+  vg_flip_region(0, vg_get_v_res() - FONT_H, vg_get_h_res(), FONT_H);
+}
+
 int scene_init(SceneID id) {
   current_scene = id;
   set_render(RENDER_FULL);
@@ -55,16 +83,8 @@ void view_render() {
           for (int r = 0; r < editor_get_row_count(); r++)
             draw_string(EDITOR_X, EDITOR_Y + r * FONT_H, editor_get_line(r), COLOR_TEXT);
           draw_cursor(col, row);
+          render_status_bar();
           vg_flip_buffer();
-          prev_col = col;
-          prev_row = row;
-          break;
-
-        case RENDER_CHAR:
-          draw_cell(prev_col, prev_row);
-          flip_cell(prev_col, prev_row);
-          draw_cursor(col, row);
-          flip_cell(col, row);
           prev_col = col;
           prev_row = row;
           break;
@@ -80,9 +100,18 @@ void view_render() {
           break;
         }
 
-        case RENDER_CURSOR:
+        case RENDER_CHAR:
+          draw_cell(prev_col, prev_row);
+          flip_cell(prev_col, prev_row);
           draw_cursor(col, row);
           flip_cell(col, row);
+          prev_col = col;
+          prev_row = row;
+          break;
+
+        case RENDER_STATUS:
+          render_status_bar();
+          flip_status_bar();
           break;
 
         default: break;
