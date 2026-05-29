@@ -13,6 +13,11 @@ static int visible_rows = MAX_LINES;
 static int visible_cols = MAX_COLS;
 static bool scroll_dirty = false;
 
+static bool sel_active = false;
+static int sel_anchor_row = 0;
+static int sel_anchor_col = 0;
+static bool sel_dirty = false;
+
 int editor_init() {
   memset(lines, 0, sizeof(lines));
   cursor_row = 0;
@@ -21,6 +26,8 @@ int editor_init() {
   scroll_row = 0;
   scroll_col = 0;
   scroll_dirty = false;
+  sel_active = false;
+  sel_dirty = false;
   return 0;
 }
 
@@ -49,6 +56,8 @@ static void clamp_scroll() {
     scroll_col = cursor_col - visible_cols + 1;
     scroll_dirty = true;
   }
+
+  if (sel_active) sel_dirty = true;
 }
 
 void editor_scroll_by(int drow, int dcol) {
@@ -208,3 +217,72 @@ int editor_get_cursor_row() { return cursor_row; }
 int editor_get_cursor_col() { return cursor_col; }
 int editor_get_scroll_row() { return scroll_row; }
 int editor_get_scroll_col() { return scroll_col; }
+
+//Standardizes range so it starts before it ends
+void editor_sel_get_range(int *start_row, int *start_col, int *end_row, int *end_col) {
+  bool cursor_after = (cursor_row > sel_anchor_row) || (cursor_row == sel_anchor_row && cursor_col >= sel_anchor_col);
+  if (cursor_after) {
+    *start_row = sel_anchor_row; 
+    *start_col = sel_anchor_col;
+    *end_row = cursor_row; 
+    *end_col = cursor_col;
+  } 
+  else {
+    *start_row = cursor_row; 
+    *start_col = cursor_col;
+    *end_row = sel_anchor_row; 
+    *end_col = sel_anchor_col;
+  }
+}
+
+void editor_delete_selection() {
+  if (!sel_active) return;
+  int start_row, start_col, end_row, end_col;
+  editor_sel_get_range(&start_row, &start_col, &end_row, &end_col);
+
+  if (start_row == end_row) {
+    int len = strlen(lines[start_row]);
+    memmove(&lines[start_row][start_col], &lines[start_row][end_col], len - end_col + 1);
+  } 
+  else {
+    int tail_len = strlen(lines[end_row]) - end_col;
+    if (start_col + tail_len < MAX_COLS){
+      memcpy(&lines[start_row][start_col], &lines[end_row][end_col], tail_len + 1);
+    }
+    else {
+      lines[start_row][start_col] = '\0';
+    }
+    int removed = end_row - start_row;
+    memmove(lines[start_row + 1], lines[end_row + 1], (row_count - end_row - 1) * MAX_COLS);
+    memset(lines[row_count - removed], 0, removed * MAX_COLS);
+    row_count -= removed;
+  }
+
+  cursor_row = start_row;
+  cursor_col = start_col;
+  sel_active = false;
+  sel_dirty = true;
+  clamp_scroll();
+}
+
+void editor_sel_set_anchor() {
+  sel_anchor_row = cursor_row;
+  sel_anchor_col = cursor_col;
+  sel_active = true;
+  sel_dirty = true;
+}
+
+void editor_sel_clear() {
+  if (sel_active) sel_dirty = true;
+  sel_active = false;
+}
+
+bool editor_sel_is_active() { return sel_active; }
+
+
+
+bool editor_consume_sel_dirty() {
+  bool d = sel_dirty;
+  sel_dirty = false;
+  return d;
+}

@@ -33,3 +33,10 @@ int editor_get_cursor_col();
 
 int editor_get_scroll_row();
 int editor_get_scroll_col();
+
+void editor_delete_selection();
+void editor_sel_set_anchor();
+void editor_sel_clear();
+bool editor_sel_is_active();
+void editor_sel_get_range(int *start_row, int *start_col, int *end_row, int *end_col);
+bool editor_consume_sel_dirty();
