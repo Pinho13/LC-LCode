@@ -139,8 +139,10 @@ void commands_dispatch(KeyEvent ev) {
     switch (ev.dir) {
       case DIR_LEFT:  ev.ctrl ? editor_move_word_left()  : editor_move_left();  break;
       case DIR_RIGHT: ev.ctrl ? editor_move_word_right() : editor_move_right(); break;
-      case DIR_UP:    editor_move_up();   break;
-      case DIR_DOWN:  editor_move_down(); break;
+      case DIR_UP: editor_move_up(); break;
+      case DIR_DOWN: editor_move_down(); break;
+      case DIR_HOME: editor_move_home(); break;
+      case DIR_END: editor_move_end(); break;
       default: break;
     }
     set_render_ex(RENDER_CHAR);

@@ -13,6 +13,8 @@
 #define SCANCODE_DOWN   0x50
 #define SCANCODE_LEFT   0x4B
 #define SCANCODE_RIGHT  0x4D
+#define SCANCODE_HOME   0x47
+#define SCANCODE_END    0x4F
 
 static const char sc_lower[58] = {
   0,    0,   '1', '2', '3', '4', '5', '6',  /* 0x00-0x07 */
@@ -61,6 +63,8 @@ void keyboard_process() {
     else if (code2 == SCANCODE_RIGHT) ev.dir = DIR_RIGHT;
     else if (code2 == SCANCODE_UP) ev.dir = DIR_UP;
     else if (code2 == SCANCODE_DOWN) ev.dir = DIR_DOWN;
+    else if (code2 == SCANCODE_HOME) ev.dir = DIR_HOME;
+    else if (code2 == SCANCODE_END) ev.dir = DIR_END;
     if (ev.dir != DIR_NONE) commands_dispatch(ev);
     return;
   }

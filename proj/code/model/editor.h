@@ -22,6 +22,8 @@ void editor_move_up();
 void editor_move_down();
 void editor_move_word_left();
 void editor_move_word_right();
+void editor_move_home();
+void editor_move_end();
 
 const char *editor_get_line(int row);
 int editor_get_row_count();

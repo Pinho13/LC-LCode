@@ -188,6 +188,16 @@ void editor_move_word_right() {
   clamp_scroll();
 }
 
+void editor_move_home() {
+  cursor_col = 0;
+  clamp_scroll();
+}
+
+void editor_move_end() {
+  cursor_col = strlen(lines[cursor_row]);
+  clamp_scroll();
+}
+
 const char *editor_get_line(int row) {
   if (row < 0 || row >= MAX_LINES) return "";
   return lines[row];
