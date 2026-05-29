@@ -5,6 +5,7 @@
 #include "render_flag.h"
 #include "model/editor.h"
 #include "model/command_bar.h"
+#include "model/filetree.h"
 #include <string.h>
 
 #define COLOR_BG 0x1E1E1E
@@ -14,12 +15,21 @@
 #define COLOR_STATUS_FG 0xFFFFFF
 #define COLOR_GUTTER_BG 0x252526
 #define COLOR_GUTTER_FG 0x858585
+#define COLOR_FILETREE_BG 0x1E1E2E
+#define COLOR_FILETREE_SEL 0x37373D
+#define COLOR_FILETREE_DIR 0x4EC9B0
+#define COLOR_FILETREE_FILE 0xCCCCCC
+#define COLOR_FILETREE_SEP 0x3C3C3C
+
+#define FILETREE_COLS 20
+#define FILETREE_W_PX (FILETREE_COLS * FONT_W)
 
 #define EDITOR_Y 10
 #define GUTTER_DIGITS 3  /* MAX_LINES=500, so 3 digits max */
 #define GUTTER_PAD 2     /* pixels between last digit and text */
 
 static void draw_gutter(int scroll_row, int end_r);
+static void draw_filetree(int vrows);
 
 static SceneID current_scene = SCENE_EDITOR;
 static int prev_col = 0;
@@ -133,10 +143,17 @@ void view_render() {
     case SCENE_EDITOR:
       switch (mode) {
         case RENDER_FULL: {
+          /* Recompute layout in case filetree was toggled. */
+          filetree_w = filetree_is_visible() ? FILETREE_W_PX : 0;
+          editor_x = filetree_w + gutter_w;
+          vis_cols = ((int)vg_get_h_res() - editor_x) / FONT_W;
+          editor_set_viewport(vis_rows, vis_cols);
+
           bb_clear(COLOR_BG);
           int end_r = scroll_row + vis_rows;
           if (end_r > editor_get_row_count()) end_r = editor_get_row_count();
 
+          if (filetree_is_visible()) draw_filetree(vis_rows);
           draw_gutter(scroll_row, end_r);
           if (editor_sel_is_active()) draw_selection_bg(end_r);
 
@@ -199,6 +216,35 @@ void view_render() {
   }
 }
 
+
+int scene_get_vis_rows() { return vis_rows; }
+
+static void draw_filetree(int vrows) {
+  unsigned v_res = vg_get_v_res();
+  bb_draw_rect(0, 0, filetree_w, (int)v_res, COLOR_FILETREE_BG);
+  bb_draw_rect(filetree_w - 1, 0, 1, (int)v_res, COLOR_FILETREE_SEP);
+
+  int ft_cursor = filetree_get_cursor();
+  int ft_scroll = filetree_get_scroll();
+  int ft_count = filetree_get_count();
+  bool focused = filetree_is_focused();
+
+  for (int i = ft_scroll; i < ft_scroll + vrows && i < ft_count; i++) {
+    const FileEntry *e = filetree_get_entry(i);
+    int y = EDITOR_Y + (i - ft_scroll) * FONT_H;
+
+    if (i == ft_cursor)
+      bb_draw_rect(0, y, filetree_w - 1, FONT_H, focused ? COLOR_FILETREE_SEL : COLOR_GUTTER_BG);
+
+    /* Truncate name to fit, leaving 1 char of left padding. */
+    char buf[FILETREE_COLS];
+    strncpy(buf, e->name, FILETREE_COLS - 1);
+    buf[FILETREE_COLS - 1] = '\0';
+
+    uint32_t fg = e->is_dir ? COLOR_FILETREE_DIR : COLOR_FILETREE_FILE;
+    draw_string(4, y, buf, fg);
+  }
+}
 
 static void draw_gutter(int scroll_row, int end_r) {
   bb_draw_rect(filetree_w, EDITOR_Y, gutter_w, vis_rows * FONT_H, COLOR_GUTTER_BG);
