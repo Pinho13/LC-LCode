@@ -10,7 +10,8 @@ static bool quit_flag = false;
 /* Use instead of set_render when the operation might have scrolled the
  * viewport — upgrades to RENDER_FULL if the scroll offset changed. */
 static void set_render_ex(int mode) {
-  set_render(editor_consume_scroll_dirty() ? RENDER_FULL : mode);
+  bool needs_full = editor_consume_scroll_dirty() || editor_consume_sel_dirty() || editor_sel_is_active();
+  set_render(needs_full ? RENDER_FULL : mode);
 }
 
 bool get_quit() { return quit_flag; }
@@ -119,7 +120,10 @@ void commands_dispatch(KeyEvent ev) {
   }
 
   if (ev.backspace) {
-    if (ev.ctrl) {
+    if (editor_sel_is_active()) {
+      editor_delete_selection();
+      set_render_ex(RENDER_FULL);
+    } else if (ev.ctrl) {
       if (editor_get_cursor_col() == 0) {
         editor_delete_char();
         set_render_ex(RENDER_FULL);
@@ -136,8 +140,13 @@ void commands_dispatch(KeyEvent ev) {
   }
 
   if (ev.dir != DIR_NONE) {
+    if (ev.shift) {
+      if (!editor_sel_is_active()) editor_sel_set_anchor();
+    } else {
+      editor_sel_clear();
+    }
     switch (ev.dir) {
-      case DIR_LEFT:  ev.ctrl ? editor_move_word_left()  : editor_move_left();  break;
+      case DIR_LEFT: ev.ctrl ? editor_move_word_left() : editor_move_left(); break;
       case DIR_RIGHT: ev.ctrl ? editor_move_word_right() : editor_move_right(); break;
       case DIR_UP: editor_move_up(); break;
       case DIR_DOWN: editor_move_down(); break;
@@ -171,12 +180,14 @@ void commands_dispatch(KeyEvent ev) {
   }
 
   if (ev.enter) {
+    if (editor_sel_is_active()) editor_delete_selection();
     editor_insert_char('\n');
     set_render(RENDER_FULL);
     return;
   }
 
   if (ev.c) {
+    if (editor_sel_is_active()) editor_delete_selection();
     editor_insert_char(ev.c);
     set_render_ex(RENDER_LINE);
   }
