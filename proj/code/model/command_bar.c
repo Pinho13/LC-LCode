@@ -5,6 +5,8 @@ static EditorMode mode = MODE_EDITOR;
 static char filename[CMD_BUF_SIZE] = "untitled";
 static char input[CMD_BUF_SIZE] = {0};
 static int input_len = 0;
+static char status_msg[CMD_BUF_SIZE] = {0};
+static int status_ticks = 0;
 
 void command_bar_init(const char *name) {
   if (name) strncpy(filename, name, CMD_BUF_SIZE - 1);
@@ -51,3 +53,17 @@ const char *command_bar_commit() {
   mode = MODE_EDITOR;
   return input;
 }
+
+void command_bar_set_status(const char *msg) {
+  strncpy(status_msg, msg, CMD_BUF_SIZE - 1);
+  status_msg[CMD_BUF_SIZE - 1] = '\0';
+  status_ticks = 60;
+}
+
+bool command_bar_tick() {
+  if (status_ticks <= 0) return false;
+  if (--status_ticks == 0) { status_msg[0] = '\0'; return true; }
+  return false;
+}
+
+const char *command_bar_get_status() { return status_msg; }

@@ -17,3 +17,6 @@ const char *command_bar_get_input();
 void command_bar_insert(char c);
 void command_bar_delete();
 const char *command_bar_commit();
+void command_bar_set_status(const char *msg);
+bool command_bar_tick();
+const char *command_bar_get_status();
