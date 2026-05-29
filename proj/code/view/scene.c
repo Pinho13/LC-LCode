@@ -12,19 +12,27 @@
 #define COLOR_SEL_BG 0x264F78
 #define COLOR_STATUS_BG 0x007ACC
 #define COLOR_STATUS_FG 0xFFFFFF
+#define COLOR_GUTTER_BG 0x252526
+#define COLOR_GUTTER_FG 0x858585
 
-#define EDITOR_X 10
 #define EDITOR_Y 10
+#define GUTTER_DIGITS 3  /* MAX_LINES=500, so 3 digits max */
+#define GUTTER_PAD 2     /* pixels between last digit and text */
+
+static void draw_gutter(int scroll_row, int end_r);
 
 static SceneID current_scene = SCENE_EDITOR;
 static int prev_col = 0;
 static int prev_row = 0;
 static int vis_rows = MAX_LINES;
 static int vis_cols = MAX_COLS;
+static int filetree_w = 0;  /* 0 until file tree is built */
+static int gutter_w = 0;
+static int editor_x = 0;   /* filetree_w + gutter_w */
 
 /* Translate model coordinates to screen pixel position. */
 static int model_to_px(int model_col) {
-  return EDITOR_X + (model_col - editor_get_scroll_col()) * FONT_W;
+  return editor_x + (model_col - editor_get_scroll_col()) * FONT_W;
 }
 
 static int model_to_py(int model_row) {
@@ -65,8 +73,8 @@ static void draw_selection_bg(int end_r) {
     int col_start = (r == sel_start_row) ? sel_start_col : 0;
     int line_len = (int)strlen(editor_get_line(r));
     int col_end = (r == sel_end_row) ? sel_end_col : line_len;
-    int pixel_start = EDITOR_X + (col_start > scroll_col ? col_start - scroll_col : 0) * FONT_W;
-    int pixel_end = EDITOR_X + (col_end < scroll_col + vis_cols ? col_end - scroll_col : vis_cols) * FONT_W;
+    int pixel_start = editor_x + (col_start > scroll_col ? col_start - scroll_col : 0) * FONT_W;
+    int pixel_end = editor_x + (col_end < scroll_col + vis_cols ? col_end - scroll_col : vis_cols) * FONT_W;
 
     if (pixel_end > pixel_start) {
       bb_draw_rect(pixel_start, y, pixel_end - pixel_start, FONT_H, COLOR_SEL_BG);
@@ -101,8 +109,10 @@ static void flip_status_bar() {
 
 int scene_init(SceneID id) {
   current_scene = id;
+  gutter_w = FONT_W * (GUTTER_DIGITS + GUTTER_PAD);
+  editor_x = filetree_w + gutter_w;
   vis_rows = ((int)vg_get_v_res() - EDITOR_Y - FONT_H) / FONT_H;
-  vis_cols = ((int)vg_get_h_res() - EDITOR_X) / FONT_W;
+  vis_cols = ((int)vg_get_h_res() - editor_x) / FONT_W;
   editor_set_viewport(vis_rows, vis_cols);
   set_render(RENDER_FULL);
   return 0;
@@ -127,13 +137,14 @@ void view_render() {
           int end_r = scroll_row + vis_rows;
           if (end_r > editor_get_row_count()) end_r = editor_get_row_count();
 
+          draw_gutter(scroll_row, end_r);
           if (editor_sel_is_active()) draw_selection_bg(end_r);
 
           for (int r = scroll_row; r < end_r; r++) {
             int y = EDITOR_Y + (r - scroll_row) * FONT_H;
             const char *line = editor_get_line(r);
             if ((int)strlen(line) > scroll_col)
-              draw_string(EDITOR_X, y, line + scroll_col, COLOR_TEXT);
+              draw_string(editor_x, y, line + scroll_col, COLOR_TEXT);
           }
           draw_cursor(col, row);
           render_status_bar();
@@ -145,13 +156,13 @@ void view_render() {
 
         case RENDER_LINE: {
           int y = EDITOR_Y + (row - scroll_row) * FONT_H;
-          unsigned line_w = vg_get_h_res() - EDITOR_X;
-          bb_draw_rect(EDITOR_X, y, line_w, FONT_H, COLOR_BG);
+          unsigned line_w = vg_get_h_res() - editor_x;
+          bb_draw_rect(editor_x, y, line_w, FONT_H, COLOR_BG);
           const char *line = editor_get_line(row);
           if ((int)strlen(line) > scroll_col)
-            draw_string(EDITOR_X, y, line + scroll_col, COLOR_TEXT);
+            draw_string(editor_x, y, line + scroll_col, COLOR_TEXT);
           draw_cursor(col, row);
-          vg_flip_region(EDITOR_X, y, line_w, FONT_H);
+          vg_flip_region(editor_x, y, line_w, FONT_H);
           prev_col = col;
           prev_row = row;
           break;
@@ -185,5 +196,22 @@ void view_render() {
         default: break;
       }
       break;
+  }
+}
+
+
+static void draw_gutter(int scroll_row, int end_r) {
+  bb_draw_rect(filetree_w, EDITOR_Y, gutter_w, vis_rows * FONT_H, COLOR_GUTTER_BG);
+  char buf[GUTTER_DIGITS + 1];
+  buf[GUTTER_DIGITS] = '\0';
+  for (int r = scroll_row; r < end_r; r++) {
+    int y = EDITOR_Y + (r - scroll_row) * FONT_H;
+    /* Format line number right-to-left, then skip leading zeros. */
+    int n = r + 1;
+    for (int i = GUTTER_DIGITS - 1; i >= 0; i--) { buf[i] = '0' + n % 10; n /= 10; }
+    const char *p = buf;
+    while (*p == '0' && *(p + 1)) p++;
+    int x = filetree_w + gutter_w - GUTTER_PAD - (int)strlen(p) * FONT_W;
+    draw_string(x, y, p, COLOR_GUTTER_FG);
   }
 }
