@@ -44,6 +44,11 @@ void bb_draw_pixel(uint16_t x, uint16_t y, uint32_t color) {
   ((uint32_t *)back_buffer)[y * vg_get_h_res() + x] = color;
 }
 
+uint32_t bb_get_pixel(uint16_t x, uint16_t y) {
+  if (x >= vg_get_h_res() || y >= vg_get_v_res()) return 0;
+  return ((uint32_t *)back_buffer)[y * vg_get_h_res() + x];
+}
+
 void bb_draw_hline(uint16_t x, uint16_t y, uint16_t len, uint32_t color) {
   if (y >= vg_get_v_res() || x >= vg_get_h_res()) return;
   if (x + len > vg_get_h_res()) len = vg_get_h_res() - x;

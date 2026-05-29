@@ -11,3 +11,6 @@ void scene_cleanup();
 int scene_get_vis_rows();
 
 void view_render();
+
+bool scene_px_to_text(int px, int py, int *out_row, int *out_col);
+bool scene_click_scrollbar(int px, int py);
