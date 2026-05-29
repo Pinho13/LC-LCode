@@ -1,7 +1,7 @@
 #pragma once
 #include <stdbool.h>
 
-#define MAX_LINES 48
+#define MAX_LINES 500
 #define MAX_COLS 256
 
 int editor_init();

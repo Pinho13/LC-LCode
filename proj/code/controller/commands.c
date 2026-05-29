@@ -7,6 +7,12 @@
 
 static bool quit_flag = false;
 
+/* Use instead of set_render when the operation might have scrolled the
+ * viewport — upgrades to RENDER_FULL if the scroll offset changed. */
+static void set_render_ex(int mode) {
+  set_render(editor_consume_scroll_dirty() ? RENDER_FULL : mode);
+}
+
 bool get_quit() { return quit_flag; }
 
 static void execute_save(const char *name) {
@@ -116,15 +122,15 @@ void commands_dispatch(KeyEvent ev) {
     if (ev.ctrl) {
       if (editor_get_cursor_col() == 0) {
         editor_delete_char();
-        set_render(RENDER_CHAR);
+        set_render_ex(RENDER_FULL);
       } else {
         editor_delete_word();
-        set_render(RENDER_LINE);
+        set_render_ex(RENDER_LINE);
       }
     } else {
       bool mid_line = (editor_get_cursor_col() > 0);
       editor_delete_char();
-      set_render(mid_line ? RENDER_LINE : RENDER_FULL);
+      set_render_ex(mid_line ? RENDER_LINE : RENDER_FULL);
     }
     return;
   }
@@ -137,7 +143,7 @@ void commands_dispatch(KeyEvent ev) {
       case DIR_DOWN:  editor_move_down(); break;
       default: break;
     }
-    set_render(RENDER_CHAR);
+    set_render_ex(RENDER_CHAR);
     return;
   }
 
@@ -170,6 +176,6 @@ void commands_dispatch(KeyEvent ev) {
 
   if (ev.c) {
     editor_insert_char(ev.c);
-    set_render(RENDER_LINE);
+    set_render_ex(RENDER_LINE);
   }
 }

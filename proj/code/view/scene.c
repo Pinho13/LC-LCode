@@ -18,23 +18,34 @@
 static SceneID current_scene = SCENE_EDITOR;
 static int prev_col = 0;
 static int prev_row = 0;
+static int vis_rows = MAX_LINES;
+static int vis_cols = MAX_COLS;
 
-static void draw_cell(int col, int row) {
-  int x = EDITOR_X + col * FONT_W;
-  int y = EDITOR_Y + row * FONT_H;
-  bb_draw_rect(x, y, FONT_W, FONT_H, COLOR_BG);
-  const char *line = editor_get_line(row);
-  if (line[col]) draw_char(x, y, line[col], COLOR_TEXT);
+/* Translate model coordinates to screen pixel position. */
+static int model_to_px(int model_col) {
+  return EDITOR_X + (model_col - editor_get_scroll_col()) * FONT_W;
 }
 
-static void draw_cursor(int col, int row) {
-  int x = EDITOR_X + col * FONT_W;
-  int y = EDITOR_Y + row * FONT_H;
+static int model_to_py(int model_row) {
+  return EDITOR_Y + (model_row - editor_get_scroll_row()) * FONT_H;
+}
+
+static void draw_cell(int model_col, int model_row) {
+  int x = model_to_px(model_col);
+  int y = model_to_py(model_row);
+  bb_draw_rect(x, y, FONT_W, FONT_H, COLOR_BG);
+  const char *line = editor_get_line(model_row);
+  if (line[model_col]) draw_char(x, y, line[model_col], COLOR_TEXT);
+}
+
+static void draw_cursor(int model_col, int model_row) {
+  int x = model_to_px(model_col);
+  int y = model_to_py(model_row);
   bb_draw_rect(x, y, FONT_W, FONT_H, COLOR_TEXT);
 }
 
-static void flip_cell(int col, int row) {
-  vg_flip_region(EDITOR_X + col * FONT_W, EDITOR_Y + row * FONT_H, FONT_W, FONT_H);
+static void flip_cell(int model_col, int model_row) {
+  vg_flip_region(model_to_px(model_col), model_to_py(model_row), FONT_W, FONT_H);
 }
 
 static void render_status_bar() {
@@ -62,6 +73,9 @@ static void flip_status_bar() {
 
 int scene_init(SceneID id) {
   current_scene = id;
+  vis_rows = ((int)vg_get_v_res() - EDITOR_Y - FONT_H) / FONT_H;
+  vis_cols = ((int)vg_get_h_res() - EDITOR_X) / FONT_W;
+  editor_set_viewport(vis_rows, vis_cols);
   set_render(RENDER_FULL);
   return 0;
 }
@@ -74,26 +88,33 @@ void view_render() {
 
   int col = editor_get_cursor_col();
   int row = editor_get_cursor_row();
+  int scroll_row = editor_get_scroll_row();
+  int scroll_col = editor_get_scroll_col();
 
   switch (current_scene) {
     case SCENE_EDITOR:
       switch (mode) {
-        case RENDER_FULL:
+        case RENDER_FULL: {
           bb_clear(COLOR_BG);
-          for (int r = 0; r < editor_get_row_count(); r++)
-            draw_string(EDITOR_X, EDITOR_Y + r * FONT_H, editor_get_line(r), COLOR_TEXT);
+          int end_r = scroll_row + vis_rows;
+          if (end_r > editor_get_row_count()) end_r = editor_get_row_count();
+          for (int r = scroll_row; r < end_r; r++) {
+            int y = EDITOR_Y + (r - scroll_row) * FONT_H;
+            draw_string(EDITOR_X, y, editor_get_line(r) + scroll_col, COLOR_TEXT);
+          }
           draw_cursor(col, row);
           render_status_bar();
           vg_flip_buffer();
           prev_col = col;
           prev_row = row;
           break;
+        }
 
         case RENDER_LINE: {
-          int y = EDITOR_Y + row * FONT_H;
+          int y = EDITOR_Y + (row - scroll_row) * FONT_H;
           unsigned line_w = vg_get_h_res() - EDITOR_X;
           bb_draw_rect(EDITOR_X, y, line_w, FONT_H, COLOR_BG);
-          draw_string(EDITOR_X, y, editor_get_line(row), COLOR_TEXT);
+          draw_string(EDITOR_X, y, editor_get_line(row) + scroll_col, COLOR_TEXT);
           draw_cursor(col, row);
           vg_flip_region(EDITOR_X, y, line_w, FONT_H);
           prev_col = col;
@@ -105,7 +126,7 @@ void view_render() {
           int end = prev_col;
           for (int c = col; c <= end; c++) draw_cell(c, prev_row);
           draw_cursor(col, row);
-          vg_flip_region(EDITOR_X + col * FONT_W, EDITOR_Y + prev_row * FONT_H,
+          vg_flip_region(model_to_px(col), model_to_py(prev_row),
                          (end - col + 1) * FONT_W, FONT_H);
           prev_col = col;
           prev_row = row;
