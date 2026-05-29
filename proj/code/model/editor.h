@@ -1,7 +1,7 @@
 #pragma once
 
 #define MAX_LINES 48
-#define MAX_COLS 128
+#define MAX_COLS 256
 
 int editor_init();
 void editor_cleanup();

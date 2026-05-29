@@ -18,10 +18,20 @@ void editor_cleanup() {}
 
 void editor_insert_char(char c) {
   if (c == '\n') {
-    if (cursor_row >= MAX_LINES - 1) return;
+    if (row_count >= MAX_LINES) return;
+
+
+    /* Shift all rows below the current one down by one to open a slot,
+     * then copy from cursor onwards into
+     * the new slot and end the current line at the split point. */
+    memmove(lines[cursor_row + 2], lines[cursor_row + 1], (row_count - cursor_row - 1) * MAX_COLS);
+    int split = cursor_col;
+    int tail = strlen(lines[cursor_row]) - split;
+    memcpy(lines[cursor_row + 1], &lines[cursor_row][split], tail + 1);
+    lines[cursor_row][split] = '\0';
+    row_count++;
     cursor_row++;
     cursor_col = 0;
-    if (cursor_row >= row_count) row_count = cursor_row + 1;
     return;
   }
 
@@ -37,9 +47,20 @@ void editor_delete_char() {
     cursor_col--;
     int len = strlen(lines[cursor_row]);
     memmove(&lines[cursor_row][cursor_col], &lines[cursor_row][cursor_col + 1], len - cursor_col);
-  } else if (cursor_row > 0) {
+  } 
+  else if (cursor_row > 0) {
+    /* Merge current line into the end of the previous one, then shift
+     * all rows below up by one to close the gap. */
+
+    int prev_len = strlen(lines[cursor_row - 1]);
+    int curr_len = strlen(lines[cursor_row]);
+    if (prev_len + curr_len >= MAX_COLS) return;
+    memcpy(&lines[cursor_row - 1][prev_len], lines[cursor_row], curr_len + 1);
+    memmove(lines[cursor_row], lines[cursor_row + 1], (row_count - cursor_row - 1) * MAX_COLS);
+    memset(lines[row_count - 1], 0, MAX_COLS);
+    row_count--;
     cursor_row--;
-    cursor_col = strlen(lines[cursor_row]);
+    cursor_col = prev_len;
   }
 }
 

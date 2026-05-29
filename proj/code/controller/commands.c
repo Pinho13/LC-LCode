@@ -124,7 +124,7 @@ void commands_dispatch(KeyEvent ev) {
     } else {
       bool mid_line = (editor_get_cursor_col() > 0);
       editor_delete_char();
-      set_render(mid_line ? RENDER_LINE : RENDER_CHAR);
+      set_render(mid_line ? RENDER_LINE : RENDER_FULL);
     }
     return;
   }
