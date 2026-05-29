@@ -9,6 +9,7 @@
 
 #define COLOR_BG 0x1E1E1E
 #define COLOR_TEXT 0xFFFFFF
+#define COLOR_SEL_BG 0x264F78
 #define COLOR_STATUS_BG 0x007ACC
 #define COLOR_STATUS_FG 0xFFFFFF
 
@@ -46,6 +47,31 @@ static void draw_cursor(int model_col, int model_row) {
 
 static void flip_cell(int model_col, int model_row) {
   vg_flip_region(model_to_px(model_col), model_to_py(model_row), FONT_W, FONT_H);
+}
+
+static void draw_selection_bg(int end_r) {
+  int sel_start_row, sel_start_col, sel_end_row, sel_end_col;
+  editor_sel_get_range(&sel_start_row, &sel_start_col, &sel_end_row, &sel_end_col);
+  int scroll_row = editor_get_scroll_row();
+  int scroll_col = editor_get_scroll_col();
+
+  //Clamp visible
+  int first_row = sel_start_row > scroll_row ? sel_start_row : scroll_row;
+  int last_row = sel_end_row < end_r - 1 ? sel_end_row : end_r - 1;
+
+  //Per line draw background rectangle on visible part
+  for (int r = first_row; r <= last_row; r++) {
+    int y = EDITOR_Y + (r - scroll_row) * FONT_H;
+    int col_start = (r == sel_start_row) ? sel_start_col : 0;
+    int line_len = (int)strlen(editor_get_line(r));
+    int col_end = (r == sel_end_row) ? sel_end_col : line_len;
+    int pixel_start = EDITOR_X + (col_start > scroll_col ? col_start - scroll_col : 0) * FONT_W;
+    int pixel_end = EDITOR_X + (col_end < scroll_col + vis_cols ? col_end - scroll_col : vis_cols) * FONT_W;
+
+    if (pixel_end > pixel_start) {
+      bb_draw_rect(pixel_start, y, pixel_end - pixel_start, FONT_H, COLOR_SEL_BG);
+    }
+  }
 }
 
 static void render_status_bar() {
@@ -98,6 +124,9 @@ void view_render() {
           bb_clear(COLOR_BG);
           int end_r = scroll_row + vis_rows;
           if (end_r > editor_get_row_count()) end_r = editor_get_row_count();
+
+          if (editor_sel_is_active()) draw_selection_bg(end_r);
+
           for (int r = scroll_row; r < end_r; r++) {
             int y = EDITOR_Y + (r - scroll_row) * FONT_H;
             const char *line = editor_get_line(r);
