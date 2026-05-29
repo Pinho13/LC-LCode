@@ -35,7 +35,7 @@ static void draw_cell(int model_col, int model_row) {
   int y = model_to_py(model_row);
   bb_draw_rect(x, y, FONT_W, FONT_H, COLOR_BG);
   const char *line = editor_get_line(model_row);
-  if (line[model_col]) draw_char(x, y, line[model_col], COLOR_TEXT);
+  if (model_col < (int)strlen(line)) draw_char(x, y, line[model_col], COLOR_TEXT);
 }
 
 static void draw_cursor(int model_col, int model_row) {
@@ -100,7 +100,9 @@ void view_render() {
           if (end_r > editor_get_row_count()) end_r = editor_get_row_count();
           for (int r = scroll_row; r < end_r; r++) {
             int y = EDITOR_Y + (r - scroll_row) * FONT_H;
-            draw_string(EDITOR_X, y, editor_get_line(r) + scroll_col, COLOR_TEXT);
+            const char *line = editor_get_line(r);
+            if ((int)strlen(line) > scroll_col)
+              draw_string(EDITOR_X, y, line + scroll_col, COLOR_TEXT);
           }
           draw_cursor(col, row);
           render_status_bar();
@@ -114,7 +116,9 @@ void view_render() {
           int y = EDITOR_Y + (row - scroll_row) * FONT_H;
           unsigned line_w = vg_get_h_res() - EDITOR_X;
           bb_draw_rect(EDITOR_X, y, line_w, FONT_H, COLOR_BG);
-          draw_string(EDITOR_X, y, editor_get_line(row) + scroll_col, COLOR_TEXT);
+          const char *line = editor_get_line(row);
+          if ((int)strlen(line) > scroll_col)
+            draw_string(EDITOR_X, y, line + scroll_col, COLOR_TEXT);
           draw_cursor(col, row);
           vg_flip_region(EDITOR_X, y, line_w, FONT_H);
           prev_col = col;
