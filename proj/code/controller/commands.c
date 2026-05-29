@@ -158,6 +158,26 @@ void commands_dispatch(KeyEvent ev) {
     return;
   }
 
+  if (ev.ctrl && ev.c == 'c') {
+    editor_copy_selection();
+    return;
+  }
+  if (ev.ctrl && ev.c == 'x') {
+    editor_copy_selection();
+    editor_delete_selection();
+    set_render_ex(RENDER_FULL);
+    return;
+  }
+  if (ev.ctrl && ev.c == 'v') {
+    if (editor_sel_is_active()) editor_delete_selection();
+    EditorResult result = editor_paste();
+    switch (result) {
+      case EDITOR_OK: set_render_ex(RENDER_FULL); break;
+      case EDITOR_ERR_NO_CLIPBOARD: command_bar_set_status("Nothing to paste"); set_render_ex(RENDER_STATUS); break;
+      case EDITOR_ERR_DOCUMENT_FULL: command_bar_set_status("Document full - paste aborted"); set_render_ex(RENDER_STATUS); break;
+    }
+    return;
+  }
   if (ev.ctrl && ev.c == 's') {
     if (strcmp(command_bar_get_filename(), "untitled") == 0)
       command_bar_start_prefill("save ");

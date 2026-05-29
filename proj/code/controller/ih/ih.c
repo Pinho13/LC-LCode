@@ -3,6 +3,8 @@
 #include "ih.h"
 #include "fw/common/utils.h"
 #include "controller/keyboard.h"
+#include "model/command_bar.h"
+#include "render_flag.h"
 
 static uint8_t irq_timer = 0, irq_keyboard = 0, irq_mouse = 0;
 
@@ -59,7 +61,10 @@ int unsubscribe_interrupts() {
 }
 
 void interrupts_handler(uint32_t irq_mask) {
-  if (irq_mask & irq_timer) timer_int_handler();
+  if (irq_mask & irq_timer) {
+    timer_int_handler();
+    if (command_bar_tick()) set_render(RENDER_STATUS);
+  }
   if (irq_mask & irq_keyboard) keyboard_process();
   if (irq_mask & irq_mouse) mouse_ih();
 }
