@@ -3,6 +3,7 @@
 #include "fw/drivers/timer.h"
 #include "fw/drivers/keyboard.h"
 #include "fw/drivers/mouse.h"
+#include "fw/drivers/serial_port.h"
 
 int subscribe_interrupts();
 int unsubscribe_interrupts();
