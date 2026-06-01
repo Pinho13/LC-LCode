@@ -13,7 +13,9 @@ FW_OBJS = ${FRAMEWORK_DIR}/timer.o \
           ${FRAMEWORK_DIR}/kbc.o \
           ${FRAMEWORK_DIR}/video.o \
           ${FRAMEWORK_DIR}/utils.o \
-          ${FRAMEWORK_DIR}/rtc.o
+          ${FRAMEWORK_DIR}/rtc.o \
+          ${FRAMEWORK_DIR}/serial_port.o \
+          ${FRAMEWORK_DIR}/queue.o
 
 # additional compilation flags
 # "-Wall -Wextra -Werror -I . -std=c11 -Wno-unused-parameter" are already set
