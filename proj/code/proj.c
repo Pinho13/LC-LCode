@@ -6,8 +6,30 @@
 
 
 int(proj_main_loop)(int argc, char *argv[]) {
+  int ipc_status, r;
+  message msg;
+  get_int_counter();
   if (subscribe_interrupts() != OK)
     return fail(ERR, "proj_main_loop: unable to subscribe interrupts");
+
+  while (1)
+  {
+    if ((r = driver_receive(ANY, &msg, &ipc_status))!= OK) {
+      printf("driver_receive failed with: %d", r);
+      continue;
+    }
+
+    if (is_ipc_notify(ipc_status)) {
+      switch (_ENDPOINT_P(msg.m_source)) {
+        case HARDWARE:
+          interrupts_handler(msg.m_notify.interrupts);
+          break;
+
+        default:
+          break;
+      }
+    }
+  }
 
   if (unsubscribe_interrupts() != OK)
     return fail(ERR, "proj_main_loop: unable to unsubscribe interrupts");
