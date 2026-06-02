@@ -2,26 +2,22 @@
 
 #include "ih.h"
 #include "fw/common/utils.h"
+#include "controller/keyboard.h"
+#include "controller/commands.h"
+#include "model/command_bar.h"
+#include "fw/drivers/video.h"
 #include "render_flag.h"
 
-#define BLINK_TICKS 30  //every half sec
-
-static int blink_tick = 0;
-
 static uint8_t irq_timer = 0, irq_keyboard = 0, irq_mouse = 0;
-packet_scancode ps = {
-  .two_byte = false,
-  .make = false,
-  .size = 0,
-  .bytes = {0, 0}
-};
+static int mouse_x = 0, mouse_y = 0;
+static bool mouse_initialized = false;
+static bool prev_lb = false;
 
 int subscribe_interrupts() {
-  uint8_t bit_no; // used once per interrupt, no need to create one per driver
+  uint8_t bit_no;
 
-  if (timer_subscribe_int(&bit_no) != OK) {
+  if (timer_subscribe_int(&bit_no) != OK)
     return fail(ERR_TIMER, "subscribe_interrupts: unable to subscribe timer interrupt");
-  }
   irq_timer = BIT(bit_no);
 
   if (keyboard_subscribe_int(&bit_no) != OK) {
@@ -49,73 +45,62 @@ int subscribe_interrupts() {
 int unsubscribe_interrupts() {
   int errors = 0;
 
+  if (mouse_unsubscribe_int() != OK) {
+    errors = 1;
+    fail(ERR_MOUSE, "unsubscribe_interrupts: unable to unsubscribe mouse interrupt");
+  }
+  if (keyboard_unsubscribe_int() != OK) {
+    errors = 1;
+    fail(ERR_KEYBOARD, "unsubscribe_interrupts: unable to unsubscribe keyboard interrupt");
+  }
+  if (timer_unsubscribe_int() != OK) {
+    errors = 1;
+    fail(ERR_TIMER, "unsubscribe_interrupts: unable to unsubscribe timer interrupt");
+  }
   if (my_mouse_disable_data_reporting() != OK) {
     errors = 1;
     fail(ERR_MOUSE, "unsubscribe_interrupts: unable to disable mouse data reporting");
   }
 
-  if (mouse_unsubscribe_int() != OK) {
-    errors = 1;
-    fail(ERR_MOUSE, "unsubscribe_interrupts: unable to unsubscribe mouse interrupt");
-  }
-
-  if (keyboard_unsubscribe_int() != OK) {
-    errors = 1;
-    fail(ERR_KEYBOARD, "unsubscribe_interrupts: unable to unsubscribe keyboard interrupt");
-  }
-
-  if (timer_unsubscribe_int() != OK) {
-    errors = 1;
-    fail(ERR_TIMER, "unsubscribe_interrupts: unable to unsubscribe timer interrupt");
-  }
-
   return errors;
-}
-
-void timer_handler() {
-  timer_int_handler();
-  blink_tick++;
-  if (blink_tick % BLINK_TICKS == 0)
-    set_dirty(DIRTY_CURSOR);
-}
-
-void keyboard_handler() {
-  keyboard_ih();
-            
-  if (build_scancode(&ps) != OK) {
-    return;
-  }
-
-  if (ps.two_byte) {
-    return;
-  }
-
-  keyboard_print_scancode(ps);
-}
-
-void mouse_handler() {
-  mouse_ih();
-
-  if (is_packet_ready()) {
-    struct packet pp;
-  
-    if (build_packet(&pp) != OK) {
-      fail(ERR_MOUSE, "mouse_example: unable to build packet");
-      return;
-    }
-    mouse_print_packet(&pp);
-  }
 }
 
 void interrupts_handler(uint32_t irq_mask) {
   if (irq_mask & irq_timer) {
-    timer_handler();
+    timer_int_handler();
+    if (command_bar_tick()) set_render(RENDER_STATUS);
   }
-  if (irq_mask & irq_keyboard) {
-    keyboard_handler();
-  }
+  if (irq_mask & irq_keyboard) keyboard_process();
   if (irq_mask & irq_mouse) {
-    mouse_handler();
+    mouse_ih();
+    if (is_packet_ready()) {
+      struct packet pp;
+      if (build_packet(&pp) != OK) return;
+
+      if (!mouse_initialized) {
+        mouse_x = (int)vg_get_h_res() / 2;
+        mouse_y = (int)vg_get_v_res() / 2;
+        mouse_initialized = true;
+      }
+
+      bool moved = (pp.delta_x != 0 || pp.delta_y != 0);
+      mouse_x += pp.delta_x;
+      mouse_y -= pp.delta_y;
+      if (mouse_x < 0) mouse_x = 0;
+      if (mouse_y < 0) mouse_y = 0;
+      if (mouse_x >= (int)vg_get_h_res()) mouse_x = (int)vg_get_h_res() - 1;
+      if (mouse_y >= (int)vg_get_v_res()) mouse_y = (int)vg_get_v_res() - 1;
+
+      if (moved) set_render(RENDER_MOUSE);
+
+      if (pp.lb && !prev_lb) {
+        MouseEvent me = {.left_clicked = true, .click_x = mouse_x, .click_y = mouse_y};
+        commands_dispatch_mouse(me);
+      }
+      prev_lb = pp.lb;
+    }
   }
 }
 
+int ih_get_mouse_x() { return mouse_x; }
+int ih_get_mouse_y() { return mouse_y; }

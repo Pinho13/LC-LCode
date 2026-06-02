@@ -1,10 +1,18 @@
 #include <lcom/lcf.h>
 
 #include "fw/common/utils.h"
+#include <unistd.h>
+#include <sys/stat.h>
+
+#define WORK_DIR "/home/lcom/labs/proj/docs"
 
 #include "controller/ih/ih.h"
+#include "controller/commands.h"
 #include "view/video.h"
 #include "view/scene.h"
+#include "model/editor.h"
+#include "model/command_bar.h"
+#include "model/filetree.h"
 #include "render_flag.h"
 
 
@@ -13,6 +21,15 @@
 int(proj_main_loop)(int argc, char *argv[]) {
   int ipc_status, r;
   message msg;
+
+  mkdir(WORK_DIR, 0755);
+  chdir(WORK_DIR);
+
+  command_bar_init(argc > 1 ? argv[1] : "untitled");
+  filetree_init();
+
+  if (editor_init() != OK)
+    return fail(ERR, "proj_main_loop: editor_init failed");
 
   if (video_init() != OK)
     return fail(ERR_VIDEO, "proj_main_loop: video_init failed");
@@ -30,7 +47,7 @@ int(proj_main_loop)(int argc, char *argv[]) {
     return fail(ERR_TIMER, "proj_main_loop: unable to set timer frequency");
   }
 
-  while (1)
+  while (!get_quit())
   {
     if ((r = driver_receive(ANY, &msg, &ipc_status))!= OK) {
       printf("driver_receive failed with: %d", r);
@@ -48,13 +65,16 @@ int(proj_main_loop)(int argc, char *argv[]) {
       }
     }
 
-    if (get_dirty())
+    if (get_render())
       view_render();
   }
 
+  scene_cleanup();
+  video_cleanup();
+
   if (unsubscribe_interrupts() != OK)
     return fail(ERR, "proj_main_loop: unable to unsubscribe interrupts");
-  
+
   return 0;
 }
 
