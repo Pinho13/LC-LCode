@@ -4,6 +4,7 @@
 #include "model/command_bar.h"
 #include "view/scene.h"
 #include "render_flag.h"
+#include "controller/serial.h"
 #include <stdio.h>
 #include <string.h>
 
@@ -231,3 +232,33 @@ void commands_dispatch_mouse(MouseEvent me) {
     set_render_ex(RENDER_CHAR);
   }
 }
+
+void commands_dispatch_serial(uint8_t cmd, const uint8_t *payload, uint8_t len) {
+  if (len == 0 && cmd != CMD_DELETE_CHAR) return;
+
+  switch (cmd) {
+    case CMD_INSERT_CHAR:
+      // TODO
+      break;
+      
+    case CMD_DELETE_CHAR:
+      // TODO
+      break;
+      
+    case CMD_MOVE_CURSOR:
+      // TODO
+      break;
+
+    case CMD_FILE_START:
+      // TODO
+      break;
+
+    case CMD_FILE_LINE:
+      // TODO
+      break;
+
+    default:
+      break;
+  }
+}
+
