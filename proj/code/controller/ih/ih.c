@@ -4,11 +4,12 @@
 #include "fw/common/utils.h"
 #include "controller/keyboard.h"
 #include "controller/commands.h"
+#include "controller/serial.h"
 #include "model/command_bar.h"
 #include "fw/drivers/video.h"
 #include "render_flag.h"
 
-static uint8_t irq_timer = 0, irq_keyboard = 0, irq_mouse = 0;
+static uint8_t irq_timer = 0, irq_keyboard = 0, irq_mouse = 0, irq_serial = 0;
 static int mouse_x = 0, mouse_y = 0;
 static bool mouse_initialized = false;
 static bool prev_lb = false;
@@ -38,6 +39,14 @@ int subscribe_interrupts() {
     return fail(ERR_MOUSE, "subscribe_interrupts: unable to enable data reporting");
   }
   irq_mouse = BIT(bit_no);
+  
+  if (serial_subscribe_int(&bit_no) != OK) {
+    timer_unsubscribe_int();
+    keyboard_unsubscribe_int();
+    mouse_unsubscribe_int();
+    return fail(ERR_SERIAL, "subscribe_interrupts: unable to subscribe serial interrupt");
+  }
+  irq_serial = BIT(bit_no);
 
   return 0;
 }
@@ -71,6 +80,7 @@ void interrupts_handler(uint32_t irq_mask) {
     if (command_bar_tick()) set_render(RENDER_STATUS);
   }
   if (irq_mask & irq_keyboard) keyboard_process();
+  if (irq_mask & irq_serial) serial_process(); 
   if (irq_mask & irq_mouse) {
     mouse_ih();
     if (is_packet_ready()) {

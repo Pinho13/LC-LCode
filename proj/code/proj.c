@@ -6,6 +6,7 @@
 
 #define WORK_DIR "/home/lcom/labs/proj/docs"
 
+#include "fw/drivers/serial_port.h"
 #include "controller/ih/ih.h"
 #include "controller/commands.h"
 #include "view/video.h"
@@ -38,6 +39,8 @@ int(proj_main_loop)(int argc, char *argv[]) {
     video_cleanup();
     return fail(ERR, "proj_main_loop: scene_init failed");
   }
+  if (serial_init() != OK)
+    return fail(ERR_SERIAL, "proj_main_loop: unable to initialize serial port");
 
   if (subscribe_interrupts() != OK)
     return fail(ERR, "proj_main_loop: unable to subscribe interrupts");

@@ -13,7 +13,9 @@ FW_OBJS = ${FRAMEWORK_DIR}/timer.o \
           ${FRAMEWORK_DIR}/kbc.o \
           ${FRAMEWORK_DIR}/video.o \
           ${FRAMEWORK_DIR}/utils.o \
-          ${FRAMEWORK_DIR}/rtc.o
+          ${FRAMEWORK_DIR}/rtc.o \
+          ${FRAMEWORK_DIR}/serial_port.o \
+          ${FRAMEWORK_DIR}/queue.o
 
 # additional compilation flags
 # "-Wall -Wextra -Werror -I . -std=c11 -Wno-unused-parameter" are already set
@@ -27,7 +29,7 @@ LDLIBS += -lm
 # define headers dependencies
 HDRS = $(find . -name *.c)
 
-SRCS = proj.c ih.c render_flag.c video.c scene.c font.c mouse_cursor.c editor.c keyboard.c commands.c command_bar.c filetree.c filetree_commands.c
+SRCS = proj.c ih.c render_flag.c video.c scene.c font.c mouse_cursor.c editor.c keyboard.c commands.c command_bar.c filetree.c filetree_commands.c serial.c
 OBJS = ${SRCS:.c=.o}
 .PATH: controller/ih controller view model
 .PATH.o: build

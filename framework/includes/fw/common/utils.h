@@ -10,7 +10,8 @@ typedef enum {
   ERR_KBC,
   ERR_KEYBOARD,
   ERR_MOUSE,
-  ERR_VIDEO
+  ERR_VIDEO,
+  ERR_SERIAL
 } ErrorType;
 
 void print_err_type(ErrorType error_type);
