@@ -316,7 +316,7 @@ int mouse_example() {
 
 int video_example(uint16_t mode) {
   printf("\n\n");
-  printf("Mouse Example \n");
+  printf("Video Example \n");
 
   if (vg_map_vram(mode) != OK) return 1;
 

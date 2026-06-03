@@ -7,6 +7,7 @@
 #include "model/command_bar.h"
 #include "model/filetree.h"
 #include "controller/ih/ih.h"
+#include "controller/input/mouse.h"
 #include <string.h>
 
 #define COLOR_BG 0x1E1E1E
