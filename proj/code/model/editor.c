@@ -205,25 +205,43 @@ EditorResult editor_insert_char(char c) {
   return EDITOR_OK;
 }
 
-void editor_delete_char() {
+EditorResult editor_delete_char() {
   if (cursor_col > 0) {
     cursor_col--;
-    int len = strlen(lines[cursor_row]);
-    memmove(&lines[cursor_row][cursor_col], &lines[cursor_row][cursor_col + 1], len - cursor_col);
-  } else if (cursor_row > 0) {
-    /* Merge current line into the end of the previous one, then shift
-     * all rows below up by one to close the gap. */
-    int prev_len = strlen(lines[cursor_row - 1]);
-    int curr_len = strlen(lines[cursor_row]);
-    if (prev_len + curr_len >= MAX_COLS) return;
-    memcpy(&lines[cursor_row - 1][prev_len], lines[cursor_row], curr_len + 1);
-    memmove(lines[cursor_row], lines[cursor_row + 1], (row_count - cursor_row - 1) * MAX_COLS);
-    memset(lines[row_count - 1], 0, MAX_COLS);
+    memmove(&lines[cursor_row].buf[cursor_col], &lines[cursor_row].buf[cursor_col + 1],
+            lines[cursor_row].len - cursor_col);
+    lines[cursor_row].len--;
+  } 
+
+  //Cursor at col 0 not on first row - line merge
+  else if (cursor_row > 0) {
+    int prev_len = lines[cursor_row - 1].len;
+    int curr_len = lines[cursor_row].len;
+
+    //grow prev line for merged content
+    if (line_ensure_cap(&lines[cursor_row - 1], prev_len + curr_len + 1) != 0){
+      return EDITOR_ERR_ALLOC_FAILED;
+    }
+
+    //append line
+    memcpy(lines[cursor_row - 1].buf + prev_len, lines[cursor_row].buf, curr_len + 1);
+    lines[cursor_row - 1].len = prev_len + curr_len;
+
+    free(lines[cursor_row].buf);
+
+    //shift lines back
+    memmove(lines + cursor_row, lines + cursor_row + 1, (row_count - cursor_row - 1) * sizeof(Line));
+
+    //zero out last line and update counts
+    lines[row_count - 1] = (Line){0};
     row_count--;
-    cursor_row--;
+    cursor_row--; 
     cursor_col = prev_len;
   }
+
+
   clamp_scroll();
+  return EDITOR_OK;
 }
 
 void editor_delete_word() {
