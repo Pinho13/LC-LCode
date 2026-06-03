@@ -47,10 +47,6 @@ static void dispatch_filetree_mode(KeyEvent ev) {
 }
 
 bool filetree_commands_try(KeyEvent ev) {
-  if (filetree_is_focused()) {
-    dispatch_filetree_mode(ev);
-    return true;
-  }
   if (ev.ctrl && ev.c == 'b') {
     bool now_visible = !filetree_is_visible();
     filetree_set_visible(now_visible);
@@ -58,5 +54,11 @@ bool filetree_commands_try(KeyEvent ev) {
     set_render(RENDER_FULL);
     return true;
   }
+
+  if (filetree_is_focused()) {
+    dispatch_filetree_mode(ev);
+    return true;
+  }
+
   return false;
 }
