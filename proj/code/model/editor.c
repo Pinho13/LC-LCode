@@ -1,17 +1,21 @@
-#include "editor.h"
+#include "model/editor.h"
 #include <string.h>
 #include <stdbool.h>
 #include <stdlib.h>
 
-static char lines[MAX_LINES][MAX_COLS];
+#define LINE_BUF_INIT_CAP 32
+#define LINES_INIT_CAP 16
+
+static Line *lines = NULL;
+static int row_cap = 0;
 static int cursor_row = 0;
 static int cursor_col = 0;
 static int row_count = 1;
 
 static int scroll_row = 0;
 static int scroll_col = 0;
-static int visible_rows = MAX_LINES;
-static int visible_cols = MAX_COLS;
+static int visible_rows = 0;
+static int visible_cols = 0;
 static bool scroll_dirty = false;
 
 static bool sel_active = false;
@@ -20,6 +24,47 @@ static int sel_anchor_col = 0;
 static bool sel_dirty = false;
 
 static char *clipboard = NULL;
+
+static int line_ensure_cap(Line *ln, int needed) {
+  // already enough linesize, nothing to do
+  if (ln->cap > needed) return 0;
+
+  // new needed size calc
+  int new_cap = ln->cap ? ln->cap * 2 : LINE_BUF_INIT_CAP;
+  while (new_cap <= needed) new_cap *= 2;
+
+  char *new_buf = malloc(new_cap);
+  if (!new_buf) return -1;
+  if (ln->buf) {
+    memcpy(new_buf, ln->buf, ln->len + 1);
+  } 
+  else {
+    new_buf[0] = '\0';
+  }
+  free(ln->buf);
+  ln->buf = new_buf;
+  ln->cap = new_cap;
+  return 0;
+}
+
+
+static int lines_ensure_cap(int needed) {
+  // already enough lines, nothing to do
+  if (row_cap > needed) return 0;
+
+  // new needed total lines calc
+  int new_cap = row_cap ? row_cap * 2 : LINES_INIT_CAP;
+  while (new_cap <= needed) new_cap *= 2;
+  Line *new_arr = malloc(new_cap * sizeof(Line));
+  if (!new_arr) return -1;
+  if (lines) {
+    memcpy(new_arr, lines, row_count * sizeof(Line));
+  }
+  free(lines);
+  lines = new_arr;
+  row_cap = new_cap;
+  return 0;
+}
 
 int editor_init() {
   memset(lines, 0, sizeof(lines));
