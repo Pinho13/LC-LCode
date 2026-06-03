@@ -464,69 +464,73 @@ void editor_copy_selection() {
 EditorResult editor_paste() {
   if (clipboard == NULL) return EDITOR_ERR_NO_CLIPBOARD;
 
-  int tail_len = strlen(lines[cursor_row]) - cursor_col;
+  // save tail
+  int tail_len = lines[cursor_row].len - cursor_col;
+  char *tail = malloc(tail_len + 1);
+  if (!tail) return EDITOR_ERR_ALLOC_FAILED;
 
-  /* Count rows */
-  int rows_needed = 1;
-  int col = cursor_col;
-  for (int i = 0; clipboard[i]; i++) {
-    if (clipboard[i] == '\n') {
-      rows_needed++; col = 0;
-    }
-    else if (++col >= MAX_COLS - 1) {
-      rows_needed++; col = 0;
-    }
-  }
-  /* col now holds the final dest_col after pass 2; if the tail won't fit
-   * there, reserve one extra row so it never gets dropped. */
-  if (col + tail_len >= MAX_COLS) rows_needed++;
-
-  if (row_count + rows_needed - 1 > MAX_LINES) return EDITOR_ERR_DOCUMENT_FULL;
-
-  /* Save text after cursor of current line */
-  char tail[MAX_COLS];
-  memcpy(tail, &lines[cursor_row][cursor_col], tail_len + 1);
-  lines[cursor_row][cursor_col] = '\0';
-
-  //Opens rows_needed -1 lines of free space right after the cursor, by moving lines after cursor down
-  //Zeroes out new lines. 
-  if (rows_needed > 1) {
-    memmove(lines[cursor_row + rows_needed], lines[cursor_row + 1], (row_count - cursor_row - 1) * MAX_COLS);
-    memset(lines[cursor_row + 1], 0, (rows_needed - 1) * MAX_COLS);
-  }
-
+  memcpy(tail, lines[cursor_row].buf + cursor_col, tail_len + 1);
+  lines[cursor_row].buf[cursor_col] = '\0';
+  lines[cursor_row].len = cursor_col;
 
   int dest_row = cursor_row;
   int dest_col = cursor_col;
   const char *p = clipboard;
 
-  //Divide em segmentos - Ou até maximizar a linha ou então '\n'
   while (*p) {
-    const char *seg_end = p;
-    while (*seg_end && *seg_end != '\n') seg_end++;
-    int seg_len = (int)(seg_end - p);
+    if (*p == '\n') {
+      //Make sure newline can be added
+      if (lines_ensure_cap(row_count + 1) != 0) {
+        free(tail);
+        return EDITOR_ERR_ALLOC_FAILED;
+      }
 
-    while (seg_len > 0) {
-      int space = MAX_COLS - 1 - dest_col;
-      int copy_len = seg_len < space ? seg_len : space;
-      memcpy(&lines[dest_row][dest_col], p, copy_len);
-      lines[dest_row][dest_col + copy_len] = '\0';
-      dest_col += copy_len;
-      p += copy_len;
-      seg_len -= copy_len;
-      if (seg_len > 0) { dest_row++; dest_col = 0; } /* overflow split */
+      //Shift down
+      memmove(lines + dest_row + 2, lines + dest_row + 1, (row_count - dest_row - 1) * sizeof(Line));
+
+      Line *new_line = &lines[dest_row + 1];
+      new_line->cap = 0; new_line->buf = NULL; new_line->len = 0;
+      if (line_ensure_cap(new_line, 0) != 0) {
+        free(tail);
+        return EDITOR_ERR_ALLOC_FAILED;
+      }
+
+      row_count++;
+      dest_row++; dest_col = 0;
+      p++;
+    } 
+
+    else {
+      const char *seg_end = p;
+
+      //Find next new line
+      while (*seg_end && *seg_end != '\n') seg_end++;
+      int seg_len = (int)(seg_end - p);
+
+      //ensure entire line fits
+      if (line_ensure_cap(&lines[dest_row], dest_col + seg_len + 1) != 0) {
+        free(tail); return EDITOR_ERR_ALLOC_FAILED;
+      }
+      //move segment
+      memcpy(lines[dest_row].buf + dest_col, p, seg_len);
+      dest_col += seg_len;
+      lines[dest_row].buf[dest_col] = '\0';
+      lines[dest_row].len = dest_col;
+      p = seg_end;
     }
-
-    if (*p == '\n') { dest_row++; dest_col = 0; p++; }
   }
 
-  /* Append the saved tail; overflow to the reserved row if it doesn't fit. */
-  if (dest_col + tail_len >= MAX_COLS) { dest_row++; dest_col = 0; }
-  memcpy(&lines[dest_row][dest_col], tail, tail_len + 1);
+  // Append tail
+  if (line_ensure_cap(&lines[dest_row], dest_col + tail_len + 1) != 0) {
+    free(tail); 
+    return EDITOR_ERR_ALLOC_FAILED;
+  }
+  memcpy(lines[dest_row].buf + dest_col, tail, tail_len + 1);
+  lines[dest_row].len = dest_col + tail_len;
 
+  free(tail);
   cursor_row = dest_row;
   cursor_col = dest_col;
-  row_count += rows_needed - 1;
   clamp_scroll();
   return EDITOR_OK;
 }
