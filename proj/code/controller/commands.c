@@ -233,10 +233,10 @@ void commands_dispatch_mouse(MouseEvent me) {
   }
 }
 
-void commands_dispatch_serial(uint8_t cmd, const uint8_t *payload, uint8_t len) {
-  if (len == 0 && cmd != CMD_DELETE_CHAR) return;
+void commands_dispatch_serial(SerialEvent se) {
+  if (se.payload_len == 0 && se.cmd != CMD_DELETE_CHAR) return;
 
-  switch (cmd) {
+  switch (se.cmd) {
     case CMD_INSERT_CHAR:
       // TODO
       break;

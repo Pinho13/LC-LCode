@@ -4,6 +4,12 @@
 
 #define PKT_START_BYTE   0xFE
 
+typedef struct {
+  uint8_t cmd;
+  uint8_t payload_buf[256];
+  uint8_t payload_len; 
+} SerialEvent;
+
 typedef enum {
   CMD_INSERT_CHAR  = 0x01,  // Payload: 1 byte
   CMD_DELETE_CHAR  = 0x02,  // Payload: 0 bytes

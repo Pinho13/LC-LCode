@@ -1,4 +1,6 @@
 #include "controller/serial.h"
+#include "controller/commands.h"
+#include "controller/input/events.h"
 #include "fw/drivers/serial_port.h"
 #include "model/editor.h"
 #include "render_flag.h"
@@ -34,9 +36,16 @@ static void serial_handle_byte(uint8_t byte) {
       payload_len = byte;
       payload_idx = 0;
       if (payload_len == 0) {
-        commands_dispatch_serial(current_cmd, NULL, 0);
+        InputEvent ev;
+        ev.type = INPUT_EVENT_SERIAL;
+        ev.data.serial.cmd = current_cmd;
+        ev.data.serial.payload_len = payload_len;
+      
+        input_event_push(ev);
+        
         state = STATE_WAIT_START;
-      } else {
+      } 
+      else {
         state = STATE_READ_PAYLOAD;
       }
       break;
@@ -45,7 +54,15 @@ static void serial_handle_byte(uint8_t byte) {
       payload_buf[payload_idx] = byte;
       payload_idx++;
       if (payload_idx >= payload_len) {
-        commands_dispatch_serial(current_cmd, payload_buf, payload_len);
+        InputEvent ev;
+        ev.type = INPUT_EVENT_SERIAL;
+        ev.data.serial.cmd = current_cmd;
+        ev.data.serial.payload_len = payload_len;
+        
+        memcpy(ev.data.serial.payload_buf, payload_buf, payload_len);
+        
+        input_event_push(ev);
+        
         state = STATE_WAIT_START;
       }
       break;
