@@ -1,6 +1,5 @@
-#include "keyboard.h"
-#include "commands.h"
-#include "fw/drivers/keyboard.h"
+#include "controller/input/keyboard.h"
+#include "controller/input/events.h"
 
 #define SCANCODE_ESC 0x01
 #define SCANCODE_BACKSPACE 0x0E
@@ -38,19 +37,10 @@ static const char sc_upper[58] = {
   0,   ' '                                  /* 0x38-0x39 */
 };
 
-static packet_scancode ps = {
-  .two_byte = false, .make = false, .size = 0, .bytes = {0, 0}
-};
-
 static bool ctrl_pressed = false;
 static bool shift_pressed = false;
 
-void keyboard_process() {
-  keyboard_ih();
-  if (build_scancode(&ps) != OK) return;
-
-  if (ps.two_byte) return;
-
+void keyboard_process(packet_scancode ps) {
   if (ps.size == 2) {
     uint8_t code2 = ps.bytes[1] & 0x7F;
     if (code2 == SCANCODE_RCTRL) { ctrl_pressed = ps.make; return; }
@@ -65,7 +55,10 @@ void keyboard_process() {
     else if (code2 == SCANCODE_DOWN) ev.dir = DIR_DOWN;
     else if (code2 == SCANCODE_HOME) ev.dir = DIR_HOME;
     else if (code2 == SCANCODE_END) ev.dir = DIR_END;
-    if (ev.dir != DIR_NONE) commands_dispatch(ev);
+    if (ev.dir != DIR_NONE) {
+      InputEvent iev = {.type = INPUT_EVENT_KEY, .data.key = ev};
+      input_event_push(iev);
+    }
     return;
   }
 
@@ -81,12 +74,17 @@ void keyboard_process() {
     .backspace = false, .enter = false, .escape = false, .dir = DIR_NONE
   };
 
-  if (code == SCANCODE_ESC) { ev.escape = true; commands_dispatch(ev); return; }
-  if (code == SCANCODE_BACKSPACE) { ev.backspace = true; commands_dispatch(ev); return; }
-  if (code == SCANCODE_ENTER) { ev.enter = true; commands_dispatch(ev); return; }
+  if (code == SCANCODE_ESC) { ev.escape = true; }
+  else if (code == SCANCODE_BACKSPACE) { ev.backspace = true; }
+  else if (code == SCANCODE_ENTER) { ev.enter = true; }
 
-  if (code < 58) {
+  if (!ev.escape && !ev.backspace && !ev.enter && code < 58) {
     char c = shift_pressed ? sc_upper[code] : sc_lower[code];
-    if (c) { ev.c = c; commands_dispatch(ev); }
+    if (c) ev.c = c;
+  }
+
+  if (ev.escape || ev.backspace || ev.enter || ev.dir != DIR_NONE || ev.c) {
+    InputEvent iev = {.type = INPUT_EVENT_KEY, .data.key = ev};
+    input_event_push(iev);
   }
 }
