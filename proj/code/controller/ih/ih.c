@@ -1,8 +1,9 @@
 #include <lcom/lcf.h>
 
-#include "ih.h"
+#include "controller/ih/ih.h"
 #include "fw/common/utils.h"
-#include "controller/keyboard.h"
+#include "controller/input/keyboard.h"
+#include "controller/input/mouse.h"
 #include "controller/commands.h"
 #include "controller/serial.h"
 #include "model/command_bar.h"
@@ -10,9 +11,12 @@
 #include "render_flag.h"
 
 static uint8_t irq_timer = 0, irq_keyboard = 0, irq_mouse = 0, irq_serial = 0;
-static int mouse_x = 0, mouse_y = 0;
-static bool mouse_initialized = false;
-static bool prev_lb = false;
+packet_scancode ps = {
+  .two_byte = false,
+  .make = false,
+  .size = 0,
+  .bytes = {0, 0}
+};
 
 int subscribe_interrupts() {
   uint8_t bit_no;
@@ -79,43 +83,44 @@ int unsubscribe_interrupts() {
   return errors;
 }
 
-void interrupts_handler(uint32_t irq_mask) {
-  if (irq_mask & irq_timer) {
-    timer_int_handler();
-    if (command_bar_tick()) set_render(RENDER_STATUS);
+void timer_handler() {
+  timer_int_handler();
+  if (command_bar_tick()) set_render(RENDER_STATUS);
+}
+
+void keyboard_handler() {
+  keyboard_ih();
+            
+  if (build_scancode(&ps) != OK) {
+      fail(ERR_KEYBOARD, "keyboard_handler: unable to build packet");
+    return;
   }
-  if (irq_mask & irq_keyboard) keyboard_process();
-  if (irq_mask & irq_serial) serial_process(); 
-  if (irq_mask & irq_mouse) {
-    mouse_ih();
-    if (is_packet_ready()) {
-      struct packet pp;
-      if (build_packet(&pp) != OK) return;
 
-      if (!mouse_initialized) {
-        mouse_x = (int)vg_get_h_res() / 2;
-        mouse_y = (int)vg_get_v_res() / 2;
-        mouse_initialized = true;
-      }
+  if (ps.two_byte) {
+    return;
+  }
 
-      bool moved = (pp.delta_x != 0 || pp.delta_y != 0);
-      mouse_x += pp.delta_x;
-      mouse_y -= pp.delta_y;
-      if (mouse_x < 0) mouse_x = 0;
-      if (mouse_y < 0) mouse_y = 0;
-      if (mouse_x >= (int)vg_get_h_res()) mouse_x = (int)vg_get_h_res() - 1;
-      if (mouse_y >= (int)vg_get_v_res()) mouse_y = (int)vg_get_v_res() - 1;
+  keyboard_process(ps);
+}
 
-      if (moved) set_render(RENDER_MOUSE);
+void mouse_handler() {
+  mouse_ih();
 
-      if (pp.lb && !prev_lb) {
-        MouseEvent me = {.left_clicked = true, .click_x = mouse_x, .click_y = mouse_y};
-        commands_dispatch_mouse(me);
-      }
-      prev_lb = pp.lb;
+  if (is_packet_ready()) {
+    struct packet pp;
+  
+    if (build_packet(&pp) != OK) {
+      fail(ERR_MOUSE, "mouse_handler: unable to build packet");
+      return;
     }
+
+    mouse_process(pp);
   }
 }
 
-int ih_get_mouse_x() { return mouse_x; }
-int ih_get_mouse_y() { return mouse_y; }
+void interrupts_handler(uint32_t irq_mask) {
+  if (irq_mask & irq_timer) timer_handler();
+  if (irq_mask & irq_keyboard) keyboard_handler();
+  if (irq_mask & irq_serial) serial_process(); 
+  if (irq_mask & irq_mouse) mouse_handler();
+}
