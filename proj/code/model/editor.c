@@ -358,26 +358,38 @@ void editor_sel_get_range(int *start_row, int *start_col, int *end_row, int *end
   }
 }
 
-void editor_delete_selection() {
-  if (!sel_active) return;
+EditorResult editor_delete_selection() {
+  if (!sel_active) return EDITOR_OK;
   int start_row, start_col, end_row, end_col;
   editor_sel_get_range(&start_row, &start_col, &end_row, &end_col);
 
+  //Single line selection
   if (start_row == end_row) {
-    int len = strlen(lines[start_row]);
-    memmove(&lines[start_row][start_col], &lines[start_row][end_col], len - end_col + 1);
+    int len = lines[start_row].len;
+    memmove(&lines[start_row].buf[start_col], &lines[start_row].buf[end_col], len - end_col + 1);
+    lines[start_row].len -= end_col - start_col;
   } 
+  //Multi-line selection 
   else {
-    int tail_len = strlen(lines[end_row]) - end_col;
-    if (start_col + tail_len < MAX_COLS){
-      memcpy(&lines[start_row][start_col], &lines[end_row][end_col], tail_len + 1);
+    int tail_len = lines[end_row].len - end_col;
+
+    //Grow line (if needed) to merge tail
+    if (line_ensure_cap(&lines[start_row], start_col + tail_len + 1) != 0){
+      return EDITOR_ERR_ALLOC_FAILED;
     }
-    else {
-      lines[start_row][start_col] = '\0';
-    }
+    //append tail
+    memcpy(lines[start_row].buf + start_col, lines[end_row].buf + end_col, tail_len + 1);
+    lines[start_row].len = start_col + tail_len;
+
+
     int removed = end_row - start_row;
-    memmove(lines[start_row + 1], lines[end_row + 1], (row_count - end_row - 1) * MAX_COLS);
-    memset(lines[row_count - removed], 0, removed * MAX_COLS);
+    for (int r = start_row + 1; r <= end_row; r++) {
+      free(lines[r].buf);
+    }
+    memmove(lines + start_row + 1, lines + end_row + 1, (row_count - end_row - 1) * sizeof(Line));
+
+    //Zero out now-unused lines at the end
+    memset(lines + row_count - removed, 0, removed * sizeof(Line));
     row_count -= removed;
   }
 
@@ -386,6 +398,7 @@ void editor_delete_selection() {
   sel_active = false;
   sel_dirty = true;
   clamp_scroll();
+  return EDITOR_OK;
 }
 
 void editor_sel_set_anchor() {
@@ -420,26 +433,30 @@ void editor_copy_selection() {
   int start_row, start_col, end_row, end_col;
   editor_sel_get_range(&start_row, &start_col, &end_row, &end_col);
 
+  //measure how many bytes to allocate
   int size = 0;
   for (int r = start_row; r <= end_row; r++) {
     int col_start = (r == start_row) ? start_col : 0;
-    int col_end = (r == end_row) ? end_col : (int)strlen(lines[r]);
+    int col_end = (r == end_row) ? end_col : lines[r].len;
     size += (col_end - col_start) + (r < end_row ? 1 : 0); /* +1 for '\n' between rows */
   }
-  size++; /* '\0' */
+  // \0 terminator
+  size++; 
 
   if (clipboard != NULL) free(clipboard);
   clipboard = malloc(size);
   if (clipboard == NULL) return;
 
+  //Fill buffer
   int idx = 0;
   for (int r = start_row; r <= end_row; r++) {
     int col_start = (r == start_row) ? start_col : 0;
-    int col_end = (r == end_row) ? end_col : (int)strlen(lines[r]);
+    int col_end = (r == end_row) ? end_col : lines[r].len;
     int len = col_end - col_start;
-    memcpy(&clipboard[idx], &lines[r][col_start], len);
+    memcpy(&clipboard[idx], lines[r].buf + col_start, len);
     idx += len;
-    if (r < end_row) clipboard[idx++] = '\n'; /* no trailing newline after last row */
+    // no \n in last line
+    if (r < end_row) clipboard[idx++] = '\n';
   }
   clipboard[idx] = '\0';
 }
