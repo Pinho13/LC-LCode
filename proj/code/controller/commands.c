@@ -239,13 +239,13 @@ void commands_dispatch_serial(SerialEvent se) {
   switch (se.cmd) {
     case CMD_INSERT_CHAR:
       editor_remote_insert_char(se.payload_buf[0]);
-      set_render_ex(RENDER_LINE);
+      set_render_ex(RENDER_REMOTE_LINE);
       break;
       
     case CMD_DELETE_CHAR:{
       bool mid_line = (editor_get_remote_cursor_col() > 0);
       editor_remote_delete_char();
-      set_render_ex(mid_line ? RENDER_LINE : RENDER_FULL);
+      set_render_ex(mid_line ? RENDER_REMOTE_LINE : RENDER_FULL);
       break;
     }  
     case CMD_MOVE_CURSOR:{
@@ -263,7 +263,7 @@ void commands_dispatch_serial(SerialEvent se) {
       }
       else{
         editor_set_remote_cursor(remote_cursor_row,remote_cursor_col);
-        set_render_ex(RENDER_LINE);
+        set_render_ex(RENDER_REMOTE_LINE);
       }
       break;
     }
