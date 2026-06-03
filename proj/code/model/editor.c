@@ -244,14 +244,21 @@ EditorResult editor_delete_char() {
   return EDITOR_OK;
 }
 
-void editor_delete_word() {
-  if (cursor_col == 0) return;
+EditorResult editor_delete_word() {
+  if (cursor_col == 0) {
+    return EDITOR_OK;
+  }
+
   int end = cursor_col;
-  while (cursor_col > 0 && lines[cursor_row][cursor_col - 1] == ' ') cursor_col--;
-  while (cursor_col > 0 && lines[cursor_row][cursor_col - 1] != ' ') cursor_col--;
-  int len = strlen(lines[cursor_row]);
-  memmove(&lines[cursor_row][cursor_col], &lines[cursor_row][end], len - end + 1);
+  while (cursor_col > 0 && lines[cursor_row].buf[cursor_col - 1] == ' ') cursor_col--;
+  while (cursor_col > 0 && lines[cursor_row].buf[cursor_col - 1] != ' ') cursor_col--;
+
+  //shift from end (right bound) to cursor_col (left bound)
+  memmove(&lines[cursor_row].buf[cursor_col], &lines[cursor_row].buf[end], lines[cursor_row].len - end + 1);
+  
+  lines[cursor_row].len -= end - cursor_col;
   clamp_scroll();
+  return EDITOR_OK;
 }
 
 void editor_move_left() {
