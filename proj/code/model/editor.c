@@ -142,7 +142,7 @@ void editor_scroll_by(int drow, int dcol) {
 void editor_set_cursor(int row, int col) {
   if (row < 0) row = 0;
   if (row >= row_count) row = row_count - 1;
-  int len = strlen(lines[row]);
+  int len = lines[row].len;
   if (col < 0) col = 0;
   if (col > len) col = len;
   cursor_row = row;
@@ -262,13 +262,18 @@ EditorResult editor_delete_word() {
 }
 
 void editor_move_left() {
-  if (cursor_col > 0) cursor_col--;
-  else if (cursor_row > 0) { cursor_row--; cursor_col = strlen(lines[cursor_row]); }
+  if (cursor_col > 0){
+    cursor_col--;
+  }
+  else if (cursor_row > 0){
+    cursor_row--; 
+    cursor_col = lines[cursor_row].len;
+  }
   clamp_scroll();
 }
 
 void editor_move_right() {
-  int len = strlen(lines[cursor_row]);
+  int len = lines[cursor_row].len;
   if (cursor_col < len) cursor_col++;
   else if (cursor_row < row_count - 1) { cursor_row++; cursor_col = 0; }
   clamp_scroll();
@@ -277,8 +282,9 @@ void editor_move_right() {
 void editor_move_up() {
   if (cursor_row > 0) {
     cursor_row--;
-    int len = strlen(lines[cursor_row]);
-    if (cursor_col > len) cursor_col = len;
+    if (cursor_col > lines[cursor_row].len) {
+      cursor_col = lines[cursor_row].len;
+    }
   }
   clamp_scroll();
 }
@@ -286,26 +292,31 @@ void editor_move_up() {
 void editor_move_down() {
   if (cursor_row < row_count - 1) {
     cursor_row++;
-    int len = strlen(lines[cursor_row]);
-    if (cursor_col > len) cursor_col = len;
+    if (cursor_col > lines[cursor_row].len) {
+      cursor_col = lines[cursor_row].len;
+    }
   }
   clamp_scroll();
 }
 
 void editor_move_word_left() {
-  while (cursor_col > 0 && lines[cursor_row][cursor_col - 1] == ' ')
+  while (cursor_col > 0 && lines[cursor_row].buf[cursor_col - 1] == ' '){
     cursor_col--;
-  while (cursor_col > 0 && lines[cursor_row][cursor_col - 1] != ' ')
+  }
+  while (cursor_col > 0 && lines[cursor_row].buf[cursor_col - 1] != ' '){
     cursor_col--;
+  }
   clamp_scroll();
 }
 
 void editor_move_word_right() {
-  int len = strlen(lines[cursor_row]);
-  while (cursor_col < len && lines[cursor_row][cursor_col] != ' ')
+  int len = lines[cursor_row].len;
+  while (cursor_col < len && lines[cursor_row].buf[cursor_col] != ' '){
     cursor_col++;
-  while (cursor_col < len && lines[cursor_row][cursor_col] == ' ')
+  }
+  while (cursor_col < len && lines[cursor_row].buf[cursor_col] == ' '){
     cursor_col++;
+  }
   clamp_scroll();
 }
 
@@ -315,13 +326,13 @@ void editor_move_home() {
 }
 
 void editor_move_end() {
-  cursor_col = strlen(lines[cursor_row]);
+  cursor_col = lines[cursor_row].len;
   clamp_scroll();
 }
 
 const char *editor_get_line(int row) {
-  if (row < 0 || row >= MAX_LINES) return "";
-  return lines[row];
+  if (row < 0 || row >= row_count) return "";
+  return lines[row].buf;
 }
 
 int editor_get_row_count() { return row_count; }
