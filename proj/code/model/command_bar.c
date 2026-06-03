@@ -1,4 +1,4 @@
-#include "command_bar.h"
+#include "model/command_bar.h"
 #include <string.h>
 
 static EditorMode mode = MODE_EDITOR;

@@ -1,4 +1,4 @@
-#include "editor.h"
+#include "model/editor.h"
 #include <string.h>
 #include <stdbool.h>
 #include <stdlib.h>

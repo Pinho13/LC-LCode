@@ -1,5 +1,5 @@
-#include "filetree_commands.h"
-#include "commands.h"
+#include "controller/filetree_commands.h"
+#include "controller/commands.h"
 #include "model/filetree.h"
 #include "model/command_bar.h"
 #include "view/scene.h"
