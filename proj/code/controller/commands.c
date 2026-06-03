@@ -77,7 +77,7 @@ static void execute_command(const char *raw) {
   char name[CMD_BUF_SIZE];
   const char *args = "";
   int i = 0;
-  while (raw[i] && raw[i] != ' ') i++;
+  while (raw[i] && raw[i] != ' ' && i < CMD_BUF_SIZE - 1) i++;
   strncpy(name, raw, i);
   name[i] = '\0';
   if (raw[i] == ' ') args = raw + i + 1;
