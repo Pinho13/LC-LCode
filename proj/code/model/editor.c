@@ -156,30 +156,53 @@ bool editor_consume_scroll_dirty() {
   return dirty;
 }
 
-void editor_insert_char(char c) {
+EditorResult editor_insert_char(char c) {
   if (c == '\n') {
-    if (row_count >= MAX_LINES) return;
-    /* Shift all rows below the current one down by one to open a slot,
-     * then copy from cursor onwards into the new slot and end the
-     * current line at the split point. */
-    memmove(lines[cursor_row + 2], lines[cursor_row + 1], (row_count - cursor_row - 1) * MAX_COLS);
+    //add new line allocation if needed
+    if (lines_ensure_cap(row_count + 1) != 0){
+      return EDITOR_ERR_ALLOC_FAILED;
+    }
+
+    //  Shifts all Line structs below the cursor down by one slot to open a gap at cursor_row + 1.
+    memmove(lines + cursor_row + 2, lines + cursor_row + 1, (row_count - cursor_row - 1) * sizeof(Line));
+
     int split = cursor_col;
-    int tail = strlen(lines[cursor_row]) - split;
-    memcpy(lines[cursor_row + 1], &lines[cursor_row][split], tail + 1);
-    lines[cursor_row][split] = '\0';
+    int tail_len = lines[cursor_row].len - split;
+
+    Line *new_line = &lines[cursor_row + 1];
+    new_line->cap = 0; new_line->buf = NULL; new_line->len = 0;
+
+    //make sure newline can hold the tail
+    if (line_ensure_cap(new_line, tail_len) != 0){
+      return EDITOR_ERR_ALLOC_FAILED;
+    }
+    memcpy(new_line->buf, lines[cursor_row].buf + split, tail_len);
+    new_line->buf[tail_len] = '\0';
+    new_line->len = tail_len;
+
+    lines[cursor_row].buf[split] = '\0';
+    lines[cursor_row].len = split;
+
     row_count++;
-    cursor_row++;
-    cursor_col = 0;
+    cursor_row++; cursor_col = 0;
     clamp_scroll();
-    return;
+    return EDITOR_OK;
   }
 
-  int len = strlen(lines[cursor_row]);
-  if (len >= MAX_COLS - 1) return;
-  memmove(&lines[cursor_row][cursor_col + 1], &lines[cursor_row][cursor_col], len - cursor_col + 1);
-  lines[cursor_row][cursor_col] = c;
+  //not newline char
+  if (line_ensure_cap(&lines[cursor_row], lines[cursor_row].len + 2) != 0){
+    return EDITOR_ERR_ALLOC_FAILED;
+  }
+
+  //move chars right
+  memmove(&lines[cursor_row].buf[cursor_col + 1], &lines[cursor_row].buf[cursor_col], lines[cursor_row].len - cursor_col + 1);
+
+  //add char
+  lines[cursor_row].buf[cursor_col] = c;
   cursor_col++;
+  lines[cursor_row].len++;
   clamp_scroll();
+  return EDITOR_OK;
 }
 
 void editor_delete_char() {
