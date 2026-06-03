@@ -48,6 +48,7 @@ int subscribe_interrupts() {
     timer_unsubscribe_int();
     keyboard_unsubscribe_int();
     mouse_unsubscribe_int();
+    my_mouse_disable_data_reporting();
     return fail(ERR_SERIAL, "subscribe_interrupts: unable to subscribe serial interrupt");
   }
   irq_serial = BIT(bit_no);
