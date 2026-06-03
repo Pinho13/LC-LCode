@@ -13,6 +13,3 @@ void keyboard_handler();
 void mouse_handler();
 
 void interrupts_handler(uint32_t irq_mask);
-
-int ih_get_mouse_x();
-int ih_get_mouse_y();
