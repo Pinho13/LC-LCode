@@ -3,6 +3,7 @@
 #include "controller/ih/ih.h"
 #include "fw/common/utils.h"
 #include "controller/input/keyboard.h"
+#include "controller/input/mouse.h"
 #include "controller/commands.h"
 #include "controller/serial.h"
 #include "model/command_bar.h"
@@ -10,9 +11,6 @@
 #include "render_flag.h"
 
 static uint8_t irq_timer = 0, irq_keyboard = 0, irq_mouse = 0, irq_serial = 0;
-static int mouse_x = 0, mouse_y = 0;
-static bool mouse_initialized = false;
-static bool prev_lb = false;
 packet_scancode ps = {
   .two_byte = false,
   .make = false,
@@ -110,29 +108,8 @@ void mouse_handler() {
       fail(ERR_MOUSE, "mouse_handler: unable to build packet");
       return;
     }
-    
 
-    if (!mouse_initialized) {
-        mouse_x = (int)vg_get_h_res() / 2;
-        mouse_y = (int)vg_get_v_res() / 2;
-        mouse_initialized = true;
-      }
-
-      bool moved = (pp.delta_x != 0 || pp.delta_y != 0);
-      mouse_x += pp.delta_x;
-      mouse_y -= pp.delta_y;
-      if (mouse_x < 0) mouse_x = 0;
-      if (mouse_y < 0) mouse_y = 0;
-      if (mouse_x >= (int)vg_get_h_res()) mouse_x = (int)vg_get_h_res() - 1;
-      if (mouse_y >= (int)vg_get_v_res()) mouse_y = (int)vg_get_v_res() - 1;
-
-      if (moved) set_render(RENDER_MOUSE);
-
-      if (pp.lb && !prev_lb) {
-        MouseEvent me = {.left_clicked = true, .click_x = mouse_x, .click_y = mouse_y};
-        commands_dispatch_mouse(me);
-      }
-      prev_lb = pp.lb;
+    mouse_process(pp);
   }
 }
 
@@ -142,6 +119,3 @@ void interrupts_handler(uint32_t irq_mask) {
   if (irq_mask & irq_serial) serial_process(); 
   if (irq_mask & irq_mouse) mouse_handler();
 }
-
-int ih_get_mouse_x() { return mouse_x; }
-int ih_get_mouse_y() { return mouse_y; }
