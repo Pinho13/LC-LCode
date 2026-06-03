@@ -1,7 +1,7 @@
 #include <lcom/lcf.h>
 
 #include "controller/input/mouse.h"
-#include "controller/commands.h"
+#include "controller/input/events.h"
 #include "fw/drivers/video.h"
 #include "render_flag.h"
 
@@ -28,7 +28,8 @@ void mouse_process(struct packet pp) {
 
   if (pp.lb && !prev_lb) {
     MouseEvent me = {.left_clicked = true, .click_x = mouse_x, .click_y = mouse_y};
-    commands_dispatch_mouse(me);
+    InputEvent iev = {.type = INPUT_EVENT_MOUSE, .data.mouse = me};
+    input_event_push(iev);
   }
   prev_lb = pp.lb;
 }

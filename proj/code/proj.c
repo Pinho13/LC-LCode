@@ -11,6 +11,7 @@
 #include "fw/drivers/serial_port.h"
 #include "controller/ih/ih.h"
 #include "controller/commands.h"
+#include "controller/input/events.h"
 #include "view/scene.h"
 #include "model/editor.h"
 #include "model/command_bar.h"
@@ -69,6 +70,7 @@ int(proj_main_loop)(int argc, char *argv[]) {
       }
     }
 
+    input_dispatch();
     if (get_render())
       view_render();
   }

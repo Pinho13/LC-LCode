@@ -1,5 +1,5 @@
 #include "controller/input/keyboard.h"
-#include "controller/commands.h"
+#include "controller/input/events.h"
 
 #define SCANCODE_ESC 0x01
 #define SCANCODE_BACKSPACE 0x0E
@@ -55,7 +55,10 @@ void keyboard_process(packet_scancode ps) {
     else if (code2 == SCANCODE_DOWN) ev.dir = DIR_DOWN;
     else if (code2 == SCANCODE_HOME) ev.dir = DIR_HOME;
     else if (code2 == SCANCODE_END) ev.dir = DIR_END;
-    if (ev.dir != DIR_NONE) commands_dispatch(ev);
+    if (ev.dir != DIR_NONE) {
+      InputEvent iev = {.type = INPUT_EVENT_KEY, .data.key = ev};
+      input_event_push(iev);
+    }
     return;
   }
 
@@ -71,12 +74,17 @@ void keyboard_process(packet_scancode ps) {
     .backspace = false, .enter = false, .escape = false, .dir = DIR_NONE
   };
 
-  if (code == SCANCODE_ESC) { ev.escape = true; commands_dispatch(ev); return; }
-  if (code == SCANCODE_BACKSPACE) { ev.backspace = true; commands_dispatch(ev); return; }
-  if (code == SCANCODE_ENTER) { ev.enter = true; commands_dispatch(ev); return; }
+  if (code == SCANCODE_ESC) { ev.escape = true; }
+  else if (code == SCANCODE_BACKSPACE) { ev.backspace = true; }
+  else if (code == SCANCODE_ENTER) { ev.enter = true; }
 
-  if (code < 58) {
+  if (!ev.escape && !ev.backspace && !ev.enter && code < 58) {
     char c = shift_pressed ? sc_upper[code] : sc_lower[code];
-    if (c) { ev.c = c; commands_dispatch(ev); }
+    if (c) ev.c = c;
+  }
+
+  if (ev.escape || ev.backspace || ev.enter || ev.dir != DIR_NONE || ev.c) {
+    InputEvent iev = {.type = INPUT_EVENT_KEY, .data.key = ev};
+    input_event_push(iev);
   }
 }
