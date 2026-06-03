@@ -1,4 +1,4 @@
-#include "keyboard.h"
+#include "controller/input/keyboard.h"
 #include "controller/commands.h"
 
 #define SCANCODE_ESC 0x01

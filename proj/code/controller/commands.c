@@ -1,4 +1,4 @@
-#include "commands.h"
+#include "controller/commands.h"
 #include "controller/filetree_commands.h"
 #include "model/editor.h"
 #include "model/command_bar.h"

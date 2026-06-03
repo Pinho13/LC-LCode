@@ -1,4 +1,4 @@
-#include "serial.h"
+#include "controller/serial.h"
 #include "fw/drivers/serial_port.h"
 #include "model/editor.h"
 #include "render_flag.h"

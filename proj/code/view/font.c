@@ -1,4 +1,4 @@
-#include "font.h"
+#include "view/font.h"
 #include "fw/drivers/video.h"
 
 /* IBM VGA 8x16 bitmap font — public domain (CP437) */
