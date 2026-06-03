@@ -1,6 +1,5 @@
 #include "keyboard.h"
 #include "commands.h"
-#include "fw/drivers/keyboard.h"
 
 #define SCANCODE_ESC 0x01
 #define SCANCODE_BACKSPACE 0x0E
@@ -38,19 +37,10 @@ static const char sc_upper[58] = {
   0,   ' '                                  /* 0x38-0x39 */
 };
 
-static packet_scancode ps = {
-  .two_byte = false, .make = false, .size = 0, .bytes = {0, 0}
-};
-
 static bool ctrl_pressed = false;
 static bool shift_pressed = false;
 
-void keyboard_process() {
-  keyboard_ih();
-  if (build_scancode(&ps) != OK) return;
-
-  if (ps.two_byte) return;
-
+void keyboard_process(packet_scancode ps) {
   if (ps.size == 2) {
     uint8_t code2 = ps.bytes[1] & 0x7F;
     if (code2 == SCANCODE_RCTRL) { ctrl_pressed = ps.make; return; }

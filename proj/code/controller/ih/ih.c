@@ -13,6 +13,12 @@ static uint8_t irq_timer = 0, irq_keyboard = 0, irq_mouse = 0, irq_serial = 0;
 static int mouse_x = 0, mouse_y = 0;
 static bool mouse_initialized = false;
 static bool prev_lb = false;
+packet_scancode ps = {
+  .two_byte = false,
+  .make = false,
+  .size = 0,
+  .bytes = {0, 0}
+};
 
 int subscribe_interrupts() {
   uint8_t bit_no;
@@ -74,20 +80,39 @@ int unsubscribe_interrupts() {
   return errors;
 }
 
-void interrupts_handler(uint32_t irq_mask) {
-  if (irq_mask & irq_timer) {
-    timer_int_handler();
-    if (command_bar_tick()) set_render(RENDER_STATUS);
-  }
-  if (irq_mask & irq_keyboard) keyboard_process();
-  if (irq_mask & irq_serial) serial_process(); 
-  if (irq_mask & irq_mouse) {
-    mouse_ih();
-    if (is_packet_ready()) {
-      struct packet pp;
-      if (build_packet(&pp) != OK) return;
+void timer_handler() {
+  timer_int_handler();
+  if (command_bar_tick()) set_render(RENDER_STATUS);
+}
 
-      if (!mouse_initialized) {
+void keyboard_handler() {
+  keyboard_ih();
+            
+  if (build_scancode(&ps) != OK) {
+      fail(ERR_KEYBOARD, "keyboard_handler: unable to build packet");
+    return;
+  }
+
+  if (ps.two_byte) {
+    return;
+  }
+
+  keyboard_process(ps);
+}
+
+void mouse_handler() {
+  mouse_ih();
+
+  if (is_packet_ready()) {
+    struct packet pp;
+  
+    if (build_packet(&pp) != OK) {
+      fail(ERR_MOUSE, "mouse_handler: unable to build packet");
+      return;
+    }
+    
+
+    if (!mouse_initialized) {
         mouse_x = (int)vg_get_h_res() / 2;
         mouse_y = (int)vg_get_v_res() / 2;
         mouse_initialized = true;
@@ -108,8 +133,14 @@ void interrupts_handler(uint32_t irq_mask) {
         commands_dispatch_mouse(me);
       }
       prev_lb = pp.lb;
-    }
   }
+}
+
+void interrupts_handler(uint32_t irq_mask) {
+  if (irq_mask & irq_timer) timer_handler();
+  if (irq_mask & irq_keyboard) keyboard_handler();
+  if (irq_mask & irq_serial) serial_process(); 
+  if (irq_mask & irq_mouse) mouse_handler();
 }
 
 int ih_get_mouse_x() { return mouse_x; }
