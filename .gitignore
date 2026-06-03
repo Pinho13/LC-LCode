@@ -3,6 +3,9 @@
 !*.*
 !/**/
 
+# macOS metadata
+**/.DS_Store
+
 # LCF output
 output.txt
 trace.txt
