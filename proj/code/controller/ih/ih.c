@@ -2,7 +2,7 @@
 
 #include "ih.h"
 #include "fw/common/utils.h"
-#include "controller/keyboard.h"
+#include "controller/input/keyboard.h"
 #include "controller/commands.h"
 #include "controller/serial.h"
 #include "model/command_bar.h"

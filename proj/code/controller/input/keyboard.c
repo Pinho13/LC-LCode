@@ -1,5 +1,5 @@
 #include "keyboard.h"
-#include "commands.h"
+#include "controller/commands.h"
 
 #define SCANCODE_ESC 0x01
 #define SCANCODE_BACKSPACE 0x0E

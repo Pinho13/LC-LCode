@@ -1,6 +1,6 @@
 #pragma once
 
-#include "keyboard.h"
+#include "controller/input/keyboard.h"
 #include <stdbool.h>
 
 typedef struct {
