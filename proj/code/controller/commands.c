@@ -284,17 +284,25 @@ void commands_dispatch_mouse(MouseEvent me) {
 
 void commands_dispatch_serial(SerialEvent se) {
   if (se.payload_len == 0 && se.cmd != CMD_DELETE_CHAR) return;
-
+  EditorResult r;
   switch (se.cmd) {
     case CMD_INSERT_CHAR:
-      editor_remote_insert_char(se.payload_buf[0]);
+      r = editor_remote_insert_char(se.payload_buf[0]);
+      if (r == EDITOR_ERR_ALLOC_FAILED) {
+        command_bar_set_status("Out of memory");
+        set_render(RENDER_STATUS);
+      }
       set_render_ex(RENDER_REMOTE_LINE);
       break;
       
     case CMD_DELETE_CHAR:{
       bool mid_line = (editor_get_remote_cursor_col() > 0);
-      editor_remote_delete_char();
-      set_render_ex(mid_line ? RENDER_REMOTE_LINE : RENDER_FULL);
+      r = editor_remote_delete_char();
+      if (r == EDITOR_ERR_ALLOC_FAILED) {
+        command_bar_set_status("Out of memory");
+        set_render(RENDER_STATUS);
+      }
+      else set_render_ex(mid_line ? RENDER_REMOTE_LINE : RENDER_FULL);
       break;
     }  
     case CMD_MOVE_CURSOR:{

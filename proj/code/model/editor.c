@@ -543,91 +543,6 @@ EditorResult editor_paste() {
   return EDITOR_OK;
 }
 
-// Remote
-
-void editor_set_remote_cursor(int row, int col) {
-  if (row == cursor_row) return;
-  
-  remote_cursor_row = row;
-  remote_cursor_col = col;
-}
-
-void editor_remote_insert_char(char c) {
-  if (c == '\n') {
-    if (row_count >= MAX_LINES) return;
-    
-    memmove(lines[remote_cursor_row + 2], lines[remote_cursor_row + 1], (row_count - remote_cursor_row - 1) * MAX_COLS);
-    
-    int split = remote_cursor_col;
-    int tail = strlen(lines[remote_cursor_row]) - split;
-    memcpy(lines[remote_cursor_row + 1], &lines[remote_cursor_row][split], tail + 1);
-    lines[remote_cursor_row][split] = '\0';
-    
-    row_count++;
-    int old_remote_row = remote_cursor_row; 
-    remote_cursor_row++;
-    remote_cursor_col = 0;
-    
-    if (cursor_row > old_remote_row) {
-      cursor_row++;
-    } 
-    
-    clamp_scroll(); 
-    return;
-  }
-
-  int len = strlen(lines[remote_cursor_row]);
-  if (len >= MAX_COLS - 1) return;
-  
-  memmove(&lines[remote_cursor_row][remote_cursor_col + 1], &lines[remote_cursor_row][remote_cursor_col], len - remote_cursor_col + 1);
-  
-  lines[remote_cursor_row][remote_cursor_col] = c;
-  remote_cursor_col++;
-  
-}
-
-void editor_remote_delete_char() {
-  if (remote_cursor_col > 0) { // letter in the mid of the line
-   
-    remote_cursor_col--;
-    int len = strlen(lines[remote_cursor_row]);
-    
-    memmove(&lines[remote_cursor_row][remote_cursor_col], &lines[remote_cursor_row][remote_cursor_col + 1], len - remote_cursor_col);
-    
-        
-  } 
-  else if (remote_cursor_row > 0) { // backspace in the begin of the line
-    
-    int prev_len = strlen(lines[remote_cursor_row - 1]);
-    int curr_len = strlen(lines[remote_cursor_row]);
-    
-    if (prev_len + curr_len >= MAX_COLS) return;
-    
-    memcpy(&lines[remote_cursor_row - 1][prev_len], lines[remote_cursor_row], curr_len + 1);
-    
-    // Lines down, move 1 line up each one
-    memmove(lines[remote_cursor_row], lines[remote_cursor_row + 1], (row_count - remote_cursor_row - 1) * MAX_COLS);
-    
-    // clean trash
-    memset(lines[row_count - 1], 0, MAX_COLS);
-    
-    row_count--;
-    int old_remote_row = remote_cursor_row; 
-    remote_cursor_row--;
-    remote_cursor_col = prev_len;
-  
-    if (cursor_row > old_remote_row) {
-      cursor_row--;
-    }
-  }
-  
-  clamp_scroll(); 
-}
-
-int editor_get_remote_cursor_row(){ return remote_cursor_row;}
-int editor_get_remote_cursor_col(){ return remote_cursor_col;}
-
-
 EditorResult editor_load_line(const char *text, int len) {
   //grows last line to fit new text
   if (line_ensure_cap(&lines[row_count - 1], len) != 0) return EDITOR_ERR_ALLOC_FAILED;
@@ -646,3 +561,118 @@ void editor_load_finalize() {
   if (row_count > 1 && lines[row_count - 1].len == 0)
     row_count--;
 }
+
+// Remote
+
+void editor_set_remote_cursor(int row, int col) {
+  if (row == cursor_row) return;
+  
+  remote_cursor_row = row;
+  remote_cursor_col = col;
+}
+
+EditorResult editor_remote_insert_char(char c) {
+  if (c == '\n') {
+    //add new line allocation if needed
+    if (lines_ensure_cap(row_count + 1) != 0){
+      return EDITOR_ERR_ALLOC_FAILED;
+    }
+    
+    memmove(lines+ remote_cursor_row + 2, lines + remote_cursor_row + 1, (row_count - remote_cursor_row - 1) * sizeof(Line));
+    
+    int split = remote_cursor_col;
+    int tail_len = lines[remote_cursor_row].len - split;
+    
+    Line * new_line = &lines[remote_cursor_row + 1];
+    *new_line = (Line){NULL, 0, 0};
+    
+    if (line_ensure_cap(new_line, tail_len) != 0){
+      return EDITOR_ERR_ALLOC_FAILED;
+    }
+    
+    memcpy(new_line->buf, lines[remote_cursor_row].buf + split, tail_len);
+    new_line->buf[tail_len] = '\0';
+    new_line->len = tail_len;
+    
+    lines[remote_cursor_row].buf[split] = '\0';
+    lines[remote_cursor_row].len = split;
+    
+    row_count++;
+    int old_remote_row = remote_cursor_row; 
+    remote_cursor_row++;
+    remote_cursor_col = 0;
+    
+    if (cursor_row > old_remote_row) {
+      cursor_row++;
+    } 
+    
+    clamp_scroll(); 
+    return EDITOR_OK;
+  }
+
+  if (line_ensure_cap(&lines[remote_cursor_row], lines[remote_cursor_row].len + 2) != 0){
+    return EDITOR_ERR_ALLOC_FAILED;
+  }
+  
+  //move chars right
+  memmove(&lines[remote_cursor_row].buf[remote_cursor_col + 1], &lines[remote_cursor_row].buf[remote_cursor_col], lines[remote_cursor_row].len - remote_cursor_col + 1);
+  
+
+  //add char
+  lines[remote_cursor_row].buf[remote_cursor_col] = c;
+  remote_cursor_col++;
+  lines[remote_cursor_row].len++;
+  clamp_scroll();
+  return EDITOR_OK;
+  
+}
+
+EditorResult editor_remote_delete_char() {
+  if (remote_cursor_col > 0) { // letter in the mid of the line
+   
+    remote_cursor_col--;
+    memmove(&lines[remote_cursor_row].buf[remote_cursor_col], &lines[remote_cursor_row].buf[remote_cursor_col + 1],
+            lines[remote_cursor_row].len - remote_cursor_col);
+    lines[remote_cursor_row].len--;
+    
+  } 
+  else if (remote_cursor_row > 0) { // backspace in the begin of the line
+    
+    int prev_len = lines[remote_cursor_row - 1].len;
+    int curr_len = lines[remote_cursor_row].len;
+    
+    //grow prev line for merged content
+    if (line_ensure_cap(&lines[remote_cursor_row - 1], prev_len + curr_len + 1) != 0){
+      return EDITOR_ERR_ALLOC_FAILED;
+    }
+    
+    //append line
+    memcpy(lines[remote_cursor_row - 1].buf + prev_len, lines[remote_cursor_row].buf, curr_len + 1);
+    lines[remote_cursor_row - 1].len = prev_len + curr_len;
+
+    free(lines[remote_cursor_row].buf);
+    
+    // Lines down, move 1 line up each one
+    memmove(lines + remote_cursor_row, lines + remote_cursor_row + 1, (row_count - remote_cursor_row - 1) * sizeof(Line));
+    
+    // clean trash
+    
+    lines[row_count - 1] = (Line){NULL, 0, 0};
+    row_count--;
+    int old_remote_row = remote_cursor_row; 
+    remote_cursor_row--;
+    remote_cursor_col = prev_len;
+  
+    if (cursor_row > old_remote_row) {
+      cursor_row--;
+    }
+  }
+  
+  clamp_scroll();
+  return EDITOR_OK; 
+}
+
+int editor_get_remote_cursor_row(){ return remote_cursor_row;}
+int editor_get_remote_cursor_col(){ return remote_cursor_col;}
+
+
