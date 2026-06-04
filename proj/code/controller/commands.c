@@ -285,9 +285,13 @@ void commands_dispatch_mouse(MouseEvent me) {
   }
 }
 
+static uint16_t file_num_lines = 0;
+static uint16_t lines_contador = 0;
+
 void commands_dispatch_serial(SerialEvent se) {
   if (se.payload_len == 0 && se.cmd != CMD_DELETE_CHAR) return;
   EditorResult r;
+  
   switch (se.cmd) {
     case CMD_INSERT_CHAR:
       r = editor_remote_insert_char(se.payload_buf[0]);
@@ -327,14 +331,39 @@ void commands_dispatch_serial(SerialEvent se) {
       }
       break;
     }
-    case CMD_FILE_START:
-      // TODO
+    case CMD_FILE_START:{
+      editor_init();//Para já limpo a memoria toda
+      
+      file_num_lines = (se.payload_buf[0] << 8) | se.payload_buf[1];
+      lines_contador = 0; 
+      
+      char file_name[256];
+      int name_len = se.payload_len - 2;
+      
+      memcpy(file_name, &se.payload_buf[2], name_len);
+      file_name[name_len] = '\0';
+      
+      command_bar_set_filename(file_name);
+      command_bar_set_status("A Receber Ficheiro...");
+      set_render_ex(RENDER_FULL); 
       break;
-
-    case CMD_FILE_LINE:
-      // TODO
+    }  
+    case CMD_FILE_LINE:{
+      if (file_num_lines==0){
+        break;
+      }
+      
+      lines_contador++;
+      editor_load_line((const char*) se.payload_buf,se.payload_len);
+      
+      if (lines_contador>=file_num_lines){
+        set_render_ex(RENDER_FULL);
+        command_bar_set_status("");
+        editor_load_finalize();
+        file_num_lines=0;
+      }
       break;
-
+    }  
     default:
       break;
   }
