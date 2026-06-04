@@ -53,6 +53,38 @@ static void execute_open(const char *name) {
   scene_set_language(syntax_detect_language(name));
 }
 
+static void execute_sync() {
+  
+  const char *filename = command_bar_get_filename();
+  int filename_len = strlen(filename);
+  int total_lines = editor_get_row_count();
+
+  build_packet_serial(CMD_FILE_START, (uint8_t*)filename, filename_len, total_lines);
+
+    
+  for (int i = 0; i < total_lines; i++) {
+    const char *line = editor_get_line(i);
+    build_packet_serial(CMD_FILE_LINE, (uint8_t*)line, editor_get_line_len(i), 0);
+  }
+    
+  //optional
+  uint8_t load[4];
+  int r = editor_get_cursor_row();
+  int c = editor_get_cursor_col();
+  load[0] = (r >> 8) & 0xFF;
+  load[1] = r & 0xFF;
+  load[2] = (c >> 8) & 0xFF;
+  load[3] = c & 0xFF;
+  build_packet_serial(CMD_MOVE_CURSOR, load, 4, 0);
+}
+
+static void cmd_sync(const char *args) {
+  remote = true; 
+  execute_sync();
+  command_bar_set_status("Ficheiro Partilhado!");
+}
+
+
 static void cmd_save(const char *args) {
   const char *name = (args && args[0]) ? args : command_bar_get_filename();
   execute_save(name);
@@ -75,6 +107,7 @@ static const CommandEntry command_table[] = {
   { "w",    cmd_save },
   { "open", cmd_open },
   { "q",    cmd_quit },
+  { "sync", cmd_sync },
   { NULL,   NULL }
 };
 
@@ -501,6 +534,7 @@ void commands_dispatch_serial(SerialEvent se) {
       
       command_bar_set_filename(file_name);
       command_bar_set_status("A Receber Ficheiro...");
+      remote=true;
       set_render_ex(RENDER_FULL); 
       break;
     }  
