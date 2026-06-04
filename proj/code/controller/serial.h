@@ -19,3 +19,5 @@ typedef enum {
 } SerialCommand;
 
 void serial_process();
+void build_packet(SerialCommand cmd, uint8_t* payload, int len, uint16_t num_lines);
+
