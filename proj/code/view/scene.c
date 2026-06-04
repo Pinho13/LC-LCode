@@ -109,12 +109,12 @@ static void draw_cell(int model_col, int model_row, bool in_block_comment) {
   int y = model_to_py(model_row);
   bb_draw_rect(x, y, FONT_W, FONT_H, COLOR_BG);
   const char *line = editor_get_line(model_row);
-  int len = (int)strlen(line);
+  int len = editor_get_line_len(model_row);
   if (model_col < len) {
-    static uint32_t colors[MAX_COLS];
+    if (colors_buf_grow(len) != 0) return;
     bool out_bc;
-    syntax_highlight_line(line, len, in_block_comment, current_lang, colors, &out_bc);
-    draw_char(x, y, line[model_col], colors[model_col]);
+    syntax_highlight_line(line, len, in_block_comment, current_lang, colors_buf, &out_bc);
+    draw_char(x, y, line[model_col], colors_buf[model_col]);
   }
 }
 
@@ -140,7 +140,7 @@ static void draw_selection_bg(int end_r) {
   for (int r = first_row; r <= last_row; r++) {
     int y = EDITOR_Y + (r - scroll_row) * FONT_H;
     int col_start = (r == sel_start_row) ? sel_start_col : 0;
-    int line_len = (int)strlen(editor_get_line(r));
+    int line_len = editor_get_line_len(r);
     int col_end = (r == sel_end_row) ? sel_end_col : line_len;
     int pixel_start = editor_x + (col_start > scroll_col ? col_start - scroll_col : 0) * FONT_W;
     int pixel_end = editor_x + (col_end < scroll_col + vis_cols ? col_end - scroll_col : vis_cols) * FONT_W;
@@ -295,6 +295,7 @@ static void render_editor_ui(int mode, int col, int row, int scroll_row, int scr
       break;
 
     case RENDER_LINE: {
+      rebuild_block_comment_open_from(row);
       int y = EDITOR_Y + (row - scroll_row) * FONT_H;
       int line_w = h_res - editor_x - SCROLLBAR_W;
 
@@ -303,19 +304,18 @@ static void render_editor_ui(int mode, int col, int row, int scroll_row, int scr
 
       //redraw new line
       const char *line = editor_get_line(row);
-      int len = (int)strlen(line);
-      if (len > scroll_col) {
-        uint32_t colors[MAX_COLS];
-        bool in_block_comment = block_comment_open_at(row);
+      int len = editor_get_line_len(row);
+      if (len > scroll_col && colors_buf_grow(len) == 0) {
         bool out_bc;
-        syntax_highlight_line(line, len, in_block_comment, current_lang, colors, &out_bc);
-        draw_line_colored(editor_x, y, line, scroll_col, colors, len);
+        syntax_highlight_line(line, len, block_comment_open_at(row), current_lang, colors_buf, &out_bc);
+        draw_line_colored(editor_x, y, line, scroll_col, colors_buf, len);
       }
       draw_cursor(col, row);
       break;
     }
 
     case RENDER_WORD: {
+      rebuild_block_comment_open_from(prev_row);
       bool in_block_comment = block_comment_open_at(prev_row);
       for (int c = col; c <= prev_col; c++) draw_cell(c, prev_row, in_block_comment);
       draw_cursor(col, row);
@@ -328,8 +328,8 @@ static void render_editor_ui(int mode, int col, int row, int scroll_row, int scr
       bool curr_vis = (row >= scroll_row && row < scroll_row + vis_rows &&
                        col >= scroll_col && col < scroll_col + vis_cols);
       if (prev_vis) {
-        bool in_block_comment = block_comment_open_at(prev_row);
-        draw_cell(prev_col, prev_row, in_block_comment);
+        rebuild_block_comment_open_from(prev_row);
+        draw_cell(prev_col, prev_row, block_comment_open_at(prev_row));
       }
       if (curr_vis) draw_cursor(col, row);
       break;
@@ -432,7 +432,7 @@ bool scene_px_to_text(int px, int py, int *out_row, int *out_col) {
   if (row >= editor_get_row_count()) row = editor_get_row_count() - 1;
   if (col < 0) col = 0;
 
-  int len = (int)strlen(editor_get_line(row));
+  int len = editor_get_line_len(row);
   if (col > len) col = len;
   *out_row = row;
   *out_col = col;
