@@ -18,4 +18,5 @@ trace.txt
 docs/
 
 # Docs
+!proj/docs/
 !proj/docs/Doxyfile
