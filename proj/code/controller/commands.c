@@ -138,12 +138,17 @@ void commands_dispatch(KeyEvent ev) {
     EditorResult r;
     //delete selection if active
     if (editor_sel_is_active()) {
+      int sr, sc, er, ec;
+      editor_sel_get_range(&sr, &sc, &er, &ec);
+      int deleted_count = er - sr + 1;
+      
       r = editor_delete_selection();
       if (r == EDITOR_ERR_ALLOC_FAILED) {
         command_bar_set_status("Out of memory"); 
         set_render(RENDER_STATUS); 
       }
       else {
+        if (remote) sync_block(sr, deleted_count, 1); 
         set_render_ex(RENDER_FULL);
       }
     }
@@ -151,21 +156,29 @@ void commands_dispatch(KeyEvent ev) {
     else if (ev.ctrl) {
       //if at first char of line, go to previous line and delete
       if (editor_get_cursor_col() == 0) {
+        int sr = editor_get_cursor_row() - 1;
         r = editor_delete_char();
         if (r == EDITOR_ERR_ALLOC_FAILED) {
           command_bar_set_status("Out of memory");
           set_render(RENDER_STATUS);
         }
-        else set_render_ex(RENDER_FULL);
+        else {
+          if (remote) sync_block(sr, 2, 1);
+          set_render_ex(RENDER_FULL);
+        }  
       } 
       //delete word
       else {
+        int sr = editor_get_cursor_row();
         r = editor_delete_word();
         if (r == EDITOR_ERR_ALLOC_FAILED) {
           command_bar_set_status("Out of memory");
           set_render(RENDER_STATUS);
         }
-        else set_render_ex(RENDER_LINE);
+        else {
+          if (remote) sync_block(sr, 1, 1);
+          set_render_ex(RENDER_LINE);
+        }  
       }
     } 
     //normal del
@@ -178,7 +191,7 @@ void commands_dispatch(KeyEvent ev) {
       }
       else if (r == EDITOR_OK) { 
         if (remote) {       
-          build_packet(CMD_DELETE_CHAR, NULL, 0, 0);
+          build_packet_serial(CMD_DELETE_CHAR, NULL, 0, 0);
         }
         set_render_ex(mid_line ? RENDER_LINE : RENDER_FULL);
       }
@@ -210,7 +223,7 @@ void commands_dispatch(KeyEvent ev) {
       payload[1] = r & 0xFF;
       payload[2] = (c >> 8) & 0xFF;
       payload[3] = c & 0xFF;
-      build_packet(CMD_MOVE_CURSOR, payload, 4, 0);
+      build_packet_serial(CMD_MOVE_CURSOR, payload, 4, 0);
     }
     set_render_ex(RENDER_CHAR);
     return;
@@ -222,19 +235,45 @@ void commands_dispatch(KeyEvent ev) {
   }
   if (ev.ctrl && ev.c == 'x') {
     editor_copy_selection();
-    EditorResult r = editor_delete_selection();
-    if (r == EDITOR_ERR_ALLOC_FAILED) {
-      command_bar_set_status("Out of memory");
-      set_render(RENDER_STATUS);
+    if (editor_sel_is_active()) {
+      int sr, sc, er, ec;
+      editor_sel_get_range(&sr, &sc, &er, &ec);
+      int deleted_count = er - sr + 1;
+        
+      EditorResult r = editor_delete_selection();
+      
+      if (r == EDITOR_ERR_ALLOC_FAILED) {
+        command_bar_set_status("Out of memory");
+        set_render(RENDER_STATUS);
+      } else {
+        if (remote) sync_block(sr, deleted_count, 1); // Cortar deixa 1 linha
+        set_render_ex(RENDER_FULL);
+      }
     }
-    else set_render_ex(RENDER_FULL);
     return;
   }
   if (ev.ctrl && ev.c == 'v') {
-    if (editor_sel_is_active()) editor_delete_selection();
+    int start_r = editor_get_cursor_row();
+    int deleted_count = 1;//normal paste
+
+    if (editor_sel_is_active()){ 
+      int sr,sc,er,ec;
+      editor_sel_get_range(&sr, &sc, &er, &ec);
+      start_r = sr;
+      deleted_count = er - sr + 1; 
+      editor_delete_selection();
+    }  
+    
+    int old_rows = editor_get_row_count();
     EditorResult result = editor_paste();
+    int inserted_count = editor_get_row_count() - old_rows + 1;//number of lines
+    
     switch (result) {
-      case EDITOR_OK: set_render_ex(RENDER_FULL); break;
+      case EDITOR_OK:{
+        if (remote) sync_block(start_r, deleted_count, inserted_count);
+        set_render_ex(RENDER_FULL);
+        break;
+      } 
       case EDITOR_ERR_NO_CLIPBOARD: {
         command_bar_set_status("Nothing to paste");
         set_render(RENDER_STATUS); 
@@ -270,7 +309,20 @@ void commands_dispatch(KeyEvent ev) {
   }
 
   if (ev.enter) {
-    if (editor_sel_is_active()) editor_delete_selection();
+    if (editor_sel_is_active()){
+      int sr, sc, er, ec;
+      editor_sel_get_range(&sr, &sc, &er, &ec);
+      int deleted_count = er - sr + 1;
+      
+      editor_delete_selection();
+      
+      EditorResult r = editor_insert_char('\n');
+      if (r == EDITOR_OK) {
+        if (remote) sync_block(sr, deleted_count, 2);
+        set_render(RENDER_FULL);
+      }
+      return;
+    }
     EditorResult r = editor_insert_char('\n');
     if (r == EDITOR_ERR_ALLOC_FAILED) {
       command_bar_set_status("Out of memory");
@@ -279,7 +331,7 @@ void commands_dispatch(KeyEvent ev) {
     else if (r == EDITOR_OK) {
       if (remote) {
         uint8_t c = '\n';
-        build_packet(CMD_INSERT_CHAR, &c, 1, 0);
+        build_packet_serial(CMD_INSERT_CHAR, &c, 1, 0);
       }
       set_render(RENDER_FULL);
     }
@@ -287,7 +339,21 @@ void commands_dispatch(KeyEvent ev) {
   }
 
   if (ev.c) {
-    if (editor_sel_is_active()) editor_delete_selection();
+    if (editor_sel_is_active()){
+      int sr, sc, er, ec;
+      editor_sel_get_range(&sr, &sc, &er, &ec);
+      int deleted_count = er - sr + 1;
+      
+      editor_delete_selection();
+      
+      EditorResult r = editor_insert_char(ev.c);
+      if (r == EDITOR_OK) {
+        if (remote) sync_block(sr, deleted_count, 1);
+        set_render(RENDER_FULL);
+      }
+      return;
+    }
+    
     EditorResult r = editor_insert_char(ev.c);
     if (r == EDITOR_ERR_ALLOC_FAILED) {
       command_bar_set_status("Out of memory");
@@ -296,7 +362,7 @@ void commands_dispatch(KeyEvent ev) {
     else if (r == EDITOR_OK) {
       if (remote) { 
         uint8_t c = ev.c;
-        build_packet(CMD_INSERT_CHAR, &c, 1, 0);
+        build_packet_serial(CMD_INSERT_CHAR, &c, 1, 0);
       }
       set_render_ex(RENDER_LINE);
     }
@@ -316,7 +382,7 @@ void commands_dispatch_mouse(MouseEvent me) {
       payload[1] = row & 0xFF;
       payload[2] = (col >> 8) & 0xFF;
       payload[3] = col & 0xFF;
-      build_packet(CMD_MOVE_CURSOR, payload, 4, 0);
+      build_packet_serial(CMD_MOVE_CURSOR, payload, 4, 0);
     }
     set_render_ex(RENDER_CHAR);
   }
@@ -368,6 +434,25 @@ void commands_dispatch_serial(SerialEvent se) {
       }
       break;
     }
+    case CMD_REPLACE_BLOCK:{
+      uint16_t start_row = (se.payload_buf[0] << 8) | se.payload_buf[1];
+      uint16_t deleted   = (se.payload_buf[2] << 8) | se.payload_buf[3];
+      uint16_t inserted  = (se.payload_buf[4] << 8) | se.payload_buf[5];
+      
+      editor_remote_replace_block(start_row, deleted, inserted);
+      //not necessary rend_full because new lines will arrive later
+      break;
+    }
+    case CMD_UPDATE_LINE:{
+      uint16_t row_index = (se.payload_buf[0] << 8) | se.payload_buf[1];
+      
+      int text_len = se.payload_len - 2;
+      
+      editor_remote_update_line(row_index, (const char*)&se.payload_buf[2], text_len);
+      
+      set_render_ex(RENDER_FULL);
+      break;
+    }
     case CMD_FILE_START:{
       editor_init();//Para já limpo a memoria toda
       
@@ -404,5 +489,39 @@ void commands_dispatch_serial(SerialEvent se) {
     default:
       break;
   }
+}
+
+static void sync_block(int start_row, int deleted_count, int inserted_count) {
+  if (!remote) return;
+  
+  if (deleted_count == 1 && inserted_count == 1){
+    const char *text = editor_get_line(start_row);
+    build_packet_serial(CMD_UPDATE_LINE, (uint8_t*)text, editor_get_line_len(start_row), start_row);
+  }
+  else{
+    uint8_t payload[6];
+    payload[0] = (start_row >> 8) & 0xFF;
+    payload[1] = start_row & 0xFF;
+    payload[2] = (deleted_count >> 8) & 0xFF;
+    payload[3] = deleted_count & 0xFF;
+    payload[4] = (inserted_count >> 8) & 0xFF;
+    payload[5] = inserted_count & 0xFF;
+    build_packet_serial(CMD_REPLACE_BLOCK, payload, 6, 0);
+      
+    for (int i = 0; i < inserted_count; i++) {
+      int r = start_row + i;
+      const char *text = editor_get_line(r);
+      build_packet_serial(CMD_UPDATE_LINE, (uint8_t*)text, editor_get_line_len(r), r);
+    }
+  }
+
+  uint8_t load[4];
+  int r = editor_get_cursor_row();
+  int c = editor_get_cursor_col();
+  load[0] = (r >> 8) & 0xFF;
+  load[1] = r & 0xFF;
+  load[2] = (c >> 8) & 0xFF;
+  load[3] = c & 0xFF;
+  build_packet_serial(CMD_MOVE_CURSOR, load, 4, 0);
 }
 
