@@ -117,6 +117,40 @@ static void dispatch_command_mode(KeyEvent ev) {
   }
 }
 
+static void sync_block(int start_row, int deleted_count, int inserted_count) {
+  if (!remote) return;
+  
+  if (deleted_count == 1 && inserted_count == 1){
+    const char *text = editor_get_line(start_row);
+    build_packet_serial(CMD_UPDATE_LINE, (uint8_t*)text, editor_get_line_len(start_row), start_row);
+  }
+  else{
+    uint8_t payload[6];
+    payload[0] = (start_row >> 8) & 0xFF;
+    payload[1] = start_row & 0xFF;
+    payload[2] = (deleted_count >> 8) & 0xFF;
+    payload[3] = deleted_count & 0xFF;
+    payload[4] = (inserted_count >> 8) & 0xFF;
+    payload[5] = inserted_count & 0xFF;
+    build_packet_serial(CMD_REPLACE_BLOCK, payload, 6, 0);
+      
+    for (int i = 0; i < inserted_count; i++) {
+      int r = start_row + i;
+      const char *text = editor_get_line(r);
+      build_packet_serial(CMD_UPDATE_LINE, (uint8_t*)text, editor_get_line_len(r), r);
+    }
+  }
+
+  uint8_t load[4];
+  int r = editor_get_cursor_row();
+  int c = editor_get_cursor_col();
+  load[0] = (r >> 8) & 0xFF;
+  load[1] = r & 0xFF;
+  load[2] = (c >> 8) & 0xFF;
+  load[3] = c & 0xFF;
+  build_packet_serial(CMD_MOVE_CURSOR, load, 4, 0);
+}
+
 void commands_open_file(const char *path) {
   execute_open(path);
 }
@@ -491,37 +525,4 @@ void commands_dispatch_serial(SerialEvent se) {
   }
 }
 
-static void sync_block(int start_row, int deleted_count, int inserted_count) {
-  if (!remote) return;
-  
-  if (deleted_count == 1 && inserted_count == 1){
-    const char *text = editor_get_line(start_row);
-    build_packet_serial(CMD_UPDATE_LINE, (uint8_t*)text, editor_get_line_len(start_row), start_row);
-  }
-  else{
-    uint8_t payload[6];
-    payload[0] = (start_row >> 8) & 0xFF;
-    payload[1] = start_row & 0xFF;
-    payload[2] = (deleted_count >> 8) & 0xFF;
-    payload[3] = deleted_count & 0xFF;
-    payload[4] = (inserted_count >> 8) & 0xFF;
-    payload[5] = inserted_count & 0xFF;
-    build_packet_serial(CMD_REPLACE_BLOCK, payload, 6, 0);
-      
-    for (int i = 0; i < inserted_count; i++) {
-      int r = start_row + i;
-      const char *text = editor_get_line(r);
-      build_packet_serial(CMD_UPDATE_LINE, (uint8_t*)text, editor_get_line_len(r), r);
-    }
-  }
-
-  uint8_t load[4];
-  int r = editor_get_cursor_row();
-  int c = editor_get_cursor_col();
-  load[0] = (r >> 8) & 0xFF;
-  load[1] = r & 0xFF;
-  load[2] = (c >> 8) & 0xFF;
-  load[3] = c & 0xFF;
-  build_packet_serial(CMD_MOVE_CURSOR, load, 4, 0);
-}
 

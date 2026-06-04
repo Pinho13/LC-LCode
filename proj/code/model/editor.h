@@ -62,6 +62,8 @@ void editor_load_finalize();
 void editor_set_remote_cursor(int row, int col);
 EditorResult editor_remote_insert_char(char c);
 EditorResult editor_remote_delete_char();
+EditorResult editor_remote_replace_block(int start_row, int deleted_count, int inserted_count);
+EditorResult editor_remote_update_line(int row, const char *text, int len);
 int editor_get_remote_cursor_row();
 int editor_get_remote_cursor_col();
 
