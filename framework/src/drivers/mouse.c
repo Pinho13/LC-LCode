@@ -82,7 +82,16 @@ void (mouse_ih)() {
     return;
   }
   
-  // Check if output buffer is full
+  // Check if output buffer is full — retry briefly if not yet ready
+  int obf_tries = 10;
+  while (!(status & KBC_ST_OBF) && obf_tries-- > 0) {
+    tickdelay(micros_to_ticks(20000));
+    if (util_sys_inb(KBC_STATUS_REG, &status) != OK) {
+      error = true;
+      fail(ERR_MOUSE, "mouse_ih: failed to re-read status register");
+      return;
+    }
+  }
   if (!(status & KBC_ST_OBF)) {
     error = true;
     fail(ERR_MOUSE, "mouse_ih: output buffer not full");

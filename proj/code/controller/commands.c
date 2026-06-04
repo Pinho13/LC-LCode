@@ -3,6 +3,7 @@
 #include "model/editor.h"
 #include "model/command_bar.h"
 #include "view/scene.h"
+#include "view/syntax.h"
 #include "render_flag.h"
 #include "controller/serial.h"
 #include <stdio.h>
@@ -29,6 +30,7 @@ static void execute_save(const char *name) {
     fprintf(f, "%s\n", editor_get_line(r));
   fclose(f);
   command_bar_set_filename(name);
+  scene_set_language(syntax_detect_language(name));
 }
 
 static void execute_open(const char *name) {
@@ -47,6 +49,7 @@ static void execute_open(const char *name) {
   fclose(f);
   editor_load_finalize();
   command_bar_set_filename(name);
+  scene_set_language(syntax_detect_language(name));
 }
 
 static void cmd_save(const char *args) {

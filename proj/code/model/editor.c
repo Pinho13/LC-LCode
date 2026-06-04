@@ -343,6 +343,11 @@ const char *editor_get_line(int row) {
   return lines[row].buf;
 }
 
+int editor_get_line_len(int row) {
+  if (row < 0 || row >= row_count) return 0;
+  return lines[row].len;
+}
+
 int editor_get_row_count() { return row_count; }
 int editor_get_cursor_row() { return cursor_row; }
 int editor_get_cursor_col() { return cursor_col; }
