@@ -7,21 +7,23 @@
 #include "model/command_bar.h"
 #include "model/filetree.h"
 #include "controller/ih/ih.h"
+#include "view/syntax.h"
 #include "controller/input/mouse.h"
 #include <string.h>
+#include <stdlib.h>
 
-#define COLOR_BG 0x1E1E1E
-#define COLOR_TEXT 0xFFFFFF
-#define COLOR_SEL_BG 0x264F78
-#define COLOR_STATUS_BG 0x007ACC
-#define COLOR_STATUS_FG 0xFFFFFF
-#define COLOR_GUTTER_BG 0x252526
-#define COLOR_GUTTER_FG 0x858585
-#define COLOR_FILETREE_BG 0x1E1E2E
-#define COLOR_FILETREE_SEL 0x37373D
-#define COLOR_FILETREE_DIR 0x4EC9B0
-#define COLOR_FILETREE_FILE 0xCCCCCC
-#define COLOR_FILETREE_SEP 0x3C3C3C
+#define COLOR_BG 0x282C34
+#define COLOR_TEXT 0xABB2BF
+#define COLOR_SEL_BG 0x3E4451
+#define COLOR_STATUS_BG 0x21252B
+#define COLOR_STATUS_FG 0xABB2BF
+#define COLOR_GUTTER_BG 0x282C34
+#define COLOR_GUTTER_FG 0x4B5263
+#define COLOR_FILETREE_BG 0x21252B
+#define COLOR_FILETREE_SEL 0x2C313C
+#define COLOR_FILETREE_DIR 0x61AFEF
+#define COLOR_FILETREE_FILE 0xABB2BF
+#define COLOR_FILETREE_SEP 0x181A1F
 
 #define FILETREE_COLS 20
 #define FILETREE_W_PX (FILETREE_COLS * FONT_W)
@@ -35,7 +37,12 @@ static void draw_gutter(int scroll_row, int end_r);
 static void draw_filetree(int vrows);
 static void draw_scrollbar();
 static void draw_text_lines(int scroll_row, int end_r, int scroll_col);
+static void draw_line_colored(int x, int y, const char *line, int scroll_col, const uint32_t *colors, int line_len);
+static bool block_comment_open_at(int row);
 static void flip_cursor_region(int x, int y);
+static void rebuild_block_comment_open_full(void);
+static void rebuild_block_comment_open_from(int row);
+static int colors_buf_grow(int needed);
 
 static SceneID current_scene = SCENE_EDITOR;
 static int prev_col = 0;
@@ -45,8 +52,13 @@ static int vis_cols = 0;
 static int filetree_w = 0;
 static int gutter_w = 0;
 static int editor_x = 0;
+static SyntaxLanguage current_lang = SYNTAX_LANG_NONE;
+static uint32_t *colors_buf = NULL;
+static int colors_cap = 0;
+static bool *block_comment_open = NULL;
+static int block_comment_open_cap = 0;
 
-// Public API 
+// Public API
 
 int scene_init(SceneID id) {
   current_scene = id;
@@ -62,9 +74,20 @@ int scene_init(SceneID id) {
 
 void scene_cleanup() {
   mouse_cursor_cleanup();
+  free(colors_buf);
+  colors_buf = NULL;
+  colors_cap = 0;
+  free(block_comment_open);
+  block_comment_open = NULL;
+  block_comment_open_cap = 0;
 }
 
 int scene_get_vis_rows() { return vis_rows; }
+
+void scene_set_language(SyntaxLanguage lang) {
+  current_lang = lang;
+  rebuild_block_comment_open_full();
+}
 
 
 
@@ -81,12 +104,18 @@ static int model_to_py(int model_row) {
 
 // Draw primitives
 
-static void draw_cell(int model_col, int model_row) {
+static void draw_cell(int model_col, int model_row, bool in_block_comment) {
   int x = model_to_px(model_col);
   int y = model_to_py(model_row);
   bb_draw_rect(x, y, FONT_W, FONT_H, COLOR_BG);
   const char *line = editor_get_line(model_row);
-  if (model_col < (int)strlen(line)) draw_char(x, y, line[model_col], COLOR_TEXT);
+  int len = editor_get_line_len(model_row);
+  if (model_col < len) {
+    if (colors_buf_grow(len) != 0) return;
+    bool out_bc;
+    syntax_highlight_line(line, len, in_block_comment, current_lang, colors_buf, &out_bc);
+    draw_char(x, y, line[model_col], colors_buf[model_col]);
+  }
 }
 
 static void draw_cursor(int model_col, int model_row) {
@@ -111,7 +140,7 @@ static void draw_selection_bg(int end_r) {
   for (int r = first_row; r <= last_row; r++) {
     int y = EDITOR_Y + (r - scroll_row) * FONT_H;
     int col_start = (r == sel_start_row) ? sel_start_col : 0;
-    int line_len = (int)strlen(editor_get_line(r));
+    int line_len = editor_get_line_len(r);
     int col_end = (r == sel_end_row) ? sel_end_col : line_len;
     int pixel_start = editor_x + (col_start > scroll_col ? col_start - scroll_col : 0) * FONT_W;
     int pixel_end = editor_x + (col_end < scroll_col + vis_cols ? col_end - scroll_col : vis_cols) * FONT_W;
@@ -213,12 +242,25 @@ static void draw_scrollbar() {
   bb_draw_rect(h_res - SCROLLBAR_W + 2, handle_y, SCROLLBAR_W - 4, handle_h, COLOR_GUTTER_FG);
 }
 
+static void draw_line_colored(int x, int y, const char *line, int scroll_col,
+                              const uint32_t *colors, int line_len) {
+  int draw_x = x;
+  for (int c = scroll_col; c < line_len; c++) {
+    draw_char(draw_x, y, line[c], colors[c]);
+    draw_x += FONT_W;
+  }
+}
+
 static void draw_text_lines(int scroll_row, int end_r, int scroll_col) {
   for (int r = scroll_row; r < end_r; r++) {
     int y = EDITOR_Y + (r - scroll_row) * FONT_H;
     const char *line = editor_get_line(r);
-    if ((int)strlen(line) > scroll_col)
-      draw_string(editor_x, y, line + scroll_col, COLOR_TEXT);
+    int len = editor_get_line_len(r);
+    if (len <= scroll_col) continue;
+    if (colors_buf_grow(len) != 0) continue;
+    bool out_bc;
+    syntax_highlight_line(line, len, block_comment_open_at(r), current_lang, colors_buf, &out_bc);
+    draw_line_colored(editor_x, y, line, scroll_col, colors_buf, len);
   }
 }
 
@@ -253,6 +295,7 @@ static void render_editor_ui(int mode, int col, int row, int scroll_row, int scr
       break;
 
     case RENDER_LINE: {
+      rebuild_block_comment_open_from(row);
       int y = EDITOR_Y + (row - scroll_row) * FONT_H;
       int line_w = h_res - editor_x - SCROLLBAR_W;
 
@@ -261,23 +304,33 @@ static void render_editor_ui(int mode, int col, int row, int scroll_row, int scr
 
       //redraw new line
       const char *line = editor_get_line(row);
-      if ((int)strlen(line) > scroll_col)
-        draw_string(editor_x, y, line + scroll_col, COLOR_TEXT);
+      int len = editor_get_line_len(row);
+      if (len > scroll_col && colors_buf_grow(len) == 0) {
+        bool out_bc;
+        syntax_highlight_line(line, len, block_comment_open_at(row), current_lang, colors_buf, &out_bc);
+        draw_line_colored(editor_x, y, line, scroll_col, colors_buf, len);
+      }
       draw_cursor(col, row);
       break;
     }
 
-    case RENDER_WORD:
-      for (int c = col; c <= prev_col; c++) draw_cell(c, prev_row);
+    case RENDER_WORD: {
+      rebuild_block_comment_open_from(prev_row);
+      bool in_block_comment = block_comment_open_at(prev_row);
+      for (int c = col; c <= prev_col; c++) draw_cell(c, prev_row, in_block_comment);
       draw_cursor(col, row);
       break;
+    }
 
     case RENDER_CHAR: {
       bool prev_vis = (prev_row >= scroll_row && prev_row < scroll_row + vis_rows &&
                        prev_col >= scroll_col && prev_col < scroll_col + vis_cols);
       bool curr_vis = (row >= scroll_row && row < scroll_row + vis_rows &&
                        col >= scroll_col && col < scroll_col + vis_cols);
-      if (prev_vis) draw_cell(prev_col, prev_row);
+      if (prev_vis) {
+        rebuild_block_comment_open_from(prev_row);
+        draw_cell(prev_col, prev_row, block_comment_open_at(prev_row));
+      }
       if (curr_vis) draw_cursor(col, row);
       break;
     }
@@ -379,7 +432,7 @@ bool scene_px_to_text(int px, int py, int *out_row, int *out_col) {
   if (row >= editor_get_row_count()) row = editor_get_row_count() - 1;
   if (col < 0) col = 0;
 
-  int len = (int)strlen(editor_get_line(row));
+  int len = editor_get_line_len(row);
   if (col > len) col = len;
   *out_row = row;
   *out_col = col;
@@ -401,4 +454,93 @@ bool scene_click_scrollbar(int px, int py) {
   editor_scroll_by(target - editor_get_scroll_row(), 0);
   if (editor_consume_scroll_dirty()) set_render(RENDER_FULL);
   return true;
+}
+
+// Coloring
+
+static int colors_buf_grow(int needed) {
+  // buffer size calc
+  if (colors_cap >= needed) return 0;
+  int new_cap = colors_cap ? colors_cap * 2 : 64;
+  while (new_cap < needed) new_cap *= 2;
+
+  //buffer allocation
+  uint32_t *p = malloc(new_cap * sizeof(uint32_t));
+  if (!p) return -1;
+  free(colors_buf);
+  colors_buf = p;
+  colors_cap = new_cap;
+  return 0;
+}
+
+static int block_comment_open_grow(int needed) {
+  //buffer size calc
+  if (block_comment_open_cap >= needed) return 0;
+  int new_cap = block_comment_open_cap ? block_comment_open_cap * 2 : 64;
+  while (new_cap < needed) new_cap *= 2;
+
+  //buffer allocation
+  bool *p = malloc(new_cap * sizeof(bool));
+  if (!p) return -1;
+  memcpy(p, block_comment_open, block_comment_open_cap * sizeof(bool));
+
+  memset(p + block_comment_open_cap, 0, (new_cap - block_comment_open_cap) * sizeof(bool));
+
+  free(block_comment_open);
+  block_comment_open = p;
+  block_comment_open_cap = new_cap;
+  return 0;
+}
+
+static void rebuild_block_comment_open_full(void) {
+  int total = editor_get_row_count();
+  if (block_comment_open_grow(total + 1) != 0) return;
+
+  //before first line can't be commented
+  bool in_block_comment = false;
+
+  for (int r = 0; r < total; r++) {
+    //check state before reading line
+    block_comment_open[r] = in_block_comment;
+
+    //probably won't happen, but if memory allocation fails just assume it isnt commented
+    int len = editor_get_line_len(r);
+    if (colors_buf_grow(len) != 0) {
+      in_block_comment = false;
+      continue;
+    }
+
+    bool out_bc;
+    syntax_highlight_line(editor_get_line(r), len, in_block_comment, current_lang, colors_buf, &out_bc);
+    in_block_comment = out_bc;
+  }
+}
+
+static void rebuild_block_comment_open_from(int row) {
+  int total = editor_get_row_count();
+  if (row < 0 || row >= total) return;
+  if (block_comment_open_grow(total + 1) != 0) return;
+
+  //check state before reading line
+  bool in_block_comment = block_comment_open[row];
+
+  for (int r = row; r < total; r++) {
+    // tokenize line
+    int len = editor_get_line_len(r);
+    if (colors_buf_grow(len) != 0) break;
+    bool out_bc;
+    syntax_highlight_line(editor_get_line(r), len, in_block_comment, current_lang, colors_buf, &out_bc);
+
+    if (r + 1 < block_comment_open_cap) {
+      if (block_comment_open[r + 1] == out_bc) break;
+      block_comment_open[r + 1] = out_bc;
+    }
+
+    in_block_comment = out_bc;
+  }
+}
+
+static bool block_comment_open_at(int row) {
+  if (row < 0 || row >= block_comment_open_cap) return false;
+  return block_comment_open[row];
 }
