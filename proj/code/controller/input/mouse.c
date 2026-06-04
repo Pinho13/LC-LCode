@@ -9,7 +9,7 @@ static int mouse_x = 0, mouse_y = 0;
 static bool mouse_initialized = false;
 static bool prev_lb = false;
 
-void mouse_process(struct packet pp) {
+void mouse_process(mouse_packet pp) {
   if (!mouse_initialized) {
     mouse_x = (int)vg_get_h_res() / 2;
     mouse_y = (int)vg_get_v_res() / 2;

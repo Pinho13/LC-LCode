@@ -10,7 +10,7 @@ typedef struct {
 } MouseEvent;
 
 
-void mouse_process(struct packet pp);
+void mouse_process(mouse_packet pp);
 
 int ih_get_mouse_x();
 int ih_get_mouse_y();
