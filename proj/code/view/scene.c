@@ -38,11 +38,11 @@ static void draw_filetree(int vrows);
 static void draw_scrollbar();
 static void draw_text_lines(int scroll_row, int end_r, int scroll_col);
 static void draw_line_colored(int x, int y, const char *line, int scroll_col, const uint32_t *colors, int line_len);
-static bool scan_block_comment_state(int up_to_row);
+static bool block_comment_open_at(int row);
 static void flip_cursor_region(int x, int y);
-static void rebuild_bc_state_full(void);
-static void rebuild_bc_state_from(int row);
-static int colors_ensure(int needed);
+static void rebuild_block_comment_open_full(void);
+static void rebuild_block_comment_open_from(int row);
+static int colors_buf_grow(int needed);
 
 static SceneID current_scene = SCENE_EDITOR;
 static int prev_col = 0;
@@ -55,8 +55,8 @@ static int editor_x = 0;
 static SyntaxLanguage current_lang = SYNTAX_LANG_NONE;
 static uint32_t *colors_buf = NULL;
 static int colors_cap = 0;
-static bool *bc_state = NULL;
-static int bc_state_cap = 0;
+static bool *block_comment_open = NULL;
+static int block_comment_open_cap = 0;
 
 // Public API
 
@@ -77,14 +77,17 @@ void scene_cleanup() {
   free(colors_buf);
   colors_buf = NULL;
   colors_cap = 0;
-  free(bc_state);
-  bc_state = NULL;
-  bc_state_cap = 0;
+  free(block_comment_open);
+  block_comment_open = NULL;
+  block_comment_open_cap = 0;
 }
 
 int scene_get_vis_rows() { return vis_rows; }
 
-void scene_set_language(SyntaxLanguage lang) { current_lang = lang; }
+void scene_set_language(SyntaxLanguage lang) {
+  current_lang = lang;
+  rebuild_block_comment_open_full();
+}
 
 
 
@@ -101,7 +104,7 @@ static int model_to_py(int model_row) {
 
 // Draw primitives
 
-static void draw_cell(int model_col, int model_row, bool in_bc) {
+static void draw_cell(int model_col, int model_row, bool in_block_comment) {
   int x = model_to_px(model_col);
   int y = model_to_py(model_row);
   bb_draw_rect(x, y, FONT_W, FONT_H, COLOR_BG);
@@ -110,7 +113,7 @@ static void draw_cell(int model_col, int model_row, bool in_bc) {
   if (model_col < len) {
     static uint32_t colors[MAX_COLS];
     bool out_bc;
-    syntax_highlight_line(line, len, in_bc, current_lang, colors, &out_bc);
+    syntax_highlight_line(line, len, in_block_comment, current_lang, colors, &out_bc);
     draw_char(x, y, line[model_col], colors[model_col]);
   }
 }
@@ -248,31 +251,16 @@ static void draw_line_colored(int x, int y, const char *line, int scroll_col,
   }
 }
 
-static bool scan_block_comment_state(int up_to_row) {
-  bool in_bc = false;
-  static uint32_t dummy[MAX_COLS];
-  for (int r = 0; r < up_to_row; r++) {
-    const char *line = editor_get_line(r);
-    int len = (int)strlen(line);
-    bool out_bc;
-    syntax_highlight_line(line, len, in_bc, current_lang, dummy, &out_bc);
-    in_bc = out_bc;
-  }
-  return in_bc;
-}
-
 static void draw_text_lines(int scroll_row, int end_r, int scroll_col) {
-  uint32_t colors[MAX_COLS];
-  bool in_bc = scan_block_comment_state(scroll_row);
   for (int r = scroll_row; r < end_r; r++) {
     int y = EDITOR_Y + (r - scroll_row) * FONT_H;
     const char *line = editor_get_line(r);
-    int len = (int)strlen(line);
+    int len = editor_get_line_len(r);
+    if (len <= scroll_col) continue;
+    if (colors_buf_grow(len) != 0) continue;
     bool out_bc;
-    syntax_highlight_line(line, len, in_bc, current_lang, colors, &out_bc);
-    in_bc = out_bc;
-    if (len > scroll_col)
-      draw_line_colored(editor_x, y, line, scroll_col, colors, len);
+    syntax_highlight_line(line, len, block_comment_open_at(r), current_lang, colors_buf, &out_bc);
+    draw_line_colored(editor_x, y, line, scroll_col, colors_buf, len);
   }
 }
 
@@ -318,9 +306,9 @@ static void render_editor_ui(int mode, int col, int row, int scroll_row, int scr
       int len = (int)strlen(line);
       if (len > scroll_col) {
         uint32_t colors[MAX_COLS];
-        bool in_bc = scan_block_comment_state(row);
+        bool in_block_comment = block_comment_open_at(row);
         bool out_bc;
-        syntax_highlight_line(line, len, in_bc, current_lang, colors, &out_bc);
+        syntax_highlight_line(line, len, in_block_comment, current_lang, colors, &out_bc);
         draw_line_colored(editor_x, y, line, scroll_col, colors, len);
       }
       draw_cursor(col, row);
@@ -328,8 +316,8 @@ static void render_editor_ui(int mode, int col, int row, int scroll_row, int scr
     }
 
     case RENDER_WORD: {
-      bool in_bc = scan_block_comment_state(prev_row);
-      for (int c = col; c <= prev_col; c++) draw_cell(c, prev_row, in_bc);
+      bool in_block_comment = block_comment_open_at(prev_row);
+      for (int c = col; c <= prev_col; c++) draw_cell(c, prev_row, in_block_comment);
       draw_cursor(col, row);
       break;
     }
@@ -340,8 +328,8 @@ static void render_editor_ui(int mode, int col, int row, int scroll_row, int scr
       bool curr_vis = (row >= scroll_row && row < scroll_row + vis_rows &&
                        col >= scroll_col && col < scroll_col + vis_cols);
       if (prev_vis) {
-        bool in_bc = scan_block_comment_state(prev_row);
-        draw_cell(prev_col, prev_row, in_bc);
+        bool in_block_comment = block_comment_open_at(prev_row);
+        draw_cell(prev_col, prev_row, in_block_comment);
       }
       if (curr_vis) draw_cursor(col, row);
       break;
@@ -466,4 +454,93 @@ bool scene_click_scrollbar(int px, int py) {
   editor_scroll_by(target - editor_get_scroll_row(), 0);
   if (editor_consume_scroll_dirty()) set_render(RENDER_FULL);
   return true;
+}
+
+// Coloring
+
+static int colors_buf_grow(int needed) {
+  // buffer size calc
+  if (colors_cap >= needed) return 0;
+  int new_cap = colors_cap ? colors_cap * 2 : 64;
+  while (new_cap < needed) new_cap *= 2;
+
+  //buffer allocation
+  uint32_t *p = malloc(new_cap * sizeof(uint32_t));
+  if (!p) return -1;
+  free(colors_buf);
+  colors_buf = p;
+  colors_cap = new_cap;
+  return 0;
+}
+
+static int block_comment_open_grow(int needed) {
+  //buffer size calc
+  if (block_comment_open_cap >= needed) return 0;
+  int new_cap = block_comment_open_cap ? block_comment_open_cap * 2 : 64;
+  while (new_cap < needed) new_cap *= 2;
+
+  //buffer allocation
+  bool *p = malloc(new_cap * sizeof(bool));
+  if (!p) return -1;
+  memcpy(p, block_comment_open, block_comment_open_cap * sizeof(bool));
+
+  memset(p + block_comment_open_cap, 0, (new_cap - block_comment_open_cap) * sizeof(bool));
+
+  free(block_comment_open);
+  block_comment_open = p;
+  block_comment_open_cap = new_cap;
+  return 0;
+}
+
+static void rebuild_block_comment_open_full(void) {
+  int total = editor_get_row_count();
+  if (block_comment_open_grow(total + 1) != 0) return;
+
+  //before first line can't be commented
+  bool in_block_comment = false;
+
+  for (int r = 0; r < total; r++) {
+    //check state before reading line
+    block_comment_open[r] = in_block_comment;
+
+    //probably won't happen, but if memory allocation fails just assume it isnt commented
+    int len = editor_get_line_len(r);
+    if (colors_buf_grow(len) != 0) {
+      in_block_comment = false;
+      continue;
+    }
+
+    bool out_bc;
+    syntax_highlight_line(editor_get_line(r), len, in_block_comment, current_lang, colors_buf, &out_bc);
+    in_block_comment = out_bc;
+  }
+}
+
+static void rebuild_block_comment_open_from(int row) {
+  int total = editor_get_row_count();
+  if (row < 0 || row >= total) return;
+  if (block_comment_open_grow(total + 1) != 0) return;
+
+  //check state before reading line
+  bool in_block_comment = block_comment_open[row];
+
+  for (int r = row; r < total; r++) {
+    // tokenize line
+    int len = editor_get_line_len(r);
+    if (colors_buf_grow(len) != 0) break;
+    bool out_bc;
+    syntax_highlight_line(editor_get_line(r), len, in_block_comment, current_lang, colors_buf, &out_bc);
+
+    if (r + 1 < block_comment_open_cap) {
+      if (block_comment_open[r + 1] == out_bc) break;
+      block_comment_open[r + 1] = out_bc;
+    }
+
+    in_block_comment = out_bc;
+  }
+}
+
+static bool block_comment_open_at(int row) {
+  if (row < 0 || row >= block_comment_open_cap) return false;
+  return block_comment_open[row];
 }
