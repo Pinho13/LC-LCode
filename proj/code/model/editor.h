@@ -35,6 +35,7 @@ void editor_move_home();
 void editor_move_end();
 
 const char *editor_get_line(int row);
+int editor_get_line_len(int row);
 int editor_get_row_count();
 
 int editor_get_cursor_row();

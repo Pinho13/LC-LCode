@@ -10,6 +10,7 @@
 #include "view/syntax.h"
 #include "controller/input/mouse.h"
 #include <string.h>
+#include <stdlib.h>
 
 #define COLOR_BG 0x282C34
 #define COLOR_TEXT 0xABB2BF
@@ -39,6 +40,9 @@ static void draw_text_lines(int scroll_row, int end_r, int scroll_col);
 static void draw_line_colored(int x, int y, const char *line, int scroll_col, const uint32_t *colors, int line_len);
 static bool scan_block_comment_state(int up_to_row);
 static void flip_cursor_region(int x, int y);
+static void rebuild_bc_state_full(void);
+static void rebuild_bc_state_from(int row);
+static int colors_ensure(int needed);
 
 static SceneID current_scene = SCENE_EDITOR;
 static int prev_col = 0;
@@ -49,8 +53,12 @@ static int filetree_w = 0;
 static int gutter_w = 0;
 static int editor_x = 0;
 static SyntaxLanguage current_lang = SYNTAX_LANG_NONE;
+static uint32_t *colors_buf = NULL;
+static int colors_cap = 0;
+static bool *bc_state = NULL;
+static int bc_state_cap = 0;
 
-// Public API 
+// Public API
 
 int scene_init(SceneID id) {
   current_scene = id;
@@ -66,6 +74,12 @@ int scene_init(SceneID id) {
 
 void scene_cleanup() {
   mouse_cursor_cleanup();
+  free(colors_buf);
+  colors_buf = NULL;
+  colors_cap = 0;
+  free(bc_state);
+  bc_state = NULL;
+  bc_state_cap = 0;
 }
 
 int scene_get_vis_rows() { return vis_rows; }
