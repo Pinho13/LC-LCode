@@ -117,6 +117,8 @@ static void draw_cell(int model_col, int model_row, bool in_block_comment) {
 }
 
 static void draw_cursor(int model_col, int model_row) {
+  if (filetree_is_focused()) return;
+
   int x = model_to_px(model_col);
   int y = model_to_py(model_row);
   bb_draw_rect(x, y, FONT_W, FONT_H, COLOR_TEXT);
