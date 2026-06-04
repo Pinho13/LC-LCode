@@ -13,6 +13,7 @@
 #include "controller/commands.h"
 #include "controller/input/events.h"
 #include "view/scene.h"
+#include "view/syntax.h"
 #include "model/editor.h"
 #include "model/command_bar.h"
 #include "model/filetree.h"
@@ -41,6 +42,9 @@ int(proj_main_loop)(int argc, char *argv[]) {
     video_cleanup();
     return fail(ERR, "proj_main_loop: scene_init failed");
   }
+  SyntaxLanguage lang = syntax_detect_language(argc > 1 ? argv[1] : "untitled");
+  if (lang == SYNTAX_LANG_NONE) lang = SYNTAX_LANG_C;
+  scene_set_language(lang);
   if (serial_init() != OK)
     return fail(ERR_SERIAL, "proj_main_loop: unable to initialize serial port");
 
