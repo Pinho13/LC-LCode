@@ -64,6 +64,7 @@ static int line_colors_cache_grow(int needed);
 static void line_colors_cache_free_row(int row);
 static void line_colors_cache_invalidate_all(void);
 static void line_colors_cache_cleanup(void);
+static void line_colors_cache_sync_row_count(int new_count, int cursor_row);
 static const uint32_t *get_line_colors(int row);
 
 // --- Syntax State Tracking ---
@@ -288,6 +289,8 @@ static void render_editor_ui(int mode, int col, int row, int scroll_row, int scr
 
   switch (mode) {
     case RENDER_FULL:
+      line_colors_cache_sync_row_count(editor_get_row_count(), row);
+
       filetree_w = filetree_is_visible() ? FILETREE_W_PX : 0;
       editor_x = filetree_w + gutter_w;
       vis_cols = (h_res - editor_x - SCROLLBAR_W) / FONT_W;
@@ -590,6 +593,62 @@ static void line_colors_cache_cleanup(void) {
   line_colors_cache_count = 0;
 }
 
+static void line_colors_cache_sync_row_count(int new_count, int cursor_row) {
+  int old_count = line_colors_last_row_count;
+  if (new_count == old_count) return;
+
+  //nothing to shift, cache empty
+  if (old_count == 0) {
+    line_colors_last_row_count = new_count;
+    return;
+  }
+
+  if (new_count == old_count + 1) {
+    //one line inserted
+    int split_row = cursor_row - 1;
+    if (split_row >= 0 && line_colors_cache_grow(new_count) == 0) {
+      int shift = old_count - split_row - 1;
+      if (shift > 0) {
+        memmove(&line_colors_cache[split_row + 2], &line_colors_cache[split_row + 1], shift * sizeof(uint32_t *));
+        memmove(&line_colors_cache_cap[split_row + 2], &line_colors_cache_cap[split_row + 1], shift * sizeof(int));
+      }
+
+      //top half stale
+      line_colors_cache_free_row(split_row);
+      line_colors_cache[split_row + 1] = NULL;
+      line_colors_cache_cap[split_row + 1] = 0;
+    }
+  } 
+  else if (new_count == old_count - 1) {
+    //one line deleted
+    int merge_row = cursor_row;
+
+    //clamp to the range we actually allocated to avoid out-of-bounds memmove
+    int eff_old = old_count < line_colors_cache_count ? old_count : line_colors_cache_count;
+    if (merge_row >= 0 && merge_row < eff_old) {
+      line_colors_cache_free_row(merge_row);
+      line_colors_cache_free_row(merge_row + 1);
+      int shift = eff_old - merge_row - 2;
+      if (shift > 0) {
+        memmove(&line_colors_cache[merge_row + 1], &line_colors_cache[merge_row + 2], shift * sizeof(uint32_t *));
+        memmove(&line_colors_cache_cap[merge_row + 1], &line_colors_cache_cap[merge_row + 2], shift * sizeof(int));
+      }
+
+      //null the vacated last slot
+      int vacated = eff_old - 1;
+      if (vacated >= 0 && vacated < line_colors_cache_count) {
+        line_colors_cache[vacated] = NULL;
+        line_colors_cache_cap[vacated] = 0;
+      }
+    }
+  } else {
+    //bulk change (paste, undo, multi-line delete): fall back to full invalidation
+    line_colors_cache_invalidate_all();
+  }
+
+  line_colors_last_row_count = new_count;
+}
+
 static const uint32_t *get_line_colors(int row) {
   //ensure outer pointer array covers this row
   if (line_colors_cache_grow(row + 1) != 0) return NULL;
@@ -656,6 +715,8 @@ static void rebuild_block_comment_open_from(int row) {
 
     if (r + 1 < block_comment_open_cap) {
       if (block_comment_open[r + 1] == out_bc) break;
+      //cached colors for this row are now wrong
+      line_colors_cache_free_row(r + 1);
       block_comment_open[r + 1] = out_bc;
     }
 
