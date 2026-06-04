@@ -12,6 +12,7 @@
 #define FILE_READ_BUF 4096
 
 static bool quit_flag = false;
+static bool remote = false;
 
 /* Use instead of set_render when the operation might have scrolled the
  * viewport — upgrades to RENDER_FULL if the scroll offset changed. */
@@ -175,7 +176,12 @@ void commands_dispatch(KeyEvent ev) {
         command_bar_set_status("Out of memory");
         set_render(RENDER_STATUS);
       }
-      else set_render_ex(mid_line ? RENDER_LINE : RENDER_FULL);
+      else if (r == EDITOR_OK) { 
+        if (remote) {       
+          build_packet(CMD_DELETE_CHAR, NULL, 0, 0);
+        }
+        set_render_ex(mid_line ? RENDER_LINE : RENDER_FULL);
+      }
     }
     return;
   }
@@ -183,9 +189,9 @@ void commands_dispatch(KeyEvent ev) {
   if (ev.dir != DIR_NONE) {
     if (ev.shift) {
       if (!editor_sel_is_active()) editor_sel_set_anchor();
-    } else {
-      editor_sel_clear();
-    }
+    } 
+    else editor_sel_clear();
+  
     switch (ev.dir) {
       case DIR_LEFT: ev.ctrl ? editor_move_word_left() : editor_move_left(); break;
       case DIR_RIGHT: ev.ctrl ? editor_move_word_right() : editor_move_right(); break;
@@ -194,6 +200,17 @@ void commands_dispatch(KeyEvent ev) {
       case DIR_HOME: editor_move_home(); break;
       case DIR_END: editor_move_end(); break;
       default: break;
+    }
+    
+    if (remote) {
+      uint8_t payload[4];
+      int r = editor_get_cursor_row();
+      int c = editor_get_cursor_col();
+      payload[0] = (r >> 8) & 0xFF;
+      payload[1] = r & 0xFF;
+      payload[2] = (c >> 8) & 0xFF;
+      payload[3] = c & 0xFF;
+      build_packet(CMD_MOVE_CURSOR, payload, 4, 0);
     }
     set_render_ex(RENDER_CHAR);
     return;
@@ -259,7 +276,13 @@ void commands_dispatch(KeyEvent ev) {
       command_bar_set_status("Out of memory");
       set_render(RENDER_STATUS); 
     }
-    else set_render(RENDER_FULL);
+    else if (r == EDITOR_OK) {
+      if (remote) {
+        uint8_t c = '\n';
+        build_packet(CMD_INSERT_CHAR, &c, 1, 0);
+      }
+      set_render(RENDER_FULL);
+    }
     return;
   }
 
@@ -270,7 +293,13 @@ void commands_dispatch(KeyEvent ev) {
       command_bar_set_status("Out of memory");
       set_render(RENDER_STATUS);
     }
-    else set_render_ex(RENDER_LINE);
+    else if (r == EDITOR_OK) {
+      if (remote) { 
+        uint8_t c = ev.c;
+        build_packet(CMD_INSERT_CHAR, &c, 1, 0);
+      }
+      set_render_ex(RENDER_LINE);
+    }
   }
 }
 
@@ -281,6 +310,14 @@ void commands_dispatch_mouse(MouseEvent me) {
   if (scene_px_to_text(me.click_x, me.click_y, &row, &col)) {
     editor_sel_clear();
     editor_set_cursor(row, col);
+    if (remote) {
+      uint8_t payload[4];
+      payload[0] = (row >> 8) & 0xFF;
+      payload[1] = row & 0xFF;
+      payload[2] = (col >> 8) & 0xFF;
+      payload[3] = col & 0xFF;
+      build_packet(CMD_MOVE_CURSOR, payload, 4, 0);
+    }
     set_render_ex(RENDER_CHAR);
   }
 }
