@@ -262,6 +262,10 @@ int mouse_example() {
 
   if (mouse_subscribe_int(&bit_no) != OK)
     return fail(ERR_MOUSE, "mouse_example: unable to subscribe mouse interrupt");
+  if (mouse_enable_wheel_mode() != OK) {
+    mouse_unsubscribe_int();
+    return fail(ERR_MOUSE, "mouse_example: unable to enable wheel mode");
+  }
   if (my_mouse_enable_data_reporting() != OK) {
     mouse_unsubscribe_int();
     return fail(ERR_MOUSE, "mouse_example: unable to enable data reporting");
@@ -280,12 +284,12 @@ int mouse_example() {
             mouse_ih();
 
             if (is_packet_ready()) {
-              struct packet pp;
+              mouse_packet pp;
               if (build_packet(&pp) != OK) {
                 fail(ERR_MOUSE, "mouse_example: unable to build packet");
                 continue;
               }
-              mouse_print_packet(&pp);
+              my_mouse_print_packet(&pp);
 
               packets_read++;
 
