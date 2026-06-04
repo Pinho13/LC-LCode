@@ -33,16 +33,43 @@
 #define SCROLLBAR_W 8
 #define SCROLLBAR_HANDLE_MIN 4
 
-static void draw_gutter(int scroll_row, int end_r);
-static void draw_filetree(int vrows);
-static void draw_scrollbar();
-static void draw_text_lines(int scroll_row, int end_r, int scroll_col);
+// --- Coordinate Mapping ---
+static int  model_to_px(int model_col);
+static int  model_to_py(int model_row);
+
+// --- Draw Primitives ---
+static void draw_cell(int model_col, int model_row, bool in_block_comment);
+static void draw_cursor(int model_col, int model_row);
 static void draw_line_colored(int x, int y, const char *line, int scroll_col, const uint32_t *colors, int line_len);
-static bool block_comment_open_at(int row);
+
+// --- Widget Draws ---
+static void draw_selection_bg(int end_r);
+static void draw_filetree(int vrows);
+static void draw_gutter(int scroll_row, int end_r);
+static void draw_scrollbar(void);
+static void draw_text_lines(int scroll_row, int end_r, int scroll_col);
+static void render_status_bar(void);
+
+// --- Render & Flip Pipeline ---
+static void render_editor_ui(int mode, int col, int row, int scroll_row, int scroll_col);
+static void flip_editor_ui(int mode, int col, int row, int scroll_row, int scroll_col);
+static void flip_status_bar(void);
 static void flip_cursor_region(int x, int y);
+
+// --- Memory & Cache Management ---
+static int  colors_buf_grow(int needed);
+static void colors_buf_cleanup(void);
+static int  block_comment_open_grow(int needed);
+static void block_comment_open_cleanup(void);
+static int  line_colors_cache_grow(int needed);
+static void line_colors_cache_free_row(int row);
+static void line_colors_cache_invalidate_all(void);
+static void line_colors_cache_cleanup(void);
+
+// --- Syntax State Tracking ---
 static void rebuild_block_comment_open_full(void);
 static void rebuild_block_comment_open_from(int row);
-static int colors_buf_grow(int needed);
+static bool block_comment_open_at(int row);
 
 static SceneID current_scene = SCENE_EDITOR;
 static int prev_col = 0;
@@ -57,6 +84,11 @@ static uint32_t *colors_buf = NULL;
 static int colors_cap = 0;
 static bool *block_comment_open = NULL;
 static int block_comment_open_cap = 0;
+
+static uint32_t **line_colors_cache = NULL;
+static int *line_colors_cache_cap = NULL;
+static int line_colors_cache_count = 0;
+static int line_colors_last_row_count = 0;
 
 // Public API
 
@@ -74,12 +106,9 @@ int scene_init(SceneID id) {
 
 void scene_cleanup() {
   mouse_cursor_cleanup();
-  free(colors_buf);
-  colors_buf = NULL;
-  colors_cap = 0;
-  free(block_comment_open);
-  block_comment_open = NULL;
-  block_comment_open_cap = 0;
+  colors_buf_cleanup();
+  block_comment_open_cleanup();
+  line_colors_cache_cleanup();
 }
 
 int scene_get_vis_rows() { return vis_rows; }
@@ -473,6 +502,12 @@ static int colors_buf_grow(int needed) {
   return 0;
 }
 
+static void colors_buf_cleanup(void) {
+  free(colors_buf);
+  colors_buf = NULL;
+  colors_cap = 0;
+}
+
 static int block_comment_open_grow(int needed) {
   //buffer size calc
   if (block_comment_open_cap >= needed) return 0;
@@ -490,6 +525,67 @@ static int block_comment_open_grow(int needed) {
   block_comment_open = p;
   block_comment_open_cap = new_cap;
   return 0;
+}
+
+static void block_comment_open_cleanup(void) {
+  free(block_comment_open);
+  block_comment_open = NULL;
+  block_comment_open_cap = 0;
+}
+
+static int line_colors_cache_grow(int needed) {
+  if (line_colors_cache_count >= needed) return 0;
+
+  int new_count = line_colors_cache_count ? line_colors_cache_count * 2 : 64;
+  while (new_count < needed) new_count *= 2;
+
+  //Colors
+  uint32_t **p = malloc(new_count * sizeof(uint32_t *));
+  if (!p) return -1;
+
+  //amount of colors per line
+  int *q = malloc(new_count * sizeof(int));
+  if (!q) { free(p); return -1; }
+
+  //Copy existing to new
+  if (line_colors_cache_count > 0) {
+    memcpy(p, line_colors_cache, line_colors_cache_count * sizeof(uint32_t *));
+    memcpy(q, line_colors_cache_cap, line_colors_cache_count * sizeof(int));
+  }
+
+  //zero-out mem 
+  memset(p + line_colors_cache_count, 0, (new_count - line_colors_cache_count) * sizeof(uint32_t *));
+  memset(q + line_colors_cache_count, 0, (new_count - line_colors_cache_count) * sizeof(int));
+
+  free(line_colors_cache);
+  free(line_colors_cache_cap);
+  line_colors_cache = p;
+  line_colors_cache_cap = q;
+  line_colors_cache_count = new_count;
+  return 0;
+}
+
+static void line_colors_cache_free_row(int row) {
+  if (row < 0 || row >= line_colors_cache_count) return;
+  free(line_colors_cache[row]);
+  line_colors_cache[row] = NULL;
+  line_colors_cache_cap[row] = 0;
+}
+
+static void line_colors_cache_invalidate_all(void) {
+  for (int r = 0; r < line_colors_cache_count; r++) {
+    line_colors_cache_free_row(r);
+  }
+  line_colors_last_row_count = 0;
+}
+
+static void line_colors_cache_cleanup(void) {
+  line_colors_cache_invalidate_all();
+  free(line_colors_cache);
+  line_colors_cache = NULL;
+  free(line_colors_cache_cap);
+  line_colors_cache_cap = NULL;
+  line_colors_cache_count = 0;
 }
 
 static void rebuild_block_comment_open_full(void) {
