@@ -1,6 +1,6 @@
 #include "view/renderer/font.h"
 #include "fw/drivers/video.h"
-#include "assets/font.h"
+#include "assets/font.xpm.h"
 
 void draw_char(int x, int y, char c, uint32_t color) {
   if ((uint8_t)c >= 128) return;
