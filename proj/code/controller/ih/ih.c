@@ -9,7 +9,7 @@
 #include "controller/serial.h"
 #include "model/command_bar.h"
 #include "fw/drivers/video.h"
-#include "render_flag.h"
+#include "render_state.h"
 #include "model/time.h"
 
 static uint8_t irq_timer = 0, irq_keyboard = 0, irq_mouse = 0, irq_serial = 0;

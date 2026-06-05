@@ -2,7 +2,7 @@
 #include "view/font.h"
 #include "view/mouse_cursor.h"
 #include "fw/drivers/video.h"
-#include "render_flag.h"
+#include "render_state.h"
 #include "model/editor.h"
 #include "model/command_bar.h"
 #include "model/filetree.h"

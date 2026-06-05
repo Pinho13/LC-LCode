@@ -1,4 +1,4 @@
-#include "render_flag.h"
+#include "render_state.h"
 
 static int render_mode = RENDER_NONE;
 

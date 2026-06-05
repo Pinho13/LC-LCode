@@ -17,7 +17,7 @@
 #include "model/editor.h"
 #include "model/command_bar.h"
 #include "model/filetree.h"
-#include "render_flag.h"
+#include "render_state.h"
 
 int(proj_main_loop)(int argc, char *argv[]) {
   int ipc_status, r;
