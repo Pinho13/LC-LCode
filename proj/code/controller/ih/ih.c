@@ -9,6 +9,7 @@
 #include "model/command_bar.h"
 #include "fw/drivers/video.h"
 #include "render_flag.h"
+#include "model/time.h"
 
 static uint8_t irq_timer = 0, irq_keyboard = 0, irq_mouse = 0, irq_serial = 0;
 packet_scancode ps = {
@@ -35,6 +36,12 @@ int subscribe_interrupts() {
     timer_unsubscribe_int();
     keyboard_unsubscribe_int();
     return fail(ERR_MOUSE, "subscribe_interrupts: unable to subscribe mouse interrupt");
+  }
+  if (mouse_enable_wheel_mode() != OK) {
+    timer_unsubscribe_int();
+    keyboard_unsubscribe_int();
+    mouse_unsubscribe_int();
+    return fail(ERR_MOUSE, "subscribe_interrupts: unable to enable wheel mode");
   }
   if (my_mouse_enable_data_reporting() != OK) {
     timer_unsubscribe_int();
@@ -87,6 +94,11 @@ int unsubscribe_interrupts() {
 void timer_handler() {
   timer_int_handler();
   if (command_bar_tick()) set_render(RENDER_STATUS);
+
+  if (get_int_counter() % TIMER_HZ == 0) {
+    time_update();
+    set_render(RENDER_STATUS);
+  }
 }
 
 void keyboard_handler() {
@@ -108,7 +120,7 @@ void mouse_handler() {
   mouse_ih();
 
   if (is_packet_ready()) {
-    struct packet pp;
+    mouse_packet pp;
   
     if (build_packet(&pp) != OK) {
       fail(ERR_MOUSE, "mouse_handler: unable to build packet");

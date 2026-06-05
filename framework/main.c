@@ -36,7 +36,6 @@ int rtc_example();
 void test_rtc_date();
 
 // Timer
-#define TIMER_HZ 60
 int timer_example();
 
 // Keyboard
@@ -107,11 +106,14 @@ void error_example() {
 }
 
 int rtc_example() {
-  rtc_date date = {0, 0, 0};
+  rtc_date date = {0, 0, 0, 0, 0, 0};
   if (rtc_read_date(&date) != OK) return 1;
 
   printf("\n\n");
   printf("RTC EXAMPLE \n");
+  printf("seconds: %u \n", date.seconds);
+  printf("minutes: %u \n", date.minutes);
+  printf("hours: %u \n", date.hours);
   printf("day: %u \n", date.day);
   printf("month: %u \n", date.month);
   printf("year: %u", date.year);
@@ -120,7 +122,7 @@ int rtc_example() {
 }
 
 void test_rtc_date() {
-  rtc_date date = {0, 0, 0};
+  rtc_date date = {0, 0, 0, 0, 0, 0};
   rtc_read_date(&date);
 
   struct timespec ts;
@@ -262,6 +264,10 @@ int mouse_example() {
 
   if (mouse_subscribe_int(&bit_no) != OK)
     return fail(ERR_MOUSE, "mouse_example: unable to subscribe mouse interrupt");
+  if (mouse_enable_wheel_mode() != OK) {
+    mouse_unsubscribe_int();
+    return fail(ERR_MOUSE, "mouse_example: unable to enable wheel mode");
+  }
   if (my_mouse_enable_data_reporting() != OK) {
     mouse_unsubscribe_int();
     return fail(ERR_MOUSE, "mouse_example: unable to enable data reporting");
@@ -280,12 +286,12 @@ int mouse_example() {
             mouse_ih();
 
             if (is_packet_ready()) {
-              struct packet pp;
+              mouse_packet pp;
               if (build_packet(&pp) != OK) {
                 fail(ERR_MOUSE, "mouse_example: unable to build packet");
                 continue;
               }
-              mouse_print_packet(&pp);
+              my_mouse_print_packet(&pp);
 
               packets_read++;
 

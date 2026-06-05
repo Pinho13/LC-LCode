@@ -4,13 +4,17 @@
 
 #include "fw/drivers/mouse.h"
 
+#define SCROLL_SPEED_MULTIPLIER 3
+
 typedef struct {
   bool left_clicked;
+  bool left_holding;
   int click_x, click_y;
+  int scroll;
 } MouseEvent;
 
 
-void mouse_process(struct packet pp);
+void mouse_process(mouse_packet pp);
 
 int ih_get_mouse_x();
 int ih_get_mouse_y();

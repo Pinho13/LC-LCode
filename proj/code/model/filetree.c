@@ -90,14 +90,38 @@ const FileEntry *filetree_get_entry(int i) {
   return &entries[i];
 }
 
-void filetree_move_up() {
+void filetree_move_up(int vis_rows) {
+  if (cursor > scroll + vis_rows) cursor = scroll + vis_rows;
   if (cursor > 0) cursor--;
   if (cursor < scroll) scroll = cursor;
 }
 
 void filetree_move_down(int vis_rows) {
+  if (cursor < scroll) cursor = scroll-1;
   if (cursor < entry_count - 1) cursor++;
   if (cursor >= scroll + vis_rows) scroll = cursor - vis_rows + 1;
+}
+
+void filetree_set_cursor(int idx, int vis_rows) {
+  if (entry_count == 0) {
+    cursor = 0;
+    scroll = 0;
+    return;
+  }
+
+  if (idx < 0)
+    idx = 0;
+
+  if (idx >= entry_count)
+    idx = entry_count - 1;
+
+  cursor = idx;
+
+  if (cursor < scroll)
+    scroll = cursor;
+
+  if (cursor >= scroll + vis_rows)
+    scroll = cursor - vis_rows + 1;
 }
 
 FiletreeResult filetree_go_parent() {
@@ -146,4 +170,16 @@ void filetree_get_selected_path(char *buf, int size) {
     buf[0] = '\0'; return;
   }
   snprintf(buf, size, "%s/%s", cwd, entries[cursor].name);
+}
+
+void filetree_scroll_by(int delta, int vis_rows) {
+  scroll += delta;
+
+  if (scroll < 0) scroll = 0;
+
+  int max_scroll = entry_count - vis_rows;
+  if (max_scroll < 0) max_scroll = 0;
+
+  if (scroll > max_scroll)
+    scroll = max_scroll;
 }
