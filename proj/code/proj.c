@@ -10,7 +10,7 @@
 #include "fw/drivers/video.h"
 #include "fw/drivers/serial_port.h"
 #include "controller/ih/ih.h"
-#include "controller/commands.h"
+#include "controller/commands/commands.h"
 #include "controller/input/events.h"
 #include "view/renderer/scene.h"
 #include "view/editor/syntax.h"

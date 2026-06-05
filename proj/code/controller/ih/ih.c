@@ -5,7 +5,7 @@
 #include "fw/common/utils.h"
 #include "controller/input/keyboard.h"
 #include "controller/input/mouse.h"
-#include "controller/commands.h"
+#include "controller/commands/commands.h"
 #include "controller/serial.h"
 #include "model/command_bar/command_bar.h"
 #include "fw/drivers/video.h"

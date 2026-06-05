@@ -1,5 +1,5 @@
-#include "controller/filetree_commands.h"
-#include "controller/commands.h"
+#include "controller/commands/filetree_commands.h"
+#include "controller/commands/commands.h"
 #include "model/filetree/filetree.h"
 #include "model/command_bar/command_bar.h"
 #include "model/time/session_time.h"
