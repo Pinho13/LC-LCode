@@ -11,6 +11,7 @@ A framework developed from the labs that enables testing of each driver based on
 - **Keyboard:** Captures and interprets keyboard scancodes
 - **Mouse:** Handles mouse input, including movement, clicks, and scrolling
 - **Video:** Supports rendering mode configuration and on-screen drawing operations
+- **Serial Port:** Supports data transfer between machines (Not fully implemented and Untested)
 
 ## Project
 
@@ -44,7 +45,7 @@ To run the project simply do:
 ./run.sh proj
 ```
 
-To run test a single driver from the framework:
+To test a single driver from the framework:
 ```sh
 ./run.sh fw <driver>
 ```
