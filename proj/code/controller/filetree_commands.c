@@ -4,7 +4,7 @@
 #include "model/command_bar.h"
 #include "model/session_time.h"
 #include "view/scene.h"
-#include "render_state.h"
+#include "model/render_state.h"
 #include <string.h>
 
 static void show_filetree_error() {

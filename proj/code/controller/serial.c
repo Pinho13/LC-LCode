@@ -3,7 +3,7 @@
 #include "controller/input/events.h"
 #include "fw/drivers/serial_port.h"
 #include "model/editor.h"
-#include "render_state.h"
+#include "model/render_state.h"
 
 typedef enum {
   STATE_WAIT_START,

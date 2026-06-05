@@ -5,7 +5,7 @@
 #include "model/command_bar.h"
 #include "view/scene.h"
 #include "view/syntax.h"
-#include "render_state.h"
+#include "model/render_state.h"
 #include "controller/serial.h"
 #include <stdio.h>
 #include <string.h>
