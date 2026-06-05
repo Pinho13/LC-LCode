@@ -1,58 +1,54 @@
-# Template
+# LCOM Project - LCode
 
+## Framework
 
+A framework developed from the labs that enables testing of each driver based on the parameter provided at runtime.
 
-## Getting started
+### Features
 
-Welcome to your LCOM code repository. This is where your team should deliver all the required artifacts, including code.
-Please take your time to get acquainted with GitLab and its functionalities. The way your team uses Git and GitLab to collaborate will be evaluated. 
+- **RTC:** Provides access to the current date and time, from year down to seconds
+- **Timer:** Enables precise time measurement and interval tracking
+- **Keyboard:** Captures and interprets keyboard scancodes
+- **Mouse:** Handles mouse input, including movement, clicks, and scrolling
+- **Video:** Supports rendering mode configuration and on-screen drawing operations
 
-## Boilerplate
+## Project
 
-In this repository, you will find some pre-loaded files and an initial setup of your team's project board. 
-Along the semester, you will be adding files and folders to this repository.
-Make sure you expand on the issues and milestones for your project, helping your team to coordinate and meet all the deadlines. Major deadlines are already setup but you should add your own sub-issues, additional issues, and deadlines. 
+LCode is a code editor built for Minix, providing an interactive environment for navigating the file tree and editing files.
 
-## GitLab Setup 
+### Features
 
-### Add your files
+- **File editor:** Supports writing, text selection, and page scrolling
+- **File tree:** A navigable menu for traversing the file system and opening files
+- **Shortcuts:** Includes essential keyboard shortcuts and support for important special characters
+- **Status Bar:** Displays the current open folder, session uptime, and current time; also allows creating new files and opening files via full path
+- **Mouse Support:** Both the **file tree** and **file editor** support full mouse interaction, including scrolling, clicking, and text selection
 
-* [Create](https://docs.gitlab.com/ee/user/project/repository/web_editor.html#create-a-file) or [upload](https://docs.gitlab.com/ee/user/project/repository/web_editor.html#upload-a-file) files
-* [Add files using the command line](https://docs.gitlab.com/topics/git/add_files/#add-files-to-a-git-repository) or push an existing Git repository with the following command:
+### Shortcuts
 
+- **Ctrl + b:** Opens and closes file tree
+- **Ctrl + s:** Saves file
+- **Ctrl + o:** Opens file
+- **Ctrl + c:** Copies selected text
+- **Ctrl + v:** Pastes selected text
+- **Ctrl + q:** Leave LCode
+
+## Environment
+
+After creating the framework, we quickly realized that compiling the framework and the project separately every time a change was made was neither practical nor efficient.
+
+The development environment should adapt to our workflow, not constrain it. To achieve this, we created [`run.sh`](run.sh), a simple shell script that automates the process of building both the framework and the project. It also provides the flexibility to run either the framework for testing purposes or the project itself, streamlining development and reducing repetitive manual steps.
+
+To run the project simply do:
+```sh
+./run.sh proj
 ```
-cd existing_repo
-git remote add origin https://gitlab.up.pt/lcom-26/template.git
-git branch -M main
-git push -uf origin main
+
+To run test a single driver from the framework:
+```sh
+./run.sh fw <driver>
 ```
 
-### Integrate with your tools
-
-* [Set up project integrations](https://gitlab.up.pt/lcom-26/template/-/settings/integrations)
-
-### Collaborate with your team
-
-* [Invite team members and collaborators](https://docs.gitlab.com/ee/user/project/members/)
-* [Create a new merge request](https://docs.gitlab.com/ee/user/project/merge_requests/creating_merge_requests.html)
-* [Automatically close issues from merge requests](https://docs.gitlab.com/ee/user/project/issues/managing_issues.html#closing-issues-automatically)
-* [Enable merge request approvals](https://docs.gitlab.com/ee/user/project/merge_requests/approvals/)
-* [Set auto-merge](https://docs.gitlab.com/user/project/merge_requests/auto_merge/)
-
-### Test and Deploy
-
-Use the built-in continuous integration in GitLab.
-
-* [Get started with GitLab CI/CD](https://docs.gitlab.com/ee/ci/quick_start/)
-* [Analyze your code for known vulnerabilities with Static Application Security Testing (SAST)](https://docs.gitlab.com/ee/user/application_security/sast/)
-* [Deploy to Kubernetes, Amazon EC2, or Amazon ECS using Auto Deploy](https://docs.gitlab.com/ee/topics/autodevops/requirements.html)
-* [Use pull-based deployments for improved Kubernetes management](https://docs.gitlab.com/ee/user/clusters/agent/)
-* [Set up protected environments](https://docs.gitlab.com/ee/ci/environments/protected_environments.html)
-
-***
-
-## License
-For open source projects, say how it is licensed.
 
 ## Declaration of Responsible AI Use
 
@@ -67,16 +63,17 @@ We declare that:
 4. We have not used AI tools to generate complete solutions that we present as entirely our own unaided work, and we have avoided plagiarism, whether from AI outputs or other sources.  
 5. If asked, we will provide details of which tools we used, for which files or parts of the project, and how we verified and adapted their outputs.
 
-Signed: `<student name>`, `<student name>`, `<student name>`, `<student name>`  
-Date: `<date>`
+Signed: `Luís Costa`, `Miguel Rocha`, `Pedro Teixeira`, `Rafael Silva`  
+Date: `05/06/2025`
 
 ## Authors and acknowledgment
 
-LCOM Project for group GRUPO_2LEIC<m><n>_<p>.
-Group members:
+LCOM Project for group GRUPO_2LEIC14_2.
 
-Luís Costa (up202404078@up.pt)
-Miguel Rocha (up202405484@up.pt)
-Pedro Teixeira (up202404987@up.pt)
-Rafael Silva (up202406334@up.pt)
+### Group members:
+
+- Luís Costa (up202404078@up.pt)
+- Miguel Rocha (up202405484@up.pt)
+- Pedro Teixeira (up202404987@up.pt)
+- Rafael Silva (up202406334@up.pt)
 
