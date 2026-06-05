@@ -2,7 +2,7 @@
 #include "controller/filetree_commands.h"
 #include "model/filetree/filetree.h"
 #include "model/editor/editor.h"
-#include "model/command_bar.h"
+#include "model/command_bar/command_bar.h"
 #include "view/renderer/scene.h"
 #include "view/editor/syntax.h"
 #include "model/render_state.h"

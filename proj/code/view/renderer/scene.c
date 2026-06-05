@@ -4,7 +4,7 @@
 #include "fw/drivers/video.h"
 #include "model/render_state.h"
 #include "model/editor/editor.h"
-#include "model/command_bar.h"
+#include "model/command_bar/command_bar.h"
 #include "model/filetree/filetree.h"
 #include "controller/ih/ih.h"
 #include "view/editor/highlight_cache.h"

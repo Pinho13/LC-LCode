@@ -1,4 +1,4 @@
-#include "model/command_bar.h"
+#include "model/command_bar/command_bar.h"
 #include "proj.h"
 #include <string.h>
 

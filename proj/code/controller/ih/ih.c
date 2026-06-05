@@ -7,7 +7,7 @@
 #include "controller/input/mouse.h"
 #include "controller/commands.h"
 #include "controller/serial.h"
-#include "model/command_bar.h"
+#include "model/command_bar/command_bar.h"
 #include "fw/drivers/video.h"
 #include "model/render_state.h"
 #include "model/time/clock.h"
