@@ -6,8 +6,8 @@
 
 #define WORK_DIR "/home/lcom/labs/proj/docs"
 
+#include "proj.h"
 #include "fw/drivers/video.h"
-#include "fw/hw/vbe.h"
 #include "fw/drivers/serial_port.h"
 #include "controller/ih/ih.h"
 #include "controller/commands.h"
@@ -18,9 +18,6 @@
 #include "model/command_bar.h"
 #include "model/filetree.h"
 #include "render_flag.h"
-
-#define VIDEO_MODE VBE_864p_DC
-#define TIMER_HZ 60
 
 int(proj_main_loop)(int argc, char *argv[]) {
   int ipc_status, r;
