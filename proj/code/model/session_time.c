@@ -19,6 +19,5 @@ void session_time_format(char *buf, size_t n) {
   int minutes = (s % 3600) / 60;
   int seconds = s % 60;
 
-  snprintf(buf, n, "open: %02d:%02d:%02d",
-           hours, minutes, seconds);
+  snprintf(buf, n, "%02d:%02d:%02d", hours, minutes, seconds);
 }
