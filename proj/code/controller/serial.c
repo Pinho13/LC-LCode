@@ -20,7 +20,8 @@ static int payload_idx = 0;
 
 static void serial_handle_byte(uint8_t byte) {
   switch (state) {
-    
+
+    // scan for the start byte; discard everything else
     case STATE_WAIT_START:
       if (byte == PKT_START_BYTE) {
         state = STATE_READ_CMD;
@@ -35,21 +36,23 @@ static void serial_handle_byte(uint8_t byte) {
     case STATE_READ_LEN:
       payload_len = byte;
       payload_idx = 0;
+      // zero-length payload: dispatch immediately without entering READ_PAYLOAD
       if (payload_len == 0) {
         InputEvent ev;
         ev.type = INPUT_EVENT_SERIAL;
         ev.data.serial.cmd = current_cmd;
         ev.data.serial.payload_len = payload_len;
-      
+
         input_event_push(ev);
-        
+
         state = STATE_WAIT_START;
-      } 
+      }
       else {
         state = STATE_READ_PAYLOAD;
       }
       break;
 
+    // accumulate bytes until payload is complete, then dispatch
     case STATE_READ_PAYLOAD:
       payload_buf[payload_idx] = byte;
       payload_idx++;
@@ -58,11 +61,11 @@ static void serial_handle_byte(uint8_t byte) {
         ev.type = INPUT_EVENT_SERIAL;
         ev.data.serial.cmd = current_cmd;
         ev.data.serial.payload_len = payload_len;
-        
+
         memcpy(ev.data.serial.payload_buf, payload_buf, payload_len);
-        
+
         input_event_push(ev);
-        
+
         state = STATE_WAIT_START;
       }
       break;
