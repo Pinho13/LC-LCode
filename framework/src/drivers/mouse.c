@@ -4,11 +4,13 @@
 
 #define MOUSE_MAX_TRIES 5
 
+static int packet_size = 3;
+
 static int hook_id = 2;
 static int packet_index = 0;
 static bool packet_ready = false;
 static bool error = false;
-static uint8_t packet_bytes[MOUSE_PACKET_SIZE];
+static uint8_t packet_bytes[4];
 
 
 uint8_t *get_packet() {
@@ -19,10 +21,11 @@ bool is_packet_ready() {
   return packet_ready;
 }
 
-static void mouse_parse_packet(struct packet *pp) {
+static void mouse_parse_packet(mouse_packet *pp) {
   pp->bytes[0] = packet_bytes[0];
   pp->bytes[1] = packet_bytes[1];
   pp->bytes[2] = packet_bytes[2];
+  pp->bytes[3] = (packet_size == 4) ? packet_bytes[3] : 0;
 
   pp->lb = packet_bytes[0] & BIT(0);
   pp->rb = packet_bytes[0] & BIT(1);
@@ -34,13 +37,14 @@ static void mouse_parse_packet(struct packet *pp) {
   // Sign extension
   pp->delta_x = (packet_bytes[0] & BIT(4)) ? (0xFF00 | packet_bytes[1]) : packet_bytes[1];
   pp->delta_y = (packet_bytes[0] & BIT(5)) ? (0xFF00 | packet_bytes[2]) : packet_bytes[2];
+  pp->delta_z = (packet_size == 4) ? (int8_t)packet_bytes[3] : 0;
 }
 
 bool get_error() {
   return error;
 }
 
-int build_packet(struct packet *pp) {
+int build_packet(mouse_packet *pp) {
   if (!pp) return fail(ERR_MOUSE, "build_packet: NULL packet pointer");
   if (!packet_ready) return fail(ERR_MOUSE, "build_packet: packet not ready");
 
@@ -104,6 +108,11 @@ void (mouse_ih)() {
     fail(ERR_MOUSE, "mouse_ih: parity or timeout error");
     return;
   }
+
+  // Ignore non-mouse data
+  if (!(status & KBC_MOUSE_DATA)) {
+    return;
+  }
   
   // Read byte
   if (util_sys_inb(KBC_DATA_REG, &data) != OK) {
@@ -119,7 +128,7 @@ void (mouse_ih)() {
   packet_bytes[packet_index] = data;
   packet_index++;
 
-  if (packet_index == MOUSE_PACKET_SIZE) {
+  if (packet_index == packet_size) {
     packet_ready = true;
     packet_index = 0;
   } else {
@@ -159,10 +168,65 @@ int (mouse_write_command)(uint8_t cmd) {
   return fail(ERR_MOUSE, "mouse_write_command: retries exceeded");
 }
 
+int mouse_enable_wheel_mode() {
+  int res;
+
+  // IntelliMouse detection sequence
+  uint8_t seq[3] = {200, 100, 80};
+
+  for (int i = 0; i < 3; i++) {
+    res = mouse_write_command(SET_SAMPLE_RATE);
+    if (res != OK) return res;
+
+    res = mouse_write_command(seq[i]);
+    if (res != OK) return res;
+  }
+
+  // Get device ID
+  res = mouse_write_command(GET_DEVICE_ID);
+  if (res != OK) return res;
+
+  // id meaning: 
+  // 0 - PS/2
+  // 3 - IntelliMouse (scroll wheel)
+  // 4 - IntelliMouse + extras
+  uint8_t id;
+  if (kbc_wait_output_full(&id) != OK)
+    return fail(ERR_MOUSE, "mouse_enable_wheel_mode: failed to read device id");
+
+  packet_size = (id >= 3) ? 4 : 3;
+
+  packet_index = 0;
+  packet_ready = false;
+
+  // Re-enable reporting
+  res = mouse_write_command(ENABLE_DR);
+  if (res != OK) return res;
+
+  return 0;
+}
+
 int my_mouse_enable_data_reporting() {
   return mouse_write_command(ENABLE_DR);
 }
 
 int my_mouse_disable_data_reporting() {
   return mouse_write_command(DISABLE_DR);
+}
+
+void my_mouse_print_packet(mouse_packet*pp) {
+  printf("B1=0x%02X ", pp->bytes[0]);
+  printf("B2=0x%02X ", pp->bytes[1]);
+  printf("B3=0x%02X ", pp->bytes[2]);
+  if (packet_size == 4) printf("B4=0x%02X ", pp->bytes[3]);
+
+  printf("LB:%d RB:%d MB:%d ", pp->lb, pp->rb, pp->mb);
+  printf("XOV:%d YOV:%d ", pp->x_ov, pp->y_ov);
+
+  printf("dx:%d dy:%d ", pp->delta_x, pp->delta_y);
+
+  // Scroll wheel
+  printf("dz:%d", pp->delta_z);
+
+  printf("\n");
 }

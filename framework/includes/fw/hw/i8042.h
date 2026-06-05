@@ -24,7 +24,8 @@
 #define DISABLE_DR        0xF5
 #define SUCCESS           0xFA
 #define FAILURE           0xFE
-
+#define SET_SAMPLE_RATE   0xF3
+#define GET_DEVICE_ID     0xF2
 
 /* KBC Status */
 
