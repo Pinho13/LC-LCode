@@ -1,0 +1,39 @@
+\doxysection{/\+home/\+pinho/\+\+Classes/\+\+LCOM/\+shared/\+proj/\+code/\+model/\+time/\+clock.h File Reference}
+\hypertarget{clock_8h}{}\label{clock_8h}\index{/home/pinho/Classes/LCOM/shared/proj/code/model/time/clock.h@{/home/pinho/Classes/LCOM/shared/proj/code/model/time/clock.h}}
+{\ttfamily \+\#include "{}fw/\+drivers/\+rtc.\+h"{}}\newline
+\doxysubsubsection*{Functions}
+\begin{DoxyCompactItemize}
+\item 
+void \doxymbox{\hyperlink{clock_8h_acbfa3c65c807be82221cbebc7ac63224}{time\+\_\+update}} ()
+\begin{DoxyCompactList}\small\item\em Reads the current time from the RTC and updates the internal string. \end{DoxyCompactList}\item 
+const char \texorpdfstring{$\ast$}{*} \doxymbox{\hyperlink{clock_8h_a5ad9b743bcaa6aae59e498c20caa8012}{time\+\_\+get\+\_\+string}} ()
+\begin{DoxyCompactList}\small\item\em Returns the current time as a formatted string. \end{DoxyCompactList}\end{DoxyCompactItemize}
+
+
+\label{doc-func-members}
+\Hypertarget{clock_8h_doc-func-members}
+\doxysubsection{Function Documentation}
+\Hypertarget{clock_8h_a5ad9b743bcaa6aae59e498c20caa8012}\index{clock.h@{clock.h}!time\_get\_string@{time\_get\_string}}
+\index{time\_get\_string@{time\_get\_string}!clock.h@{clock.h}}
+\doxysubsubsection{\texorpdfstring{time\_get\_string()}{time\_get\_string()}}
+{\footnotesize\ttfamily \label{clock_8h_a5ad9b743bcaa6aae59e498c20caa8012} 
+const char \texorpdfstring{$\ast$}{*} time\+\_\+get\+\_\+string (\begin{DoxyParamCaption}{}{}\end{DoxyParamCaption})}
+
+
+
+Returns the current time as a formatted string. 
+
+\begin{DoxyReturn}{Returns}
+Null-\/terminated string in HH:\+\+MM:\+SS format 
+\end{DoxyReturn}
+\Hypertarget{clock_8h_acbfa3c65c807be82221cbebc7ac63224}\index{clock.h@{clock.h}!time\_update@{time\_update}}
+\index{time\_update@{time\_update}!clock.h@{clock.h}}
+\doxysubsubsection{\texorpdfstring{time\_update()}{time\_update()}}
+{\footnotesize\ttfamily \label{clock_8h_acbfa3c65c807be82221cbebc7ac63224} 
+void time\+\_\+update (\begin{DoxyParamCaption}{}{}\end{DoxyParamCaption})}
+
+
+
+Reads the current time from the RTC and updates the internal string. 
+
+Should be called once per RTC interrupt 

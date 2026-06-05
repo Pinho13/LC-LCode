@@ -1,0 +1,62 @@
+\doxysection{/\+home/\+pinho/\+\+Classes/\+\+LCOM/\+shared/\+proj/\+code/\+controller/\+input/\+mouse.c File Reference}
+\hypertarget{mouse_8c}{}\label{mouse_8c}\index{/home/pinho/Classes/LCOM/shared/proj/code/controller/input/mouse.c@{/home/pinho/Classes/LCOM/shared/proj/code/controller/input/mouse.c}}
+{\ttfamily \+\#include $<$lcom/\+lcf.\+h$>$}\newline
+{\ttfamily \+\#include "{}controller/\+input/\+mouse.\+h"{}}\newline
+{\ttfamily \+\#include "{}controller/\+input/\+events.\+h"{}}\newline
+{\ttfamily \+\#include "{}fw/\+drivers/\+video.\+h"{}}\newline
+{\ttfamily \+\#include "{}model/\+render\+\_\+state.\+h"{}}\newline
+\doxysubsubsection*{Functions}
+\begin{DoxyCompactItemize}
+\item 
+void \doxymbox{\hyperlink{mouse_8c_a4f02b36e775db2205b3476c3748b78e0}{mouse\+\_\+process}} (mouse\+\_\+packet pp)
+\begin{DoxyCompactList}\small\item\em Processes a raw mouse packet into a \doxylink{structMouseEvent}{Mouse\+Event} and pushes it to the input queue. \end{DoxyCompactList}\item 
+int \doxymbox{\hyperlink{mouse_8c_a8bb232e1fa62ee27af24bca3852040b7}{ih\+\_\+get\+\_\+mouse\+\_\+x}} ()
+\begin{DoxyCompactList}\small\item\em Returns the current mouse cursor x position in pixels. \end{DoxyCompactList}\item 
+int \doxymbox{\hyperlink{mouse_8c_a9ff1a72c7dc2f9bbb8fe481c63bcaa8d}{ih\+\_\+get\+\_\+mouse\+\_\+y}} ()
+\begin{DoxyCompactList}\small\item\em Returns the current mouse cursor y position in pixels. \end{DoxyCompactList}\end{DoxyCompactItemize}
+
+
+\label{doc-func-members}
+\Hypertarget{mouse_8c_doc-func-members}
+\doxysubsection{Function Documentation}
+\Hypertarget{mouse_8c_a8bb232e1fa62ee27af24bca3852040b7}\index{mouse.c@{mouse.c}!ih\_get\_mouse\_x@{ih\_get\_mouse\_x}}
+\index{ih\_get\_mouse\_x@{ih\_get\_mouse\_x}!mouse.c@{mouse.c}}
+\doxysubsubsection{\texorpdfstring{ih\_get\_mouse\_x()}{ih\_get\_mouse\_x()}}
+{\footnotesize\ttfamily \label{mouse_8c_a8bb232e1fa62ee27af24bca3852040b7} 
+int ih\+\_\+get\+\_\+mouse\+\_\+x (\begin{DoxyParamCaption}{}{}\end{DoxyParamCaption})}
+
+
+
+Returns the current mouse cursor x position in pixels. 
+
+\begin{DoxyReturn}{Returns}
+Pixel x coordinate 
+\end{DoxyReturn}
+\Hypertarget{mouse_8c_a9ff1a72c7dc2f9bbb8fe481c63bcaa8d}\index{mouse.c@{mouse.c}!ih\_get\_mouse\_y@{ih\_get\_mouse\_y}}
+\index{ih\_get\_mouse\_y@{ih\_get\_mouse\_y}!mouse.c@{mouse.c}}
+\doxysubsubsection{\texorpdfstring{ih\_get\_mouse\_y()}{ih\_get\_mouse\_y()}}
+{\footnotesize\ttfamily \label{mouse_8c_a9ff1a72c7dc2f9bbb8fe481c63bcaa8d} 
+int ih\+\_\+get\+\_\+mouse\+\_\+y (\begin{DoxyParamCaption}{}{}\end{DoxyParamCaption})}
+
+
+
+Returns the current mouse cursor y position in pixels. 
+
+\begin{DoxyReturn}{Returns}
+Pixel y coordinate 
+\end{DoxyReturn}
+\Hypertarget{mouse_8c_a4f02b36e775db2205b3476c3748b78e0}\index{mouse.c@{mouse.c}!mouse\_process@{mouse\_process}}
+\index{mouse\_process@{mouse\_process}!mouse.c@{mouse.c}}
+\doxysubsubsection{\texorpdfstring{mouse\_process()}{mouse\_process()}}
+{\footnotesize\ttfamily \label{mouse_8c_a4f02b36e775db2205b3476c3748b78e0} 
+void mouse\+\_\+process (\begin{DoxyParamCaption}\item[{mouse\+\_\+packet}]{pp}{}\end{DoxyParamCaption})}
+
+
+
+Processes a raw mouse packet into a \doxylink{structMouseEvent}{Mouse\+Event} and pushes it to the input queue. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em pp} & Mouse packet from the mouse interrupt handler \\
+\hline
+\end{DoxyParams}

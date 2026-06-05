@@ -1,0 +1,327 @@
+\doxysection{/\+home/\+pinho/\+\+Classes/\+\+LCOM/\+shared/\+proj/\+code/\+model/\+filetree/\+filetree.c File Reference}
+\hypertarget{filetree_8c}{}\label{filetree_8c}\index{/home/pinho/Classes/LCOM/shared/proj/code/model/filetree/filetree.c@{/home/pinho/Classes/LCOM/shared/proj/code/model/filetree/filetree.c}}
+{\ttfamily \+\#include "{}model/\+filetree/\+filetree.\+h"{}}\newline
+{\ttfamily \+\#include $<$dirent.\+h$>$}\newline
+{\ttfamily \+\#include $<$sys/\+stat.\+h$>$}\newline
+{\ttfamily \+\#include $<$sys/\+types.\+h$>$}\newline
+{\ttfamily \+\#include $<$string.\+h$>$}\newline
+{\ttfamily \+\#include $<$stdlib.\+h$>$}\newline
+{\ttfamily \+\#include $<$unistd.\+h$>$}\newline
+{\ttfamily \+\#include $<$stdio.\+h$>$}\newline
+{\ttfamily \+\#include $<$errno.\+h$>$}\newline
+{\ttfamily \+\#include $<$limits.\+h$>$}\newline
+\doxysubsubsection*{Macros}
+\begin{DoxyCompactItemize}
+\item 
+\+\#define \doxymbox{\hyperlink{filetree_8c_aac39373541176f37de247a7414e9ee1b}{CWD\+\_\+\+MAX}}~PATH\+\_\+\+MAX
+\end{DoxyCompactItemize}
+\doxysubsubsection*{Functions}
+\begin{DoxyCompactItemize}
+\item 
+const char \texorpdfstring{$\ast$}{*} \doxymbox{\hyperlink{filetree_8c_a6fea1add18b9daee539a347fae9fcec3}{filetree\+\_\+get\+\_\+error}} ()
+\begin{DoxyCompactList}\small\item\em Returns a description of the last error. \end{DoxyCompactList}\item 
+\doxymbox{\hyperlink{filetree_8h_ab6bc9c11d8c3fa65f655d3071004b2ba}{Filetree\+Result}} \doxymbox{\hyperlink{filetree_8c_ae04bcc6af381c94c75e7f650b44028bf}{filetree\+\_\+refresh}} ()
+\begin{DoxyCompactList}\small\item\em Reloads the file tree from the current working directory. \end{DoxyCompactList}\item 
+void \doxymbox{\hyperlink{filetree_8c_a09c268bea3aa510ca5d0a43ef96d731e}{filetree\+\_\+init}} ()
+\begin{DoxyCompactList}\small\item\em Initializes the file tree at the current working directory. \end{DoxyCompactList}\item 
+bool \doxymbox{\hyperlink{filetree_8c_a3c0cac6dc95f1e145ea040fba6f167f0}{filetree\+\_\+is\+\_\+visible}} ()
+\begin{DoxyCompactList}\small\item\em Returns whether the file tree panel is currently visible. \end{DoxyCompactList}\item 
+void \doxymbox{\hyperlink{filetree_8c_a316a0b4494d7584b99e0ef53bdd4d43d}{filetree\+\_\+set\+\_\+visible}} (bool v)
+\begin{DoxyCompactList}\small\item\em Shows or hides the file tree panel. \end{DoxyCompactList}\item 
+bool \doxymbox{\hyperlink{filetree_8c_a9e383f5567072db612ad1350fbdf8793}{filetree\+\_\+is\+\_\+focused}} ()
+\begin{DoxyCompactList}\small\item\em Returns whether the file tree has keyboard focus. \end{DoxyCompactList}\item 
+void \doxymbox{\hyperlink{filetree_8c_a3c5a8d5283b8e8b4884f458e2af7017b}{filetree\+\_\+set\+\_\+focused}} (bool f)
+\begin{DoxyCompactList}\small\item\em Gives or removes keyboard focus from the file tree. \end{DoxyCompactList}\item 
+const char \texorpdfstring{$\ast$}{*} \doxymbox{\hyperlink{filetree_8c_a7619abac93adc6e51956639f539d9296}{filetree\+\_\+get\+\_\+cwd}} ()
+\begin{DoxyCompactList}\small\item\em Returns the current working directory path. \end{DoxyCompactList}\item 
+int \doxymbox{\hyperlink{filetree_8c_af6ba9ff708bdc3f26fb2429652132e22}{filetree\+\_\+get\+\_\+count}} ()
+\begin{DoxyCompactList}\small\item\em Returns the number of entries in the current listing. \end{DoxyCompactList}\item 
+int \doxymbox{\hyperlink{filetree_8c_ab5bb8cbd1d76b8c8f19b31766c5439bc}{filetree\+\_\+get\+\_\+cursor}} ()
+\begin{DoxyCompactList}\small\item\em Returns the index of the highlighted entry. \end{DoxyCompactList}\item 
+int \doxymbox{\hyperlink{filetree_8c_ae7f8a11419e4dc25a93943bb931744cf}{filetree\+\_\+get\+\_\+scroll}} ()
+\begin{DoxyCompactList}\small\item\em Returns the scroll offset of the file tree. \end{DoxyCompactList}\item 
+const \doxymbox{\hyperlink{structFileEntry}{File\+Entry}} \texorpdfstring{$\ast$}{*} \doxymbox{\hyperlink{filetree_8c_abeae4a874dc91021ae8164d643545373}{filetree\+\_\+get\+\_\+entry}} (int i)
+\begin{DoxyCompactList}\small\item\em Returns an entry from the current listing. \end{DoxyCompactList}\item 
+void \doxymbox{\hyperlink{filetree_8c_a1671e9fd026a886f3175a9d7c405bf99}{filetree\+\_\+move\+\_\+up}} (int vis\+\_\+rows)
+\begin{DoxyCompactList}\small\item\em Moves the cursor one entry up and scrolls if needed. \end{DoxyCompactList}\item 
+void \doxymbox{\hyperlink{filetree_8c_acddd8d2e15fc50202ed2bd9947491438}{filetree\+\_\+move\+\_\+down}} (int vis\+\_\+rows)
+\begin{DoxyCompactList}\small\item\em Moves the cursor one entry down and scrolls if needed. \end{DoxyCompactList}\item 
+void \doxymbox{\hyperlink{filetree_8c_a324243015afc8322f21c86262881fab1}{filetree\+\_\+set\+\_\+cursor}} (int idx, int vis\+\_\+rows)
+\begin{DoxyCompactList}\small\item\em Moves the cursor to a specific entry and scrolls to keep it visible. \end{DoxyCompactList}\item 
+\doxymbox{\hyperlink{filetree_8h_ab6bc9c11d8c3fa65f655d3071004b2ba}{Filetree\+Result}} \doxymbox{\hyperlink{filetree_8c_ad8179f74e55e5bb173b517d5ccfde5dc}{filetree\+\_\+go\+\_\+parent}} ()
+\begin{DoxyCompactList}\small\item\em Navigates to the parent directory and refreshes the listing. \end{DoxyCompactList}\item 
+\doxymbox{\hyperlink{filetree_8h_ab6bc9c11d8c3fa65f655d3071004b2ba}{Filetree\+Result}} \doxymbox{\hyperlink{filetree_8c_af50436c7979b4b46566b4fc5944d148d}{filetree\+\_\+enter\+\_\+selected}} ()
+\begin{DoxyCompactList}\small\item\em Enters the selected directory or signals that a file was selected. \end{DoxyCompactList}\item 
+void \doxymbox{\hyperlink{filetree_8c_abb747d62b3c9150de5390d9107effdda}{filetree\+\_\+get\+\_\+selected\+\_\+path}} (char \texorpdfstring{$\ast$}{*}buf, int size)
+\begin{DoxyCompactList}\small\item\em Writes the full path of the selected entry into a buffer. \end{DoxyCompactList}\item 
+void \doxymbox{\hyperlink{filetree_8c_ad7ecedbe7c5cad199a421be23cd7e2e1}{filetree\+\_\+scroll\+\_\+by}} (int delta, int vis\+\_\+rows)
+\begin{DoxyCompactList}\small\item\em Scrolls the file tree by a delta, clamped to the valid range. \end{DoxyCompactList}\end{DoxyCompactItemize}
+
+
+\label{doc-define-members}
+\Hypertarget{filetree_8c_doc-define-members}
+\doxysubsection{Macro Definition Documentation}
+\Hypertarget{filetree_8c_aac39373541176f37de247a7414e9ee1b}\index{filetree.c@{filetree.c}!CWD\_MAX@{CWD\_MAX}}
+\index{CWD\_MAX@{CWD\_MAX}!filetree.c@{filetree.c}}
+\doxysubsubsection{\texorpdfstring{CWD\_MAX}{CWD\_MAX}}
+{\footnotesize\ttfamily \label{filetree_8c_aac39373541176f37de247a7414e9ee1b} 
+\+\#define CWD\+\_\+\+MAX~PATH\+\_\+\+MAX}
+
+
+
+\label{doc-func-members}
+\Hypertarget{filetree_8c_doc-func-members}
+\doxysubsection{Function Documentation}
+\Hypertarget{filetree_8c_af50436c7979b4b46566b4fc5944d148d}\index{filetree.c@{filetree.c}!filetree\_enter\_selected@{filetree\_enter\_selected}}
+\index{filetree\_enter\_selected@{filetree\_enter\_selected}!filetree.c@{filetree.c}}
+\doxysubsubsection{\texorpdfstring{filetree\_enter\_selected()}{filetree\_enter\_selected()}}
+{\footnotesize\ttfamily \label{filetree_8c_af50436c7979b4b46566b4fc5944d148d} 
+\doxymbox{\hyperlink{filetree_8h_ab6bc9c11d8c3fa65f655d3071004b2ba}{Filetree\+Result}} filetree\+\_\+enter\+\_\+selected (\begin{DoxyParamCaption}{}{}\end{DoxyParamCaption})}
+
+
+
+Enters the selected directory or signals that a file was selected. 
+
+\begin{DoxyReturn}{Returns}
+FILETREE\+\_\+\+OK if a directory was entered; FILETREE\+\_\+\+FILE if a file is selected; FILETREE\+\_\+\+ERR on failure. 
+\end{DoxyReturn}
+\Hypertarget{filetree_8c_af6ba9ff708bdc3f26fb2429652132e22}\index{filetree.c@{filetree.c}!filetree\_get\_count@{filetree\_get\_count}}
+\index{filetree\_get\_count@{filetree\_get\_count}!filetree.c@{filetree.c}}
+\doxysubsubsection{\texorpdfstring{filetree\_get\_count()}{filetree\_get\_count()}}
+{\footnotesize\ttfamily \label{filetree_8c_af6ba9ff708bdc3f26fb2429652132e22} 
+int filetree\+\_\+get\+\_\+count (\begin{DoxyParamCaption}{}{}\end{DoxyParamCaption})}
+
+
+
+Returns the number of entries in the current listing. 
+
+\begin{DoxyReturn}{Returns}
+Entry count. At most FILETREE\+\_\+\+MAX\+\_\+\+ENTRIES 
+\end{DoxyReturn}
+\Hypertarget{filetree_8c_ab5bb8cbd1d76b8c8f19b31766c5439bc}\index{filetree.c@{filetree.c}!filetree\_get\_cursor@{filetree\_get\_cursor}}
+\index{filetree\_get\_cursor@{filetree\_get\_cursor}!filetree.c@{filetree.c}}
+\doxysubsubsection{\texorpdfstring{filetree\_get\_cursor()}{filetree\_get\_cursor()}}
+{\footnotesize\ttfamily \label{filetree_8c_ab5bb8cbd1d76b8c8f19b31766c5439bc} 
+int filetree\+\_\+get\+\_\+cursor (\begin{DoxyParamCaption}{}{}\end{DoxyParamCaption})}
+
+
+
+Returns the index of the highlighted entry. 
+
+\begin{DoxyReturn}{Returns}
+Cursor index (0-\/based) 
+\end{DoxyReturn}
+\Hypertarget{filetree_8c_a7619abac93adc6e51956639f539d9296}\index{filetree.c@{filetree.c}!filetree\_get\_cwd@{filetree\_get\_cwd}}
+\index{filetree\_get\_cwd@{filetree\_get\_cwd}!filetree.c@{filetree.c}}
+\doxysubsubsection{\texorpdfstring{filetree\_get\_cwd()}{filetree\_get\_cwd()}}
+{\footnotesize\ttfamily \label{filetree_8c_a7619abac93adc6e51956639f539d9296} 
+const char \texorpdfstring{$\ast$}{*} filetree\+\_\+get\+\_\+cwd (\begin{DoxyParamCaption}{}{}\end{DoxyParamCaption})}
+
+
+
+Returns the current working directory path. 
+
+\begin{DoxyReturn}{Returns}
+Null-\/terminated absolute path string 
+\end{DoxyReturn}
+\Hypertarget{filetree_8c_abeae4a874dc91021ae8164d643545373}\index{filetree.c@{filetree.c}!filetree\_get\_entry@{filetree\_get\_entry}}
+\index{filetree\_get\_entry@{filetree\_get\_entry}!filetree.c@{filetree.c}}
+\doxysubsubsection{\texorpdfstring{filetree\_get\_entry()}{filetree\_get\_entry()}}
+{\footnotesize\ttfamily \label{filetree_8c_abeae4a874dc91021ae8164d643545373} 
+const \doxymbox{\hyperlink{structFileEntry}{File\+Entry}} \texorpdfstring{$\ast$}{*} filetree\+\_\+get\+\_\+entry (\begin{DoxyParamCaption}\item[{int}]{i}{}\end{DoxyParamCaption})}
+
+
+
+Returns an entry from the current listing. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em i} & Entry index (0-\/based) \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+Pointer to the \doxylink{structFileEntry}{File\+Entry}; NULL if out of range 
+\end{DoxyReturn}
+\Hypertarget{filetree_8c_a6fea1add18b9daee539a347fae9fcec3}\index{filetree.c@{filetree.c}!filetree\_get\_error@{filetree\_get\_error}}
+\index{filetree\_get\_error@{filetree\_get\_error}!filetree.c@{filetree.c}}
+\doxysubsubsection{\texorpdfstring{filetree\_get\_error()}{filetree\_get\_error()}}
+{\footnotesize\ttfamily \label{filetree_8c_a6fea1add18b9daee539a347fae9fcec3} 
+const char \texorpdfstring{$\ast$}{*} filetree\+\_\+get\+\_\+error (\begin{DoxyParamCaption}{}{}\end{DoxyParamCaption})}
+
+
+
+Returns a description of the last error. 
+
+\begin{DoxyReturn}{Returns}
+Null-\/terminated error string. Valid until the next filetree call 
+\end{DoxyReturn}
+\Hypertarget{filetree_8c_ae7f8a11419e4dc25a93943bb931744cf}\index{filetree.c@{filetree.c}!filetree\_get\_scroll@{filetree\_get\_scroll}}
+\index{filetree\_get\_scroll@{filetree\_get\_scroll}!filetree.c@{filetree.c}}
+\doxysubsubsection{\texorpdfstring{filetree\_get\_scroll()}{filetree\_get\_scroll()}}
+{\footnotesize\ttfamily \label{filetree_8c_ae7f8a11419e4dc25a93943bb931744cf} 
+int filetree\+\_\+get\+\_\+scroll (\begin{DoxyParamCaption}{}{}\end{DoxyParamCaption})}
+
+
+
+Returns the scroll offset of the file tree. 
+
+\begin{DoxyReturn}{Returns}
+Index of the first visible entry 
+\end{DoxyReturn}
+\Hypertarget{filetree_8c_abb747d62b3c9150de5390d9107effdda}\index{filetree.c@{filetree.c}!filetree\_get\_selected\_path@{filetree\_get\_selected\_path}}
+\index{filetree\_get\_selected\_path@{filetree\_get\_selected\_path}!filetree.c@{filetree.c}}
+\doxysubsubsection{\texorpdfstring{filetree\_get\_selected\_path()}{filetree\_get\_selected\_path()}}
+{\footnotesize\ttfamily \label{filetree_8c_abb747d62b3c9150de5390d9107effdda} 
+void filetree\+\_\+get\+\_\+selected\+\_\+path (\begin{DoxyParamCaption}\item[{char \texorpdfstring{$\ast$}{*}}]{buf}{, }\item[{int}]{size}{}\end{DoxyParamCaption})}
+
+
+
+Writes the full path of the selected entry into a buffer. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em buf} & Output buffer \\
+\hline
+{\em size} & Size of the output buffer in bytes \\
+\hline
+\end{DoxyParams}
+\Hypertarget{filetree_8c_ad8179f74e55e5bb173b517d5ccfde5dc}\index{filetree.c@{filetree.c}!filetree\_go\_parent@{filetree\_go\_parent}}
+\index{filetree\_go\_parent@{filetree\_go\_parent}!filetree.c@{filetree.c}}
+\doxysubsubsection{\texorpdfstring{filetree\_go\_parent()}{filetree\_go\_parent()}}
+{\footnotesize\ttfamily \label{filetree_8c_ad8179f74e55e5bb173b517d5ccfde5dc} 
+\doxymbox{\hyperlink{filetree_8h_ab6bc9c11d8c3fa65f655d3071004b2ba}{Filetree\+Result}} filetree\+\_\+go\+\_\+parent (\begin{DoxyParamCaption}{}{}\end{DoxyParamCaption})}
+
+
+
+Navigates to the parent directory and refreshes the listing. 
+
+\begin{DoxyReturn}{Returns}
+FILETREE\+\_\+\+OK on success; FILETREE\+\_\+\+ERR if already at the root or on failure 
+\end{DoxyReturn}
+\Hypertarget{filetree_8c_a09c268bea3aa510ca5d0a43ef96d731e}\index{filetree.c@{filetree.c}!filetree\_init@{filetree\_init}}
+\index{filetree\_init@{filetree\_init}!filetree.c@{filetree.c}}
+\doxysubsubsection{\texorpdfstring{filetree\_init()}{filetree\_init()}}
+{\footnotesize\ttfamily \label{filetree_8c_a09c268bea3aa510ca5d0a43ef96d731e} 
+void filetree\+\_\+init (\begin{DoxyParamCaption}{}{}\end{DoxyParamCaption})}
+
+
+
+Initializes the file tree at the current working directory. 
+
+\Hypertarget{filetree_8c_a9e383f5567072db612ad1350fbdf8793}\index{filetree.c@{filetree.c}!filetree\_is\_focused@{filetree\_is\_focused}}
+\index{filetree\_is\_focused@{filetree\_is\_focused}!filetree.c@{filetree.c}}
+\doxysubsubsection{\texorpdfstring{filetree\_is\_focused()}{filetree\_is\_focused()}}
+{\footnotesize\ttfamily \label{filetree_8c_a9e383f5567072db612ad1350fbdf8793} 
+bool filetree\+\_\+is\+\_\+focused (\begin{DoxyParamCaption}{}{}\end{DoxyParamCaption})}
+
+
+
+Returns whether the file tree has keyboard focus. 
+
+\Hypertarget{filetree_8c_a3c0cac6dc95f1e145ea040fba6f167f0}\index{filetree.c@{filetree.c}!filetree\_is\_visible@{filetree\_is\_visible}}
+\index{filetree\_is\_visible@{filetree\_is\_visible}!filetree.c@{filetree.c}}
+\doxysubsubsection{\texorpdfstring{filetree\_is\_visible()}{filetree\_is\_visible()}}
+{\footnotesize\ttfamily \label{filetree_8c_a3c0cac6dc95f1e145ea040fba6f167f0} 
+bool filetree\+\_\+is\+\_\+visible (\begin{DoxyParamCaption}{}{}\end{DoxyParamCaption})}
+
+
+
+Returns whether the file tree panel is currently visible. 
+
+\Hypertarget{filetree_8c_acddd8d2e15fc50202ed2bd9947491438}\index{filetree.c@{filetree.c}!filetree\_move\_down@{filetree\_move\_down}}
+\index{filetree\_move\_down@{filetree\_move\_down}!filetree.c@{filetree.c}}
+\doxysubsubsection{\texorpdfstring{filetree\_move\_down()}{filetree\_move\_down()}}
+{\footnotesize\ttfamily \label{filetree_8c_acddd8d2e15fc50202ed2bd9947491438} 
+void filetree\+\_\+move\+\_\+down (\begin{DoxyParamCaption}\item[{int}]{vis\+\_\+rows}{}\end{DoxyParamCaption})}
+
+
+
+Moves the cursor one entry down and scrolls if needed. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em vis\+\_\+rows} & Number of visible rows \\
+\hline
+\end{DoxyParams}
+\Hypertarget{filetree_8c_a1671e9fd026a886f3175a9d7c405bf99}\index{filetree.c@{filetree.c}!filetree\_move\_up@{filetree\_move\_up}}
+\index{filetree\_move\_up@{filetree\_move\_up}!filetree.c@{filetree.c}}
+\doxysubsubsection{\texorpdfstring{filetree\_move\_up()}{filetree\_move\_up()}}
+{\footnotesize\ttfamily \label{filetree_8c_a1671e9fd026a886f3175a9d7c405bf99} 
+void filetree\+\_\+move\+\_\+up (\begin{DoxyParamCaption}\item[{int}]{vis\+\_\+rows}{}\end{DoxyParamCaption})}
+
+
+
+Moves the cursor one entry up and scrolls if needed. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em vis\+\_\+rows} & Number of visible rows \\
+\hline
+\end{DoxyParams}
+\Hypertarget{filetree_8c_ae04bcc6af381c94c75e7f650b44028bf}\index{filetree.c@{filetree.c}!filetree\_refresh@{filetree\_refresh}}
+\index{filetree\_refresh@{filetree\_refresh}!filetree.c@{filetree.c}}
+\doxysubsubsection{\texorpdfstring{filetree\_refresh()}{filetree\_refresh()}}
+{\footnotesize\ttfamily \label{filetree_8c_ae04bcc6af381c94c75e7f650b44028bf} 
+\doxymbox{\hyperlink{filetree_8h_ab6bc9c11d8c3fa65f655d3071004b2ba}{Filetree\+Result}} filetree\+\_\+refresh (\begin{DoxyParamCaption}{}{}\end{DoxyParamCaption})}
+
+
+
+Reloads the file tree from the current working directory. 
+
+\begin{DoxyReturn}{Returns}
+FILETREE\+\_\+\+OK on success; FILETREE\+\_\+\+ERR on failure 
+\end{DoxyReturn}
+\Hypertarget{filetree_8c_ad7ecedbe7c5cad199a421be23cd7e2e1}\index{filetree.c@{filetree.c}!filetree\_scroll\_by@{filetree\_scroll\_by}}
+\index{filetree\_scroll\_by@{filetree\_scroll\_by}!filetree.c@{filetree.c}}
+\doxysubsubsection{\texorpdfstring{filetree\_scroll\_by()}{filetree\_scroll\_by()}}
+{\footnotesize\ttfamily \label{filetree_8c_ad7ecedbe7c5cad199a421be23cd7e2e1} 
+void filetree\+\_\+scroll\+\_\+by (\begin{DoxyParamCaption}\item[{int}]{delta}{, }\item[{int}]{vis\+\_\+rows}{}\end{DoxyParamCaption})}
+
+
+
+Scrolls the file tree by a delta, clamped to the valid range. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em delta} & Number of entries to scroll (positive = down) \\
+\hline
+{\em vis\+\_\+rows} & Number of visible rows, used to clamp the scroll position \\
+\hline
+\end{DoxyParams}
+\Hypertarget{filetree_8c_a324243015afc8322f21c86262881fab1}\index{filetree.c@{filetree.c}!filetree\_set\_cursor@{filetree\_set\_cursor}}
+\index{filetree\_set\_cursor@{filetree\_set\_cursor}!filetree.c@{filetree.c}}
+\doxysubsubsection{\texorpdfstring{filetree\_set\_cursor()}{filetree\_set\_cursor()}}
+{\footnotesize\ttfamily \label{filetree_8c_a324243015afc8322f21c86262881fab1} 
+void filetree\+\_\+set\+\_\+cursor (\begin{DoxyParamCaption}\item[{int}]{idx}{, }\item[{int}]{vis\+\_\+rows}{}\end{DoxyParamCaption})}
+
+
+
+Moves the cursor to a specific entry and scrolls to keep it visible. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em idx} & Target entry index (0-\/based) \\
+\hline
+{\em vis\+\_\+rows} & Number of visible rows \\
+\hline
+\end{DoxyParams}
+\Hypertarget{filetree_8c_a3c5a8d5283b8e8b4884f458e2af7017b}\index{filetree.c@{filetree.c}!filetree\_set\_focused@{filetree\_set\_focused}}
+\index{filetree\_set\_focused@{filetree\_set\_focused}!filetree.c@{filetree.c}}
+\doxysubsubsection{\texorpdfstring{filetree\_set\_focused()}{filetree\_set\_focused()}}
+{\footnotesize\ttfamily \label{filetree_8c_a3c5a8d5283b8e8b4884f458e2af7017b} 
+void filetree\+\_\+set\+\_\+focused (\begin{DoxyParamCaption}\item[{bool}]{f}{}\end{DoxyParamCaption})}
+
+
+
+Gives or removes keyboard focus from the file tree. 
+
+\Hypertarget{filetree_8c_a316a0b4494d7584b99e0ef53bdd4d43d}\index{filetree.c@{filetree.c}!filetree\_set\_visible@{filetree\_set\_visible}}
+\index{filetree\_set\_visible@{filetree\_set\_visible}!filetree.c@{filetree.c}}
+\doxysubsubsection{\texorpdfstring{filetree\_set\_visible()}{filetree\_set\_visible()}}
+{\footnotesize\ttfamily \label{filetree_8c_a316a0b4494d7584b99e0ef53bdd4d43d} 
+void filetree\+\_\+set\+\_\+visible (\begin{DoxyParamCaption}\item[{bool}]{v}{}\end{DoxyParamCaption})}
+
+
+
+Shows or hides the file tree panel. 
+

@@ -1,0 +1,33 @@
+\doxysection{syntax.\+h}
+\hypertarget{syntax_8h_source}{}\label{syntax_8h_source}\index{/home/pinho/Classes/LCOM/shared/proj/code/view/editor/syntax.h@{/home/pinho/Classes/LCOM/shared/proj/code/view/editor/syntax.h}}
+\doxymbox{\hyperlink{syntax_8h}{Go to the documentation of this file.}}
+\begin{DoxyCode}{0}
+\DoxyCodeLine{00001\ \textcolor{preprocessor}{\#pragma\ once}}
+\DoxyCodeLine{00002\ }
+\DoxyCodeLine{00003\ \textcolor{preprocessor}{\#include\ <lcom/lcf.h>}}
+\DoxyCodeLine{00004\ \textcolor{preprocessor}{\#include\ "{}\doxymbox{\hyperlink{editor_8h}{model/editor/editor.h}}"{}}}
+\DoxyCodeLine{00005\ }
+\DoxyCodeLine{00010\ }
+\DoxyCodeLine{00014\ \textcolor{preprocessor}{\#define\ SYNTAX\_COLOR\_DEFAULT\ \ \ \ 0xABB2BF}}
+\DoxyCodeLine{00015\ \textcolor{preprocessor}{\#define\ SYNTAX\_COLOR\_KEYWORD\ \ \ \ 0xC678DD}}
+\DoxyCodeLine{00016\ \textcolor{preprocessor}{\#define\ SYNTAX\_COLOR\_TYPE\ \ \ \ \ \ \ 0x56B6C2}}
+\DoxyCodeLine{00017\ \textcolor{preprocessor}{\#define\ SYNTAX\_COLOR\_PREPROC\ \ \ \ 0xE06C75}}
+\DoxyCodeLine{00018\ \textcolor{preprocessor}{\#define\ SYNTAX\_COLOR\_STRING\ \ \ \ \ 0x98C379}}
+\DoxyCodeLine{00019\ \textcolor{preprocessor}{\#define\ SYNTAX\_COLOR\_COMMENT\ \ \ \ 0x5C6370}}
+\DoxyCodeLine{00020\ \textcolor{preprocessor}{\#define\ SYNTAX\_COLOR\_NUMBER\ \ \ \ \ 0xD19A66}}
+\DoxyCodeLine{00021\ \textcolor{preprocessor}{\#define\ SYNTAX\_COLOR\_FUNCTION\ \ \ 0x61AFEF}}
+\DoxyCodeLine{00022\ \textcolor{preprocessor}{\#define\ SYNTAX\_COLOR\_MACRO\ \ \ \ \ \ 0xD19A66}}
+\DoxyCodeLine{00023\ \textcolor{preprocessor}{\#define\ SYNTAX\_COLOR\_ESCAPE\ \ \ \ \ 0x56B6C2}}
+\DoxyCodeLine{00024\ \textcolor{preprocessor}{\#define\ SYNTAX\_COLOR\_MEMBER\ \ \ \ \ 0xE06C75}}
+\DoxyCodeLine{00025\ \textcolor{preprocessor}{\#define\ SYNTAX\_COLOR\_OPERATOR\ \ \ 0xABB2BF}\textcolor{preprocessor}{}}
+\DoxyCodeLine{00027\ }
+\DoxyCodeLine{00028\ \textcolor{keyword}{typedef}\ \textcolor{keyword}{enum}\ \{}
+\DoxyCodeLine{00029\ \ \ \doxymbox{\hyperlink{syntax_8h_a85c9a23a5eedbf98a8e829326a7bf93aaef52c8edd147538db22d992b1ec0f735}{SYNTAX\_LANG\_NONE}},}
+\DoxyCodeLine{00030\ \ \ \doxymbox{\hyperlink{syntax_8h_a85c9a23a5eedbf98a8e829326a7bf93aaf034984e6e8587a60d7fad0c8743d9f3}{SYNTAX\_LANG\_C}}}
+\DoxyCodeLine{00031\ \}\ \doxymbox{\hyperlink{syntax_8h_a85c9a23a5eedbf98a8e829326a7bf93a}{SyntaxLanguage}};}
+\DoxyCodeLine{00032\ }
+\DoxyCodeLine{00038\ \doxymbox{\hyperlink{syntax_8h_a85c9a23a5eedbf98a8e829326a7bf93a}{SyntaxLanguage}}\ \doxymbox{\hyperlink{syntax_8h_af8a9ce78771455a350686e3bcb566879}{syntax\_detect\_language}}(\textcolor{keyword}{const}\ \textcolor{keywordtype}{char}\ *filename);}
+\DoxyCodeLine{00039\ }
+\DoxyCodeLine{00050\ \textcolor{keywordtype}{void}\ \doxymbox{\hyperlink{syntax_8h_a29aa28d7f6b03b5cc98a9426d6456a55}{syntax\_highlight\_line}}(\textcolor{keyword}{const}\ \textcolor{keywordtype}{char}\ *line,\ \textcolor{keywordtype}{int}\ len,\ \textcolor{keywordtype}{bool}\ in\_block\_comment,\ \doxymbox{\hyperlink{syntax_8h_a85c9a23a5eedbf98a8e829326a7bf93a}{SyntaxLanguage}}\ lang,\ uint32\_t\ *colors,\ \textcolor{keywordtype}{bool}\ *out\_block\_comment);}
+
+\end{DoxyCode}

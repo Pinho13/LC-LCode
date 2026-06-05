@@ -1,0 +1,147 @@
+\doxysection{/\+home/\+pinho/\+\+Classes/\+\+LCOM/\+shared/\+proj/\+code/\+controller/\+input/\+events.h File Reference}
+\hypertarget{events_8h}{}\label{events_8h}\index{/home/pinho/Classes/LCOM/shared/proj/code/controller/input/events.h@{/home/pinho/Classes/LCOM/shared/proj/code/controller/input/events.h}}
+
+
+Input event queue:\+ buffers keyboard, mouse, and serial events for deferred dispatch.  
+
+
+{\ttfamily \+\#include $<$stdbool.\+h$>$}\newline
+{\ttfamily \+\#include "{}controller/\+input/\+keyboard.\+h"{}}\newline
+{\ttfamily \+\#include "{}controller/\+input/\+mouse.\+h"{}}\newline
+{\ttfamily \+\#include "{}controller/\+serial.\+h"{}}\newline
+\doxysubsubsection*{Classes}
+\begin{DoxyCompactItemize}
+\item 
+struct \doxymbox{\hyperlink{structInputEvent}{Input\+Event}}
+\begin{DoxyCompactList}\small\item\em Tagged union representing a single input event from any device. \end{DoxyCompactList}\end{DoxyCompactItemize}
+\doxysubsubsection*{Enumerations}
+\begin{DoxyCompactItemize}
+\item 
+enum \doxymbox{\hyperlink{events_8h_a2b2905130ee6827c925a34fe221b95fa}{Input\+Event\+Type}} \{ \doxymbox{\hyperlink{events_8h_a2b2905130ee6827c925a34fe221b95faaf09f2e0e408caf4f871bca463f892534}{INPUT\+\_\+\+EVENT\+\_\+\+KEY}}
+, \doxymbox{\hyperlink{events_8h_a2b2905130ee6827c925a34fe221b95faaf2d9803f77a44457c04942aae24bdf61}{INPUT\+\_\+\+EVENT\+\_\+\+MOUSE}}
+, \doxymbox{\hyperlink{events_8h_a2b2905130ee6827c925a34fe221b95faa64f528420de0d3051dd6cc00ceb7ecd0}{INPUT\+\_\+\+EVENT\+\_\+\+SERIAL}}
+ \}
+\end{DoxyCompactItemize}
+\doxysubsubsection*{Functions}
+\begin{DoxyCompactItemize}
+\item 
+bool \doxymbox{\hyperlink{events_8h_aaea4e2597451dfe281e2fdd59db0b04f}{input\+\_\+event\+\_\+push}} (\doxymbox{\hyperlink{structInputEvent}{Input\+Event}} ev)
+\begin{DoxyCompactList}\small\item\em Pushes an event onto the input queue. \end{DoxyCompactList}\item 
+bool \doxymbox{\hyperlink{events_8h_adbfc02c2863f282e546ecf5adefa67bf}{input\+\_\+event\+\_\+pop}} (\doxymbox{\hyperlink{structInputEvent}{Input\+Event}} \texorpdfstring{$\ast$}{*}out)
+\begin{DoxyCompactList}\small\item\em Pops the next event from the input queue. \end{DoxyCompactList}\item 
+bool \doxymbox{\hyperlink{events_8h_aab314f2b4857a8365c8c7a1dbe1d55ca}{input\+\_\+events\+\_\+is\+\_\+empty}} ()
+\begin{DoxyCompactList}\small\item\em Returns whether the input queue is empty. \end{DoxyCompactList}\item 
+void \doxymbox{\hyperlink{events_8h_aa4dcd986b9755ecd3e6ad001c086a484}{input\+\_\+events\+\_\+clear}} ()
+\begin{DoxyCompactList}\small\item\em Discards all pending events in the queue. \end{DoxyCompactList}\item 
+void \doxymbox{\hyperlink{events_8h_a1949632f04ad9fe6944eaac6b95433a3}{input\+\_\+dispatch}} ()
+\begin{DoxyCompactList}\small\item\em Dequeues and dispatches all pending input events via commands\+\_\+dispatch. \end{DoxyCompactList}\end{DoxyCompactItemize}
+
+
+\doxysubsection{Detailed Description}
+Input event queue:\+ buffers keyboard, mouse, and serial events for deferred dispatch. 
+
+
+
+\label{doc-enum-members}
+\Hypertarget{events_8h_doc-enum-members}
+\doxysubsection{Enumeration Type Documentation}
+\Hypertarget{events_8h_a2b2905130ee6827c925a34fe221b95fa}\index{events.h@{events.h}!InputEventType@{InputEventType}}
+\index{InputEventType@{InputEventType}!events.h@{events.h}}
+\doxysubsubsection{\texorpdfstring{InputEventType}{InputEventType}}
+{\footnotesize\ttfamily \label{events_8h_a2b2905130ee6827c925a34fe221b95fa} 
+enum \doxymbox{\hyperlink{events_8h_a2b2905130ee6827c925a34fe221b95fa}{Input\+Event\+Type}}}
+
+\begin{DoxyEnumFields}[2]{Enumerator}
+\raisebox{\heightof{T}}[0pt][0pt]{\index{INPUT\_EVENT\_KEY@{INPUT\_EVENT\_KEY}!events.h@{events.h}}
+\index{events.h@{events.h}!INPUT\_EVENT\_KEY@{INPUT\_EVENT\_KEY}}
+}\Hypertarget{events_8h_a2b2905130ee6827c925a34fe221b95faaf09f2e0e408caf4f871bca463f892534}\label{events_8h_a2b2905130ee6827c925a34fe221b95faaf09f2e0e408caf4f871bca463f892534} 
+INPUT\+\_\+\+EVENT\+\_\+\+KEY&\\
+\hline
+
+\raisebox{\heightof{T}}[0pt][0pt]{\index{INPUT\_EVENT\_MOUSE@{INPUT\_EVENT\_MOUSE}!events.h@{events.h}}
+\index{events.h@{events.h}!INPUT\_EVENT\_MOUSE@{INPUT\_EVENT\_MOUSE}}
+}\Hypertarget{events_8h_a2b2905130ee6827c925a34fe221b95faaf2d9803f77a44457c04942aae24bdf61}\label{events_8h_a2b2905130ee6827c925a34fe221b95faaf2d9803f77a44457c04942aae24bdf61} 
+INPUT\+\_\+\+EVENT\+\_\+\+MOUSE&\\
+\hline
+
+\raisebox{\heightof{T}}[0pt][0pt]{\index{INPUT\_EVENT\_SERIAL@{INPUT\_EVENT\_SERIAL}!events.h@{events.h}}
+\index{events.h@{events.h}!INPUT\_EVENT\_SERIAL@{INPUT\_EVENT\_SERIAL}}
+}\Hypertarget{events_8h_a2b2905130ee6827c925a34fe221b95faa64f528420de0d3051dd6cc00ceb7ecd0}\label{events_8h_a2b2905130ee6827c925a34fe221b95faa64f528420de0d3051dd6cc00ceb7ecd0} 
+INPUT\+\_\+\+EVENT\+\_\+\+SERIAL&\\
+\hline
+
+\end{DoxyEnumFields}
+
+
+\label{doc-func-members}
+\Hypertarget{events_8h_doc-func-members}
+\doxysubsection{Function Documentation}
+\Hypertarget{events_8h_a1949632f04ad9fe6944eaac6b95433a3}\index{events.h@{events.h}!input\_dispatch@{input\_dispatch}}
+\index{input\_dispatch@{input\_dispatch}!events.h@{events.h}}
+\doxysubsubsection{\texorpdfstring{input\_dispatch()}{input\_dispatch()}}
+{\footnotesize\ttfamily \label{events_8h_a1949632f04ad9fe6944eaac6b95433a3} 
+void input\+\_\+dispatch (\begin{DoxyParamCaption}{}{}\end{DoxyParamCaption})}
+
+
+
+Dequeues and dispatches all pending input events via commands\+\_\+dispatch. 
+
+\Hypertarget{events_8h_adbfc02c2863f282e546ecf5adefa67bf}\index{events.h@{events.h}!input\_event\_pop@{input\_event\_pop}}
+\index{input\_event\_pop@{input\_event\_pop}!events.h@{events.h}}
+\doxysubsubsection{\texorpdfstring{input\_event\_pop()}{input\_event\_pop()}}
+{\footnotesize\ttfamily \label{events_8h_adbfc02c2863f282e546ecf5adefa67bf} 
+bool input\+\_\+event\+\_\+pop (\begin{DoxyParamCaption}\item[{\doxymbox{\hyperlink{structInputEvent}{Input\+Event}} \texorpdfstring{$\ast$}{*}}]{out}{}\end{DoxyParamCaption})}
+
+
+
+Pops the next event from the input queue. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em out} & Output event \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+true if an event was dequeued, false if the queue was empty 
+\end{DoxyReturn}
+\Hypertarget{events_8h_aaea4e2597451dfe281e2fdd59db0b04f}\index{events.h@{events.h}!input\_event\_push@{input\_event\_push}}
+\index{input\_event\_push@{input\_event\_push}!events.h@{events.h}}
+\doxysubsubsection{\texorpdfstring{input\_event\_push()}{input\_event\_push()}}
+{\footnotesize\ttfamily \label{events_8h_aaea4e2597451dfe281e2fdd59db0b04f} 
+bool input\+\_\+event\+\_\+push (\begin{DoxyParamCaption}\item[{\doxymbox{\hyperlink{structInputEvent}{Input\+Event}}}]{ev}{}\end{DoxyParamCaption})}
+
+
+
+Pushes an event onto the input queue. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em ev} & Event to enqueue \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+true on success, false if the queue is full 
+\end{DoxyReturn}
+\Hypertarget{events_8h_aa4dcd986b9755ecd3e6ad001c086a484}\index{events.h@{events.h}!input\_events\_clear@{input\_events\_clear}}
+\index{input\_events\_clear@{input\_events\_clear}!events.h@{events.h}}
+\doxysubsubsection{\texorpdfstring{input\_events\_clear()}{input\_events\_clear()}}
+{\footnotesize\ttfamily \label{events_8h_aa4dcd986b9755ecd3e6ad001c086a484} 
+void input\+\_\+events\+\_\+clear (\begin{DoxyParamCaption}{}{}\end{DoxyParamCaption})}
+
+
+
+Discards all pending events in the queue. 
+
+\Hypertarget{events_8h_aab314f2b4857a8365c8c7a1dbe1d55ca}\index{events.h@{events.h}!input\_events\_is\_empty@{input\_events\_is\_empty}}
+\index{input\_events\_is\_empty@{input\_events\_is\_empty}!events.h@{events.h}}
+\doxysubsubsection{\texorpdfstring{input\_events\_is\_empty()}{input\_events\_is\_empty()}}
+{\footnotesize\ttfamily \label{events_8h_aab314f2b4857a8365c8c7a1dbe1d55ca} 
+bool input\+\_\+events\+\_\+is\+\_\+empty (\begin{DoxyParamCaption}{}{}\end{DoxyParamCaption})}
+
+
+
+Returns whether the input queue is empty. 
+
+\begin{DoxyReturn}{Returns}
+true if there are no pending events 
+\end{DoxyReturn}

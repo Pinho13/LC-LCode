@@ -1,0 +1,63 @@
+\doxysection{filetree.\+h}
+\hypertarget{filetree_8h_source}{}\label{filetree_8h_source}\index{/home/pinho/Classes/LCOM/shared/proj/code/model/filetree/filetree.h@{/home/pinho/Classes/LCOM/shared/proj/code/model/filetree/filetree.h}}
+\doxymbox{\hyperlink{filetree_8h}{Go to the documentation of this file.}}
+\begin{DoxyCode}{0}
+\DoxyCodeLine{00001\ \textcolor{preprocessor}{\#pragma\ once}}
+\DoxyCodeLine{00002\ \textcolor{preprocessor}{\#include\ <stdbool.h>}}
+\DoxyCodeLine{00003\ }
+\DoxyCodeLine{00008\ }
+\DoxyCodeLine{00009\ }
+\DoxyCodeLine{00011\ \textcolor{preprocessor}{\#define\ FILETREE\_MAX\_ENTRIES\ 256}}
+\DoxyCodeLine{00012\ }
+\DoxyCodeLine{00014\ \textcolor{preprocessor}{\#define\ FILETREE\_NAME\_LEN\ 64}}
+\DoxyCodeLine{00015\ }
+\DoxyCodeLine{00016\ \textcolor{keyword}{typedef}\ \textcolor{keyword}{enum}\ \{}
+\DoxyCodeLine{00017\ \ \ \doxymbox{\hyperlink{filetree_8h_ab6bc9c11d8c3fa65f655d3071004b2baab355651340994b01040c6cded9e11aae}{FILETREE\_OK}},\ \textcolor{comment}{/*\ <\ Operation\ succeeded.\ */}}
+\DoxyCodeLine{00018\ \ \ \doxymbox{\hyperlink{filetree_8h_ab6bc9c11d8c3fa65f655d3071004b2baaac5029f6d23e5716e05697ab2de0dfa0}{FILETREE\_FILE}},\ \textcolor{comment}{/*\ <\ A\ file\ is\ selected\ —\ caller\ should\ open\ it.\ */}}
+\DoxyCodeLine{00019\ \ \ \doxymbox{\hyperlink{filetree_8h_ab6bc9c11d8c3fa65f655d3071004b2baa98ab903cf456c9c42286e9f8ce2d2203}{FILETREE\_ERR}}\ \textcolor{comment}{/*\ <\ Operation\ failed\ —\ call\ filetree\_get\_error()\ for\ reason.\ */}}
+\DoxyCodeLine{00020\ \}\ \doxymbox{\hyperlink{filetree_8h_ab6bc9c11d8c3fa65f655d3071004b2ba}{FiletreeResult}};}
+\DoxyCodeLine{00021\ }
+\DoxyCodeLine{00023\ \textcolor{keyword}{typedef}\ \textcolor{keyword}{struct\ }\{}
+\DoxyCodeLine{00024\ \ \ \textcolor{keywordtype}{char}\ \doxymbox{\hyperlink{structFileEntry_a06a0b6bd7fd4a2da4e890fe605b59607}{name}}[\doxymbox{\hyperlink{filetree_8h_a823a99f34b2a0b05145032742fe433b1}{FILETREE\_NAME\_LEN}}];}
+\DoxyCodeLine{00025\ \ \ \textcolor{keywordtype}{bool}\ \doxymbox{\hyperlink{structFileEntry_abbe75f4822f6d8f6aa2e23108e68b595}{is\_dir}};}
+\DoxyCodeLine{00026\ \}\ \doxymbox{\hyperlink{structFileEntry}{FileEntry}};}
+\DoxyCodeLine{00027\ }
+\DoxyCodeLine{00031\ \textcolor{keywordtype}{void}\ \doxymbox{\hyperlink{filetree_8h_a09c268bea3aa510ca5d0a43ef96d731e}{filetree\_init}}();}
+\DoxyCodeLine{00032\ }
+\DoxyCodeLine{00037\ \doxymbox{\hyperlink{filetree_8h_ab6bc9c11d8c3fa65f655d3071004b2ba}{FiletreeResult}}\ \doxymbox{\hyperlink{filetree_8h_ae04bcc6af381c94c75e7f650b44028bf}{filetree\_refresh}}();}
+\DoxyCodeLine{00038\ }
+\DoxyCodeLine{00043\ \textcolor{keyword}{const}\ \textcolor{keywordtype}{char}\ *\doxymbox{\hyperlink{filetree_8h_a6fea1add18b9daee539a347fae9fcec3}{filetree\_get\_error}}();}
+\DoxyCodeLine{00044\ }
+\DoxyCodeLine{00048\ \textcolor{keywordtype}{bool}\ \doxymbox{\hyperlink{filetree_8h_a3c0cac6dc95f1e145ea040fba6f167f0}{filetree\_is\_visible}}();}
+\DoxyCodeLine{00049\ }
+\DoxyCodeLine{00053\ \textcolor{keywordtype}{void}\ \doxymbox{\hyperlink{filetree_8h_a316a0b4494d7584b99e0ef53bdd4d43d}{filetree\_set\_visible}}(\textcolor{keywordtype}{bool}\ v);}
+\DoxyCodeLine{00054\ }
+\DoxyCodeLine{00058\ \textcolor{keywordtype}{bool}\ \doxymbox{\hyperlink{filetree_8h_a9e383f5567072db612ad1350fbdf8793}{filetree\_is\_focused}}();}
+\DoxyCodeLine{00059\ }
+\DoxyCodeLine{00063\ \textcolor{keywordtype}{void}\ \doxymbox{\hyperlink{filetree_8h_a3c5a8d5283b8e8b4884f458e2af7017b}{filetree\_set\_focused}}(\textcolor{keywordtype}{bool}\ f);}
+\DoxyCodeLine{00064\ }
+\DoxyCodeLine{00069\ \textcolor{keyword}{const}\ \textcolor{keywordtype}{char}\ *\doxymbox{\hyperlink{filetree_8h_a7619abac93adc6e51956639f539d9296}{filetree\_get\_cwd}}();}
+\DoxyCodeLine{00070\ }
+\DoxyCodeLine{00075\ \textcolor{keywordtype}{int}\ \doxymbox{\hyperlink{filetree_8h_af6ba9ff708bdc3f26fb2429652132e22}{filetree\_get\_count}}();}
+\DoxyCodeLine{00076\ }
+\DoxyCodeLine{00082\ \textcolor{keyword}{const}\ \doxymbox{\hyperlink{structFileEntry}{FileEntry}}\ *\doxymbox{\hyperlink{filetree_8h_abeae4a874dc91021ae8164d643545373}{filetree\_get\_entry}}(\textcolor{keywordtype}{int}\ i);}
+\DoxyCodeLine{00083\ }
+\DoxyCodeLine{00088\ \textcolor{keywordtype}{int}\ \doxymbox{\hyperlink{filetree_8h_ab5bb8cbd1d76b8c8f19b31766c5439bc}{filetree\_get\_cursor}}();}
+\DoxyCodeLine{00089\ }
+\DoxyCodeLine{00094\ \textcolor{keywordtype}{int}\ \doxymbox{\hyperlink{filetree_8h_ae7f8a11419e4dc25a93943bb931744cf}{filetree\_get\_scroll}}();}
+\DoxyCodeLine{00095\ }
+\DoxyCodeLine{00101\ \textcolor{keywordtype}{void}\ \doxymbox{\hyperlink{filetree_8h_ad7ecedbe7c5cad199a421be23cd7e2e1}{filetree\_scroll\_by}}(\textcolor{keywordtype}{int}\ delta,\ \textcolor{keywordtype}{int}\ vis\_rows);}
+\DoxyCodeLine{00102\ }
+\DoxyCodeLine{00107\ \textcolor{keywordtype}{void}\ \doxymbox{\hyperlink{filetree_8h_a1671e9fd026a886f3175a9d7c405bf99}{filetree\_move\_up}}(\textcolor{keywordtype}{int}\ vis\_rows);}
+\DoxyCodeLine{00108\ }
+\DoxyCodeLine{00113\ \textcolor{keywordtype}{void}\ \doxymbox{\hyperlink{filetree_8h_acddd8d2e15fc50202ed2bd9947491438}{filetree\_move\_down}}(\textcolor{keywordtype}{int}\ vis\_rows);}
+\DoxyCodeLine{00114\ }
+\DoxyCodeLine{00120\ \textcolor{keywordtype}{void}\ \doxymbox{\hyperlink{filetree_8h_a324243015afc8322f21c86262881fab1}{filetree\_set\_cursor}}(\textcolor{keywordtype}{int}\ idx,\ \textcolor{keywordtype}{int}\ vis\_rows);}
+\DoxyCodeLine{00121\ }
+\DoxyCodeLine{00126\ \doxymbox{\hyperlink{filetree_8h_ab6bc9c11d8c3fa65f655d3071004b2ba}{FiletreeResult}}\ \doxymbox{\hyperlink{filetree_8h_ad8179f74e55e5bb173b517d5ccfde5dc}{filetree\_go\_parent}}();}
+\DoxyCodeLine{00127\ }
+\DoxyCodeLine{00133\ \doxymbox{\hyperlink{filetree_8h_ab6bc9c11d8c3fa65f655d3071004b2ba}{FiletreeResult}}\ \doxymbox{\hyperlink{filetree_8h_af50436c7979b4b46566b4fc5944d148d}{filetree\_enter\_selected}}();}
+\DoxyCodeLine{00134\ }
+\DoxyCodeLine{00140\ \textcolor{keywordtype}{void}\ \doxymbox{\hyperlink{filetree_8h_abb747d62b3c9150de5390d9107effdda}{filetree\_get\_selected\_path}}(\textcolor{keywordtype}{char}\ *buf,\ \textcolor{keywordtype}{int}\ size);}
+
+\end{DoxyCode}

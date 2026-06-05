@@ -1,0 +1,69 @@
+\doxysection{/\+home/\+pinho/\+\+Classes/\+\+LCOM/\+shared/\+proj/\+code/\+model/\+time/\+session\+\_\+time.h File Reference}
+\hypertarget{session__time_8h}{}\label{session__time_8h}\index{/home/pinho/Classes/LCOM/shared/proj/code/model/time/session\_time.h@{/home/pinho/Classes/LCOM/shared/proj/code/model/time/session\_time.h}}
+
+
+Session timer:\+ elapsed time since last reset, formatted as HH:\+\+MM:\+SS.  
+
+
+{\ttfamily \+\#include $<$stdio.\+h$>$}\newline
+{\ttfamily \+\#include "{}lcom/\+lcf.\+h"{}}\newline
+\doxysubsubsection*{Functions}
+\begin{DoxyCompactItemize}
+\item 
+void \doxymbox{\hyperlink{session__time_8h_ac5a0cb89fddc97786e6626a9f5de6c4d}{session\+\_\+time\+\_\+reset}} ()
+\begin{DoxyCompactList}\small\item\em Resets the session timer to the current tick count. \end{DoxyCompactList}\item 
+uint64\+\_\+t \doxymbox{\hyperlink{session__time_8h_a9313e40a727450e0873d48fde2639cb2}{session\+\_\+time\+\_\+get\+\_\+seconds}} ()
+\begin{DoxyCompactList}\small\item\em Returns the number of seconds elapsed since the last reset. \end{DoxyCompactList}\item 
+void \doxymbox{\hyperlink{session__time_8h_aaf4181c31e16b1168a1b521fbded6055}{session\+\_\+time\+\_\+format}} (char \texorpdfstring{$\ast$}{*}buf, size\+\_\+t n)
+\begin{DoxyCompactList}\small\item\em Formats the elapsed session time into a buffer as HH:\+\+MM:\+SS. \end{DoxyCompactList}\end{DoxyCompactItemize}
+
+
+\doxysubsection{Detailed Description}
+Session timer:\+ elapsed time since last reset, formatted as HH:\+\+MM:\+SS. 
+
+
+
+\label{doc-func-members}
+\Hypertarget{session__time_8h_doc-func-members}
+\doxysubsection{Function Documentation}
+\Hypertarget{session__time_8h_aaf4181c31e16b1168a1b521fbded6055}\index{session\_time.h@{session\_time.h}!session\_time\_format@{session\_time\_format}}
+\index{session\_time\_format@{session\_time\_format}!session\_time.h@{session\_time.h}}
+\doxysubsubsection{\texorpdfstring{session\_time\_format()}{session\_time\_format()}}
+{\footnotesize\ttfamily \label{session__time_8h_aaf4181c31e16b1168a1b521fbded6055} 
+void session\+\_\+time\+\_\+format (\begin{DoxyParamCaption}\item[{char \texorpdfstring{$\ast$}{*}}]{buf}{, }\item[{size\+\_\+t}]{n}{}\end{DoxyParamCaption})}
+
+
+
+Formats the elapsed session time into a buffer as HH:\+\+MM:\+SS. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em buf} & Output buffer \\
+\hline
+{\em n} & Size of the output buffer in bytes \\
+\hline
+\end{DoxyParams}
+\Hypertarget{session__time_8h_a9313e40a727450e0873d48fde2639cb2}\index{session\_time.h@{session\_time.h}!session\_time\_get\_seconds@{session\_time\_get\_seconds}}
+\index{session\_time\_get\_seconds@{session\_time\_get\_seconds}!session\_time.h@{session\_time.h}}
+\doxysubsubsection{\texorpdfstring{session\_time\_get\_seconds()}{session\_time\_get\_seconds()}}
+{\footnotesize\ttfamily \label{session__time_8h_a9313e40a727450e0873d48fde2639cb2} 
+uint64\+\_\+t session\+\_\+time\+\_\+get\+\_\+seconds (\begin{DoxyParamCaption}{}{}\end{DoxyParamCaption})}
+
+
+
+Returns the number of seconds elapsed since the last reset. 
+
+\begin{DoxyReturn}{Returns}
+Elapsed seconds as a 64-\/bit unsigned integer 
+\end{DoxyReturn}
+\Hypertarget{session__time_8h_ac5a0cb89fddc97786e6626a9f5de6c4d}\index{session\_time.h@{session\_time.h}!session\_time\_reset@{session\_time\_reset}}
+\index{session\_time\_reset@{session\_time\_reset}!session\_time.h@{session\_time.h}}
+\doxysubsubsection{\texorpdfstring{session\_time\_reset()}{session\_time\_reset()}}
+{\footnotesize\ttfamily \label{session__time_8h_ac5a0cb89fddc97786e6626a9f5de6c4d} 
+void session\+\_\+time\+\_\+reset (\begin{DoxyParamCaption}{}{}\end{DoxyParamCaption})}
+
+
+
+Resets the session timer to the current tick count. 
+
+Should be called when a new file is opened or the session starts 

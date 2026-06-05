@@ -1,0 +1,68 @@
+\doxysection{Input\+Event Struct Reference}
+\hypertarget{structInputEvent}{}\label{structInputEvent}\index{InputEvent@{InputEvent}}
+
+
+Tagged union representing a single input event from any device.  
+
+
+
+
+{\ttfamily \+\#include $<$events.\+h$>$}
+
+\doxysubsubsection*{Public Attributes}
+\begin{DoxyCompactItemize}
+\item 
+\doxymbox{\hyperlink{events_8h_a2b2905130ee6827c925a34fe221b95fa}{Input\+Event\+Type}} \doxymbox{\hyperlink{structInputEvent_a3a252efa580d9727fc0ca5025559eaec}{type}}
+\item 
+\begin{tabbing}
+xx\=xx\=xx\=xx\=xx\=xx\=xx\=xx\=xx\=\kill
+union \{\\
+\>\doxymbox{\hyperlink{structKeyEvent}{KeyEvent}} \doxymbox{\hyperlink{structInputEvent_af3f3c076f6d4d34190e3e1a97ebe45dd}{key}}\\
+\>\doxymbox{\hyperlink{structMouseEvent}{MouseEvent}} \doxymbox{\hyperlink{structInputEvent_a461ed587163ddae6ea3f6dfb3a73787a}{mouse}}\\
+\>\doxymbox{\hyperlink{structSerialEvent}{SerialEvent}} \doxymbox{\hyperlink{structInputEvent_a7b0a8750afeef20aa3ffef7e8ef15fe1}{serial}}\\
+\} \doxymbox{\hyperlink{structInputEvent_ac21a88b6a18cec1ed0bc04a5b27d2d3c}{data}}\\
+
+\end{tabbing}\end{DoxyCompactItemize}
+
+
+\doxysubsection{Detailed Description}
+Tagged union representing a single input event from any device. 
+
+\label{doc-variable-members}
+\Hypertarget{structInputEvent_doc-variable-members}
+\doxysubsection{Member Data Documentation}
+\Hypertarget{structInputEvent_ac21a88b6a18cec1ed0bc04a5b27d2d3c}\index{InputEvent@{InputEvent}!data@{data}}
+\index{data@{data}!InputEvent@{InputEvent}}
+\doxysubsubsection{\texorpdfstring{[union]}{[union]}}
+{\footnotesize\ttfamily \label{structInputEvent_ac21a88b6a18cec1ed0bc04a5b27d2d3c} 
+union  \{ ... \}  Input\+Event::\+data}
+
+\Hypertarget{structInputEvent_af3f3c076f6d4d34190e3e1a97ebe45dd}\index{InputEvent@{InputEvent}!key@{key}}
+\index{key@{key}!InputEvent@{InputEvent}}
+\doxysubsubsection{\texorpdfstring{key}{key}}
+{\footnotesize\ttfamily \label{structInputEvent_af3f3c076f6d4d34190e3e1a97ebe45dd} 
+\doxymbox{\hyperlink{structKeyEvent}{Key\+Event}} Input\+Event::\+key}
+
+\Hypertarget{structInputEvent_a461ed587163ddae6ea3f6dfb3a73787a}\index{InputEvent@{InputEvent}!mouse@{mouse}}
+\index{mouse@{mouse}!InputEvent@{InputEvent}}
+\doxysubsubsection{\texorpdfstring{mouse}{mouse}}
+{\footnotesize\ttfamily \label{structInputEvent_a461ed587163ddae6ea3f6dfb3a73787a} 
+\doxymbox{\hyperlink{structMouseEvent}{Mouse\+Event}} Input\+Event::\+mouse}
+
+\Hypertarget{structInputEvent_a7b0a8750afeef20aa3ffef7e8ef15fe1}\index{InputEvent@{InputEvent}!serial@{serial}}
+\index{serial@{serial}!InputEvent@{InputEvent}}
+\doxysubsubsection{\texorpdfstring{serial}{serial}}
+{\footnotesize\ttfamily \label{structInputEvent_a7b0a8750afeef20aa3ffef7e8ef15fe1} 
+\doxymbox{\hyperlink{structSerialEvent}{Serial\+Event}} Input\+Event::\+serial}
+
+\Hypertarget{structInputEvent_a3a252efa580d9727fc0ca5025559eaec}\index{InputEvent@{InputEvent}!type@{type}}
+\index{type@{type}!InputEvent@{InputEvent}}
+\doxysubsubsection{\texorpdfstring{type}{type}}
+{\footnotesize\ttfamily \label{structInputEvent_a3a252efa580d9727fc0ca5025559eaec} 
+\doxymbox{\hyperlink{events_8h_a2b2905130ee6827c925a34fe221b95fa}{Input\+Event\+Type}} Input\+Event::\+type}
+
+
+
+The documentation for this struct was generated from the following file:\+\begin{DoxyCompactItemize}
+\item 
+/\+home/\+pinho/\+\+Classes/\+\+LCOM/\+shared/\+proj/\+code/\+controller/\+input/\+\doxymbox{\hyperlink{events_8h}{events.\+h}}\end{DoxyCompactItemize}

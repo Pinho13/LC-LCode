@@ -1,0 +1,91 @@
+\doxysection{/\+home/\+pinho/\+\+Classes/\+\+LCOM/\+shared/\+proj/\+code/\+view/\+renderer/\+font.h File Reference}
+\hypertarget{font_8h}{}\label{font_8h}\index{/home/pinho/Classes/LCOM/shared/proj/code/view/renderer/font.h@{/home/pinho/Classes/LCOM/shared/proj/code/view/renderer/font.h}}
+
+
+Bitmap font rendering (8x16 pixels per char).  
+
+
+{\ttfamily \+\#include $<$lcom/\+lcf.\+h$>$}\newline
+\doxysubsubsection*{Macros}
+\begin{DoxyCompactItemize}
+\item 
+\+\#define \doxymbox{\hyperlink{font_8h_a303628d254ad557d43f1948ef327335b}{FONT\+\_\+W}}~8
+\item 
+\+\#define \doxymbox{\hyperlink{font_8h_a04b468e73da682ce30832fde541a9fd7}{FONT\+\_\+H}}~16
+\end{DoxyCompactItemize}
+\doxysubsubsection*{Functions}
+\begin{DoxyCompactItemize}
+\item 
+void \doxymbox{\hyperlink{font_8h_a2fc1465c0d232c13cb647fc6ce18ea98}{draw\+\_\+char}} (int x, int y, char c, uint32\+\_\+t color)
+\begin{DoxyCompactList}\small\item\em Draws a single ASCII character into the back buffer. \end{DoxyCompactList}\item 
+void \doxymbox{\hyperlink{font_8h_aecafe5f90a8ceeb25c7f283361549a72}{draw\+\_\+string}} (int x, int y, const char \texorpdfstring{$\ast$}{*}s, uint32\+\_\+t color)
+\begin{DoxyCompactList}\small\item\em Draws a null-\/terminated string into the back buffer. \end{DoxyCompactList}\end{DoxyCompactItemize}
+
+
+\doxysubsection{Detailed Description}
+Bitmap font rendering (8x16 pixels per char). 
+
+
+
+\label{doc-define-members}
+\Hypertarget{font_8h_doc-define-members}
+\doxysubsection{Macro Definition Documentation}
+\Hypertarget{font_8h_a04b468e73da682ce30832fde541a9fd7}\index{font.h@{font.h}!FONT\_H@{FONT\_H}}
+\index{FONT\_H@{FONT\_H}!font.h@{font.h}}
+\doxysubsubsection{\texorpdfstring{FONT\_H}{FONT\_H}}
+{\footnotesize\ttfamily \label{font_8h_a04b468e73da682ce30832fde541a9fd7} 
+\+\#define FONT\+\_\+H~16}
+
+Letter\textquotesingle{}s height in pixels \Hypertarget{font_8h_a303628d254ad557d43f1948ef327335b}\index{font.h@{font.h}!FONT\_W@{FONT\_W}}
+\index{FONT\_W@{FONT\_W}!font.h@{font.h}}
+\doxysubsubsection{\texorpdfstring{FONT\_W}{FONT\_W}}
+{\footnotesize\ttfamily \label{font_8h_a303628d254ad557d43f1948ef327335b} 
+\+\#define FONT\+\_\+W~8}
+
+Letter\textquotesingle{}s width in pixels 
+
+\label{doc-func-members}
+\Hypertarget{font_8h_doc-func-members}
+\doxysubsection{Function Documentation}
+\Hypertarget{font_8h_a2fc1465c0d232c13cb647fc6ce18ea98}\index{font.h@{font.h}!draw\_char@{draw\_char}}
+\index{draw\_char@{draw\_char}!font.h@{font.h}}
+\doxysubsubsection{\texorpdfstring{draw\_char()}{draw\_char()}}
+{\footnotesize\ttfamily \label{font_8h_a2fc1465c0d232c13cb647fc6ce18ea98} 
+void draw\+\_\+char (\begin{DoxyParamCaption}\item[{int}]{x}{, }\item[{int}]{y}{, }\item[{char}]{c}{, }\item[{uint32\+\_\+t}]{color}{}\end{DoxyParamCaption})}
+
+
+
+Draws a single ASCII character into the back buffer. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em x} & Pixel x coordinate of the glyph\textquotesingle{}s top-\/left corner \\
+\hline
+{\em y} & Pixel y coordinate of the glyph\textquotesingle{}s top-\/left corner \\
+\hline
+{\em c} & Character to draw. Ignored if outside the ASCII range (\texorpdfstring{$>$}{>}= 128) \\
+\hline
+{\em color} & 24-\/bit RGB color for the foreground pixels \\
+\hline
+\end{DoxyParams}
+\Hypertarget{font_8h_aecafe5f90a8ceeb25c7f283361549a72}\index{font.h@{font.h}!draw\_string@{draw\_string}}
+\index{draw\_string@{draw\_string}!font.h@{font.h}}
+\doxysubsubsection{\texorpdfstring{draw\_string()}{draw\_string()}}
+{\footnotesize\ttfamily \label{font_8h_aecafe5f90a8ceeb25c7f283361549a72} 
+void draw\+\_\+string (\begin{DoxyParamCaption}\item[{int}]{x}{, }\item[{int}]{y}{, }\item[{const char \texorpdfstring{$\ast$}{*}}]{s}{, }\item[{uint32\+\_\+t}]{color}{}\end{DoxyParamCaption})}
+
+
+
+Draws a null-\/terminated string into the back buffer. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em x} & Pixel x coordinate of the first glyph\textquotesingle{}s top-\/left corner \\
+\hline
+{\em y} & Pixel y coordinate of the string baseline \\
+\hline
+{\em s} & Null-\/terminated string to draw \\
+\hline
+{\em color} & 24-\/bit RGB color for the foreground pixels \\
+\hline
+\end{DoxyParams}

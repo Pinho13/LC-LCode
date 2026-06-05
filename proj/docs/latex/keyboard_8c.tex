@@ -1,0 +1,154 @@
+\doxysection{/\+home/\+pinho/\+\+Classes/\+\+LCOM/\+shared/\+proj/\+code/\+controller/\+input/\+keyboard.c File Reference}
+\hypertarget{keyboard_8c}{}\label{keyboard_8c}\index{/home/pinho/Classes/LCOM/shared/proj/code/controller/input/keyboard.c@{/home/pinho/Classes/LCOM/shared/proj/code/controller/input/keyboard.c}}
+{\ttfamily \+\#include "{}controller/\+input/\+keyboard.\+h"{}}\newline
+{\ttfamily \+\#include "{}controller/\+input/\+events.\+h"{}}\newline
+\doxysubsubsection*{Classes}
+\begin{DoxyCompactItemize}
+\item 
+struct \doxymbox{\hyperlink{structKeyboardState}{Keyboard\+State}}
+\end{DoxyCompactItemize}
+\doxysubsubsection*{Macros}
+\begin{DoxyCompactItemize}
+\item 
+\+\#define \doxymbox{\hyperlink{keyboard_8c_a3651d7ad01c96f5231d05fd54ba58682}{SCANCODE\+\_\+\+ESC}}~0x01
+\item 
+\+\#define \doxymbox{\hyperlink{keyboard_8c_afedf53a6a46a93a70ce1e6ea661f9f28}{SCANCODE\+\_\+\+BACKSPACE}}~0x0E
+\item 
+\+\#define \doxymbox{\hyperlink{keyboard_8c_aaeeb346e96efba694e625f2f983ba799}{SCANCODE\+\_\+\+ENTER}}~0x1C
+\item 
+\+\#define \doxymbox{\hyperlink{keyboard_8c_a0ff06ee203731582237547932a133ef2}{SCANCODE\+\_\+\+LCTRL}}~0x1D
+\item 
+\+\#define \doxymbox{\hyperlink{keyboard_8c_a24f9559ed93179fdab7207a54c6006bf}{SCANCODE\+\_\+\+RCTRL}}~0x1D
+\item 
+\+\#define \doxymbox{\hyperlink{keyboard_8c_a1864e1b6cee782fe2ffccbe32664b5d2}{SCANCODE\+\_\+\+LSHIFT}}~0x2A
+\item 
+\+\#define \doxymbox{\hyperlink{keyboard_8c_ac43632f7ef43d23e60fba8fd3dc4c283}{SCANCODE\+\_\+\+RSHIFT}}~0x36
+\item 
+\+\#define \doxymbox{\hyperlink{keyboard_8c_a4a70beb05112406def39a094b697a94e}{SCANCODE\+\_\+\+RALT}}~0x38
+\item 
+\+\#define \doxymbox{\hyperlink{keyboard_8c_ab46acf5af154ba2850d9d11dfe6be74a}{SCANCODE\+\_\+\+UP}}~0x48
+\item 
+\+\#define \doxymbox{\hyperlink{keyboard_8c_a9135864722eac173f168eab36861a70b}{SCANCODE\+\_\+\+DOWN}}~0x50
+\item 
+\+\#define \doxymbox{\hyperlink{keyboard_8c_a1db9f7539ca07859d4bfdde6a063360a}{SCANCODE\+\_\+\+LEFT}}~0x4B
+\item 
+\+\#define \doxymbox{\hyperlink{keyboard_8c_ab9bcab361f3290b9c3494d78413c69bb}{SCANCODE\+\_\+\+RIGHT}}~0x4D
+\item 
+\+\#define \doxymbox{\hyperlink{keyboard_8c_a85feb798376f1334bc53ba4181b00e29}{SCANCODE\+\_\+\+HOME}}~0x47
+\item 
+\+\#define \doxymbox{\hyperlink{keyboard_8c_a9f6dd01537b378c948fae4bd13582631}{SCANCODE\+\_\+\+END}}~0x4F
+\end{DoxyCompactItemize}
+\doxysubsubsection*{Functions}
+\begin{DoxyCompactItemize}
+\item 
+void \doxymbox{\hyperlink{keyboard_8c_a6dba9fcc6d02bdd7a19ffe443fd8df3e}{keyboard\+\_\+process}} (packet\+\_\+scancode \doxymbox{\hyperlink{ih_8c_a369fb0b6e0aae57a66084eca39e16fa3}{ps}})
+\begin{DoxyCompactList}\small\item\em Processes a raw scancode packet into a \doxylink{structKeyEvent}{Key\+Event} and pushes it to the input queue. \end{DoxyCompactList}\end{DoxyCompactItemize}
+
+
+\label{doc-define-members}
+\Hypertarget{keyboard_8c_doc-define-members}
+\doxysubsection{Macro Definition Documentation}
+\Hypertarget{keyboard_8c_afedf53a6a46a93a70ce1e6ea661f9f28}\index{keyboard.c@{keyboard.c}!SCANCODE\_BACKSPACE@{SCANCODE\_BACKSPACE}}
+\index{SCANCODE\_BACKSPACE@{SCANCODE\_BACKSPACE}!keyboard.c@{keyboard.c}}
+\doxysubsubsection{\texorpdfstring{SCANCODE\_BACKSPACE}{SCANCODE\_BACKSPACE}}
+{\footnotesize\ttfamily \label{keyboard_8c_afedf53a6a46a93a70ce1e6ea661f9f28} 
+\+\#define SCANCODE\+\_\+\+BACKSPACE~0x0E}
+
+\Hypertarget{keyboard_8c_a9135864722eac173f168eab36861a70b}\index{keyboard.c@{keyboard.c}!SCANCODE\_DOWN@{SCANCODE\_DOWN}}
+\index{SCANCODE\_DOWN@{SCANCODE\_DOWN}!keyboard.c@{keyboard.c}}
+\doxysubsubsection{\texorpdfstring{SCANCODE\_DOWN}{SCANCODE\_DOWN}}
+{\footnotesize\ttfamily \label{keyboard_8c_a9135864722eac173f168eab36861a70b} 
+\+\#define SCANCODE\+\_\+\+DOWN~0x50}
+
+\Hypertarget{keyboard_8c_a9f6dd01537b378c948fae4bd13582631}\index{keyboard.c@{keyboard.c}!SCANCODE\_END@{SCANCODE\_END}}
+\index{SCANCODE\_END@{SCANCODE\_END}!keyboard.c@{keyboard.c}}
+\doxysubsubsection{\texorpdfstring{SCANCODE\_END}{SCANCODE\_END}}
+{\footnotesize\ttfamily \label{keyboard_8c_a9f6dd01537b378c948fae4bd13582631} 
+\+\#define SCANCODE\+\_\+\+END~0x4F}
+
+\Hypertarget{keyboard_8c_aaeeb346e96efba694e625f2f983ba799}\index{keyboard.c@{keyboard.c}!SCANCODE\_ENTER@{SCANCODE\_ENTER}}
+\index{SCANCODE\_ENTER@{SCANCODE\_ENTER}!keyboard.c@{keyboard.c}}
+\doxysubsubsection{\texorpdfstring{SCANCODE\_ENTER}{SCANCODE\_ENTER}}
+{\footnotesize\ttfamily \label{keyboard_8c_aaeeb346e96efba694e625f2f983ba799} 
+\+\#define SCANCODE\+\_\+\+ENTER~0x1C}
+
+\Hypertarget{keyboard_8c_a3651d7ad01c96f5231d05fd54ba58682}\index{keyboard.c@{keyboard.c}!SCANCODE\_ESC@{SCANCODE\_ESC}}
+\index{SCANCODE\_ESC@{SCANCODE\_ESC}!keyboard.c@{keyboard.c}}
+\doxysubsubsection{\texorpdfstring{SCANCODE\_ESC}{SCANCODE\_ESC}}
+{\footnotesize\ttfamily \label{keyboard_8c_a3651d7ad01c96f5231d05fd54ba58682} 
+\+\#define SCANCODE\+\_\+\+ESC~0x01}
+
+\Hypertarget{keyboard_8c_a85feb798376f1334bc53ba4181b00e29}\index{keyboard.c@{keyboard.c}!SCANCODE\_HOME@{SCANCODE\_HOME}}
+\index{SCANCODE\_HOME@{SCANCODE\_HOME}!keyboard.c@{keyboard.c}}
+\doxysubsubsection{\texorpdfstring{SCANCODE\_HOME}{SCANCODE\_HOME}}
+{\footnotesize\ttfamily \label{keyboard_8c_a85feb798376f1334bc53ba4181b00e29} 
+\+\#define SCANCODE\+\_\+\+HOME~0x47}
+
+\Hypertarget{keyboard_8c_a0ff06ee203731582237547932a133ef2}\index{keyboard.c@{keyboard.c}!SCANCODE\_LCTRL@{SCANCODE\_LCTRL}}
+\index{SCANCODE\_LCTRL@{SCANCODE\_LCTRL}!keyboard.c@{keyboard.c}}
+\doxysubsubsection{\texorpdfstring{SCANCODE\_LCTRL}{SCANCODE\_LCTRL}}
+{\footnotesize\ttfamily \label{keyboard_8c_a0ff06ee203731582237547932a133ef2} 
+\+\#define SCANCODE\+\_\+\+LCTRL~0x1D}
+
+\Hypertarget{keyboard_8c_a1db9f7539ca07859d4bfdde6a063360a}\index{keyboard.c@{keyboard.c}!SCANCODE\_LEFT@{SCANCODE\_LEFT}}
+\index{SCANCODE\_LEFT@{SCANCODE\_LEFT}!keyboard.c@{keyboard.c}}
+\doxysubsubsection{\texorpdfstring{SCANCODE\_LEFT}{SCANCODE\_LEFT}}
+{\footnotesize\ttfamily \label{keyboard_8c_a1db9f7539ca07859d4bfdde6a063360a} 
+\+\#define SCANCODE\+\_\+\+LEFT~0x4B}
+
+\Hypertarget{keyboard_8c_a1864e1b6cee782fe2ffccbe32664b5d2}\index{keyboard.c@{keyboard.c}!SCANCODE\_LSHIFT@{SCANCODE\_LSHIFT}}
+\index{SCANCODE\_LSHIFT@{SCANCODE\_LSHIFT}!keyboard.c@{keyboard.c}}
+\doxysubsubsection{\texorpdfstring{SCANCODE\_LSHIFT}{SCANCODE\_LSHIFT}}
+{\footnotesize\ttfamily \label{keyboard_8c_a1864e1b6cee782fe2ffccbe32664b5d2} 
+\+\#define SCANCODE\+\_\+\+LSHIFT~0x2A}
+
+\Hypertarget{keyboard_8c_a4a70beb05112406def39a094b697a94e}\index{keyboard.c@{keyboard.c}!SCANCODE\_RALT@{SCANCODE\_RALT}}
+\index{SCANCODE\_RALT@{SCANCODE\_RALT}!keyboard.c@{keyboard.c}}
+\doxysubsubsection{\texorpdfstring{SCANCODE\_RALT}{SCANCODE\_RALT}}
+{\footnotesize\ttfamily \label{keyboard_8c_a4a70beb05112406def39a094b697a94e} 
+\+\#define SCANCODE\+\_\+\+RALT~0x38}
+
+\Hypertarget{keyboard_8c_a24f9559ed93179fdab7207a54c6006bf}\index{keyboard.c@{keyboard.c}!SCANCODE\_RCTRL@{SCANCODE\_RCTRL}}
+\index{SCANCODE\_RCTRL@{SCANCODE\_RCTRL}!keyboard.c@{keyboard.c}}
+\doxysubsubsection{\texorpdfstring{SCANCODE\_RCTRL}{SCANCODE\_RCTRL}}
+{\footnotesize\ttfamily \label{keyboard_8c_a24f9559ed93179fdab7207a54c6006bf} 
+\+\#define SCANCODE\+\_\+\+RCTRL~0x1D}
+
+\Hypertarget{keyboard_8c_ab9bcab361f3290b9c3494d78413c69bb}\index{keyboard.c@{keyboard.c}!SCANCODE\_RIGHT@{SCANCODE\_RIGHT}}
+\index{SCANCODE\_RIGHT@{SCANCODE\_RIGHT}!keyboard.c@{keyboard.c}}
+\doxysubsubsection{\texorpdfstring{SCANCODE\_RIGHT}{SCANCODE\_RIGHT}}
+{\footnotesize\ttfamily \label{keyboard_8c_ab9bcab361f3290b9c3494d78413c69bb} 
+\+\#define SCANCODE\+\_\+\+RIGHT~0x4D}
+
+\Hypertarget{keyboard_8c_ac43632f7ef43d23e60fba8fd3dc4c283}\index{keyboard.c@{keyboard.c}!SCANCODE\_RSHIFT@{SCANCODE\_RSHIFT}}
+\index{SCANCODE\_RSHIFT@{SCANCODE\_RSHIFT}!keyboard.c@{keyboard.c}}
+\doxysubsubsection{\texorpdfstring{SCANCODE\_RSHIFT}{SCANCODE\_RSHIFT}}
+{\footnotesize\ttfamily \label{keyboard_8c_ac43632f7ef43d23e60fba8fd3dc4c283} 
+\+\#define SCANCODE\+\_\+\+RSHIFT~0x36}
+
+\Hypertarget{keyboard_8c_ab46acf5af154ba2850d9d11dfe6be74a}\index{keyboard.c@{keyboard.c}!SCANCODE\_UP@{SCANCODE\_UP}}
+\index{SCANCODE\_UP@{SCANCODE\_UP}!keyboard.c@{keyboard.c}}
+\doxysubsubsection{\texorpdfstring{SCANCODE\_UP}{SCANCODE\_UP}}
+{\footnotesize\ttfamily \label{keyboard_8c_ab46acf5af154ba2850d9d11dfe6be74a} 
+\+\#define SCANCODE\+\_\+\+UP~0x48}
+
+
+
+\label{doc-func-members}
+\Hypertarget{keyboard_8c_doc-func-members}
+\doxysubsection{Function Documentation}
+\Hypertarget{keyboard_8c_a6dba9fcc6d02bdd7a19ffe443fd8df3e}\index{keyboard.c@{keyboard.c}!keyboard\_process@{keyboard\_process}}
+\index{keyboard\_process@{keyboard\_process}!keyboard.c@{keyboard.c}}
+\doxysubsubsection{\texorpdfstring{keyboard\_process()}{keyboard\_process()}}
+{\footnotesize\ttfamily \label{keyboard_8c_a6dba9fcc6d02bdd7a19ffe443fd8df3e} 
+void keyboard\+\_\+process (\begin{DoxyParamCaption}\item[{packet\+\_\+scancode}]{ps}{}\end{DoxyParamCaption})}
+
+
+
+Processes a raw scancode packet into a \doxylink{structKeyEvent}{Key\+Event} and pushes it to the input queue. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em \doxylink{ih_8c_a369fb0b6e0aae57a66084eca39e16fa3}{ps}} & Scancode packet from the keyboard interrupt handler \\
+\hline
+\end{DoxyParams}

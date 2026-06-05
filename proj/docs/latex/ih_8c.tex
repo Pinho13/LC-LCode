@@ -1,0 +1,130 @@
+\doxysection{/\+home/\+pinho/\+\+Classes/\+\+LCOM/\+shared/\+proj/\+code/\+controller/\+ih/\+ih.c File Reference}
+\hypertarget{ih_8c}{}\label{ih_8c}\index{/home/pinho/Classes/LCOM/shared/proj/code/controller/ih/ih.c@{/home/pinho/Classes/LCOM/shared/proj/code/controller/ih/ih.c}}
+{\ttfamily \+\#include $<$lcom/\+lcf.\+h$>$}\newline
+{\ttfamily \+\#include "{}controller/\+ih/\+ih.\+h"{}}\newline
+{\ttfamily \+\#include "{}fw/\+common/\+utils.\+h"{}}\newline
+{\ttfamily \+\#include "{}controller/\+input/\+keyboard.\+h"{}}\newline
+{\ttfamily \+\#include "{}controller/\+input/\+mouse.\+h"{}}\newline
+{\ttfamily \+\#include "{}controller/\+commands/\+commands.\+h"{}}\newline
+{\ttfamily \+\#include "{}controller/\+serial.\+h"{}}\newline
+{\ttfamily \+\#include "{}model/\+command\+\_\+bar/\+command\+\_\+bar.\+h"{}}\newline
+{\ttfamily \+\#include "{}fw/\+drivers/\+video.\+h"{}}\newline
+{\ttfamily \+\#include "{}model/\+render\+\_\+state.\+h"{}}\newline
+{\ttfamily \+\#include "{}model/\+time/\+clock.\+h"{}}\newline
+\doxysubsubsection*{Functions}
+\begin{DoxyCompactItemize}
+\item 
+int \doxymbox{\hyperlink{ih_8c_ab570339ba658dea7f08a99b9374e605f}{subscribe\+\_\+interrupts}} ()
+\begin{DoxyCompactList}\small\item\em Subscribes timer, keyboard, mouse, and serial interrupts. \end{DoxyCompactList}\item 
+int \doxymbox{\hyperlink{ih_8c_a39ca4da537e3c0062ada871f99b91b8d}{unsubscribe\+\_\+interrupts}} ()
+\begin{DoxyCompactList}\small\item\em Unsubscribes all hardware interrupts. \end{DoxyCompactList}\item 
+void \doxymbox{\hyperlink{ih_8c_a9e63ea32abae3f871fcbe66fd99003b2}{timer\+\_\+handler}} ()
+\begin{DoxyCompactList}\small\item\em Handles a timer interrupt:\+ ticks the command bar and updates the clock once per second. \end{DoxyCompactList}\item 
+void \doxymbox{\hyperlink{ih_8c_a2f4098fc71cbd39422c1001d66970bf5}{keyboard\+\_\+handler}} ()
+\begin{DoxyCompactList}\small\item\em Handles a keyboard interrupt:\+ reads a scancode and pushes a \doxylink{structKeyEvent}{Key\+Event} if the packet is complete. \end{DoxyCompactList}\item 
+void \doxymbox{\hyperlink{ih_8c_a6ca7c8595f4c1116a2e057ad74fe27a5}{mouse\+\_\+handler}} ()
+\begin{DoxyCompactList}\small\item\em Handles a mouse interrupt:\+ reads a packet and pushes a \doxylink{structMouseEvent}{Mouse\+Event} if the packet is complete. \end{DoxyCompactList}\item 
+void \doxymbox{\hyperlink{ih_8c_ae84528db772a637ad78e971362880e88}{interrupts\+\_\+handler}} (uint32\+\_\+t irq\+\_\+mask)
+\begin{DoxyCompactList}\small\item\em Dispatches hardware interrupts to the appropriate device handler. \end{DoxyCompactList}\end{DoxyCompactItemize}
+\doxysubsubsection*{Variables}
+\begin{DoxyCompactItemize}
+\item 
+packet\+\_\+scancode \doxymbox{\hyperlink{ih_8c_a369fb0b6e0aae57a66084eca39e16fa3}{ps}}
+\end{DoxyCompactItemize}
+
+
+\label{doc-func-members}
+\Hypertarget{ih_8c_doc-func-members}
+\doxysubsection{Function Documentation}
+\Hypertarget{ih_8c_ae84528db772a637ad78e971362880e88}\index{ih.c@{ih.c}!interrupts\_handler@{interrupts\_handler}}
+\index{interrupts\_handler@{interrupts\_handler}!ih.c@{ih.c}}
+\doxysubsubsection{\texorpdfstring{interrupts\_handler()}{interrupts\_handler()}}
+{\footnotesize\ttfamily \label{ih_8c_ae84528db772a637ad78e971362880e88} 
+void interrupts\+\_\+handler (\begin{DoxyParamCaption}\item[{uint32\+\_\+t}]{irq\+\_\+mask}{}\end{DoxyParamCaption})}
+
+
+
+Dispatches hardware interrupts to the appropriate device handler. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em irq\+\_\+mask} & Bitmask of pending interrupt lines from the MINIX IPC notification \\
+\hline
+\end{DoxyParams}
+\Hypertarget{ih_8c_a2f4098fc71cbd39422c1001d66970bf5}\index{ih.c@{ih.c}!keyboard\_handler@{keyboard\_handler}}
+\index{keyboard\_handler@{keyboard\_handler}!ih.c@{ih.c}}
+\doxysubsubsection{\texorpdfstring{keyboard\_handler()}{keyboard\_handler()}}
+{\footnotesize\ttfamily \label{ih_8c_a2f4098fc71cbd39422c1001d66970bf5} 
+void keyboard\+\_\+handler (\begin{DoxyParamCaption}{}{}\end{DoxyParamCaption})}
+
+
+
+Handles a keyboard interrupt:\+ reads a scancode and pushes a \doxylink{structKeyEvent}{Key\+Event} if the packet is complete. 
+
+\Hypertarget{ih_8c_a6ca7c8595f4c1116a2e057ad74fe27a5}\index{ih.c@{ih.c}!mouse\_handler@{mouse\_handler}}
+\index{mouse\_handler@{mouse\_handler}!ih.c@{ih.c}}
+\doxysubsubsection{\texorpdfstring{mouse\_handler()}{mouse\_handler()}}
+{\footnotesize\ttfamily \label{ih_8c_a6ca7c8595f4c1116a2e057ad74fe27a5} 
+void mouse\+\_\+handler (\begin{DoxyParamCaption}{}{}\end{DoxyParamCaption})}
+
+
+
+Handles a mouse interrupt:\+ reads a packet and pushes a \doxylink{structMouseEvent}{Mouse\+Event} if the packet is complete. 
+
+\Hypertarget{ih_8c_ab570339ba658dea7f08a99b9374e605f}\index{ih.c@{ih.c}!subscribe\_interrupts@{subscribe\_interrupts}}
+\index{subscribe\_interrupts@{subscribe\_interrupts}!ih.c@{ih.c}}
+\doxysubsubsection{\texorpdfstring{subscribe\_interrupts()}{subscribe\_interrupts()}}
+{\footnotesize\ttfamily \label{ih_8c_ab570339ba658dea7f08a99b9374e605f} 
+int subscribe\+\_\+interrupts (\begin{DoxyParamCaption}{}{}\end{DoxyParamCaption})}
+
+
+
+Subscribes timer, keyboard, mouse, and serial interrupts. 
+
+\begin{DoxyReturn}{Returns}
+0 on success. Non-\/zero if any subscription fails (previously subscribed devices are unsubscribed) 
+\end{DoxyReturn}
+\Hypertarget{ih_8c_a9e63ea32abae3f871fcbe66fd99003b2}\index{ih.c@{ih.c}!timer\_handler@{timer\_handler}}
+\index{timer\_handler@{timer\_handler}!ih.c@{ih.c}}
+\doxysubsubsection{\texorpdfstring{timer\_handler()}{timer\_handler()}}
+{\footnotesize\ttfamily \label{ih_8c_a9e63ea32abae3f871fcbe66fd99003b2} 
+void timer\+\_\+handler (\begin{DoxyParamCaption}{}{}\end{DoxyParamCaption})}
+
+
+
+Handles a timer interrupt:\+ ticks the command bar and updates the clock once per second. 
+
+\Hypertarget{ih_8c_a39ca4da537e3c0062ada871f99b91b8d}\index{ih.c@{ih.c}!unsubscribe\_interrupts@{unsubscribe\_interrupts}}
+\index{unsubscribe\_interrupts@{unsubscribe\_interrupts}!ih.c@{ih.c}}
+\doxysubsubsection{\texorpdfstring{unsubscribe\_interrupts()}{unsubscribe\_interrupts()}}
+{\footnotesize\ttfamily \label{ih_8c_a39ca4da537e3c0062ada871f99b91b8d} 
+int unsubscribe\+\_\+interrupts (\begin{DoxyParamCaption}{}{}\end{DoxyParamCaption})}
+
+
+
+Unsubscribes all hardware interrupts. 
+
+\begin{DoxyReturn}{Returns}
+0 if all unsubscriptions succeeded. Non-\/zero if any failed 
+\end{DoxyReturn}
+
+
+\label{doc-var-members}
+\Hypertarget{ih_8c_doc-var-members}
+\doxysubsection{Variable Documentation}
+\Hypertarget{ih_8c_a369fb0b6e0aae57a66084eca39e16fa3}\index{ih.c@{ih.c}!ps@{ps}}
+\index{ps@{ps}!ih.c@{ih.c}}
+\doxysubsubsection{\texorpdfstring{ps}{ps}}
+{\footnotesize\ttfamily \label{ih_8c_a369fb0b6e0aae57a66084eca39e16fa3} 
+packet\+\_\+scancode ps}
+
+{\bfseries Initial value:\+}
+\begin{DoxyCode}{0}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ =\ \{}
+\DoxyCodeLine{\ \ .two\_byte\ =\ \textcolor{keyword}{false},}
+\DoxyCodeLine{\ \ .make\ =\ \textcolor{keyword}{false},}
+\DoxyCodeLine{\ \ .size\ =\ 0,}
+\DoxyCodeLine{\ \ .bytes\ =\ \{0,\ 0\}}
+\DoxyCodeLine{\}}
+
+\end{DoxyCode}

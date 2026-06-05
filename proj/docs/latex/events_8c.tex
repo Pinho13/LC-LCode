@@ -1,0 +1,108 @@
+\doxysection{/\+home/\+pinho/\+\+Classes/\+\+LCOM/\+shared/\+proj/\+code/\+controller/\+input/\+events.c File Reference}
+\hypertarget{events_8c}{}\label{events_8c}\index{/home/pinho/Classes/LCOM/shared/proj/code/controller/input/events.c@{/home/pinho/Classes/LCOM/shared/proj/code/controller/input/events.c}}
+{\ttfamily \+\#include "{}controller/\+input/\+events.\+h"{}}\newline
+{\ttfamily \+\#include $<$stddef.\+h$>$}\newline
+{\ttfamily \+\#include "{}controller/\+commands/\+commands.\+h"{}}\newline
+\doxysubsubsection*{Macros}
+\begin{DoxyCompactItemize}
+\item 
+\+\#define \doxymbox{\hyperlink{events_8c_a418c1eed1ac1d0f4343ecf850acdf93f}{INPUT\+\_\+\+EVENT\+\_\+\+QUEUE\+\_\+\+SIZE}}~64
+\end{DoxyCompactItemize}
+\doxysubsubsection*{Functions}
+\begin{DoxyCompactItemize}
+\item 
+bool \doxymbox{\hyperlink{events_8c_aaea4e2597451dfe281e2fdd59db0b04f}{input\+\_\+event\+\_\+push}} (\doxymbox{\hyperlink{structInputEvent}{Input\+Event}} ev)
+\begin{DoxyCompactList}\small\item\em Pushes an event onto the input queue. \end{DoxyCompactList}\item 
+bool \doxymbox{\hyperlink{events_8c_adbfc02c2863f282e546ecf5adefa67bf}{input\+\_\+event\+\_\+pop}} (\doxymbox{\hyperlink{structInputEvent}{Input\+Event}} \texorpdfstring{$\ast$}{*}out)
+\begin{DoxyCompactList}\small\item\em Pops the next event from the input queue. \end{DoxyCompactList}\item 
+bool \doxymbox{\hyperlink{events_8c_aab314f2b4857a8365c8c7a1dbe1d55ca}{input\+\_\+events\+\_\+is\+\_\+empty}} ()
+\begin{DoxyCompactList}\small\item\em Returns whether the input queue is empty. \end{DoxyCompactList}\item 
+void \doxymbox{\hyperlink{events_8c_aa4dcd986b9755ecd3e6ad001c086a484}{input\+\_\+events\+\_\+clear}} ()
+\begin{DoxyCompactList}\small\item\em Discards all pending events in the queue. \end{DoxyCompactList}\item 
+void \doxymbox{\hyperlink{events_8c_a1949632f04ad9fe6944eaac6b95433a3}{input\+\_\+dispatch}} ()
+\begin{DoxyCompactList}\small\item\em Dequeues and dispatches all pending input events via commands\+\_\+dispatch. \end{DoxyCompactList}\end{DoxyCompactItemize}
+
+
+\label{doc-define-members}
+\Hypertarget{events_8c_doc-define-members}
+\doxysubsection{Macro Definition Documentation}
+\Hypertarget{events_8c_a418c1eed1ac1d0f4343ecf850acdf93f}\index{events.c@{events.c}!INPUT\_EVENT\_QUEUE\_SIZE@{INPUT\_EVENT\_QUEUE\_SIZE}}
+\index{INPUT\_EVENT\_QUEUE\_SIZE@{INPUT\_EVENT\_QUEUE\_SIZE}!events.c@{events.c}}
+\doxysubsubsection{\texorpdfstring{INPUT\_EVENT\_QUEUE\_SIZE}{INPUT\_EVENT\_QUEUE\_SIZE}}
+{\footnotesize\ttfamily \label{events_8c_a418c1eed1ac1d0f4343ecf850acdf93f} 
+\+\#define INPUT\+\_\+\+EVENT\+\_\+\+QUEUE\+\_\+\+SIZE~64}
+
+
+
+\label{doc-func-members}
+\Hypertarget{events_8c_doc-func-members}
+\doxysubsection{Function Documentation}
+\Hypertarget{events_8c_a1949632f04ad9fe6944eaac6b95433a3}\index{events.c@{events.c}!input\_dispatch@{input\_dispatch}}
+\index{input\_dispatch@{input\_dispatch}!events.c@{events.c}}
+\doxysubsubsection{\texorpdfstring{input\_dispatch()}{input\_dispatch()}}
+{\footnotesize\ttfamily \label{events_8c_a1949632f04ad9fe6944eaac6b95433a3} 
+void input\+\_\+dispatch (\begin{DoxyParamCaption}{}{}\end{DoxyParamCaption})}
+
+
+
+Dequeues and dispatches all pending input events via commands\+\_\+dispatch. 
+
+\Hypertarget{events_8c_adbfc02c2863f282e546ecf5adefa67bf}\index{events.c@{events.c}!input\_event\_pop@{input\_event\_pop}}
+\index{input\_event\_pop@{input\_event\_pop}!events.c@{events.c}}
+\doxysubsubsection{\texorpdfstring{input\_event\_pop()}{input\_event\_pop()}}
+{\footnotesize\ttfamily \label{events_8c_adbfc02c2863f282e546ecf5adefa67bf} 
+bool input\+\_\+event\+\_\+pop (\begin{DoxyParamCaption}\item[{\doxymbox{\hyperlink{structInputEvent}{Input\+Event}} \texorpdfstring{$\ast$}{*}}]{out}{}\end{DoxyParamCaption})}
+
+
+
+Pops the next event from the input queue. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em out} & Output event \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+true if an event was dequeued, false if the queue was empty 
+\end{DoxyReturn}
+\Hypertarget{events_8c_aaea4e2597451dfe281e2fdd59db0b04f}\index{events.c@{events.c}!input\_event\_push@{input\_event\_push}}
+\index{input\_event\_push@{input\_event\_push}!events.c@{events.c}}
+\doxysubsubsection{\texorpdfstring{input\_event\_push()}{input\_event\_push()}}
+{\footnotesize\ttfamily \label{events_8c_aaea4e2597451dfe281e2fdd59db0b04f} 
+bool input\+\_\+event\+\_\+push (\begin{DoxyParamCaption}\item[{\doxymbox{\hyperlink{structInputEvent}{Input\+Event}}}]{ev}{}\end{DoxyParamCaption})}
+
+
+
+Pushes an event onto the input queue. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em ev} & Event to enqueue \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+true on success, false if the queue is full 
+\end{DoxyReturn}
+\Hypertarget{events_8c_aa4dcd986b9755ecd3e6ad001c086a484}\index{events.c@{events.c}!input\_events\_clear@{input\_events\_clear}}
+\index{input\_events\_clear@{input\_events\_clear}!events.c@{events.c}}
+\doxysubsubsection{\texorpdfstring{input\_events\_clear()}{input\_events\_clear()}}
+{\footnotesize\ttfamily \label{events_8c_aa4dcd986b9755ecd3e6ad001c086a484} 
+void input\+\_\+events\+\_\+clear (\begin{DoxyParamCaption}{}{}\end{DoxyParamCaption})}
+
+
+
+Discards all pending events in the queue. 
+
+\Hypertarget{events_8c_aab314f2b4857a8365c8c7a1dbe1d55ca}\index{events.c@{events.c}!input\_events\_is\_empty@{input\_events\_is\_empty}}
+\index{input\_events\_is\_empty@{input\_events\_is\_empty}!events.c@{events.c}}
+\doxysubsubsection{\texorpdfstring{input\_events\_is\_empty()}{input\_events\_is\_empty()}}
+{\footnotesize\ttfamily \label{events_8c_aab314f2b4857a8365c8c7a1dbe1d55ca} 
+bool input\+\_\+events\+\_\+is\+\_\+empty (\begin{DoxyParamCaption}{}{}\end{DoxyParamCaption})}
+
+
+
+Returns whether the input queue is empty. 
+
+\begin{DoxyReturn}{Returns}
+true if there are no pending events 
+\end{DoxyReturn}

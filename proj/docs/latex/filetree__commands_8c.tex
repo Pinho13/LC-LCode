@@ -1,0 +1,58 @@
+\doxysection{/\+home/\+pinho/\+\+Classes/\+\+LCOM/\+shared/\+proj/\+code/\+controller/\+commands/\+filetree\+\_\+commands.c File Reference}
+\hypertarget{filetree__commands_8c}{}\label{filetree__commands_8c}\index{/home/pinho/Classes/LCOM/shared/proj/code/controller/commands/filetree\_commands.c@{/home/pinho/Classes/LCOM/shared/proj/code/controller/commands/filetree\_commands.c}}
+{\ttfamily \+\#include "{}controller/\+commands/\+filetree\+\_\+commands.\+h"{}}\newline
+{\ttfamily \+\#include "{}controller/\+commands/\+commands.\+h"{}}\newline
+{\ttfamily \+\#include "{}model/\+filetree/\+filetree.\+h"{}}\newline
+{\ttfamily \+\#include "{}model/\+command\+\_\+bar/\+command\+\_\+bar.\+h"{}}\newline
+{\ttfamily \+\#include "{}model/\+time/\+session\+\_\+time.\+h"{}}\newline
+{\ttfamily \+\#include "{}view/\+renderer/\+scene.\+h"{}}\newline
+{\ttfamily \+\#include "{}model/\+render\+\_\+state.\+h"{}}\newline
+{\ttfamily \+\#include $<$string.\+h$>$}\newline
+\doxysubsubsection*{Functions}
+\begin{DoxyCompactItemize}
+\item 
+bool \doxymbox{\hyperlink{filetree__commands_8c_a6540ea9c286302cfc5192365744cd728}{filetree\+\_\+commands\+\_\+try}} (\doxymbox{\hyperlink{structKeyEvent}{Key\+Event}} ev)
+\begin{DoxyCompactList}\small\item\em Tries to handle a keyboard event in the file tree context. \end{DoxyCompactList}\item 
+bool \doxymbox{\hyperlink{filetree__commands_8c_ad561a00430e7023a8bf4a03db129e0eb}{filetree\+\_\+commands\+\_\+mouse}} (\doxymbox{\hyperlink{structMouseEvent}{Mouse\+Event}} me)
+\begin{DoxyCompactList}\small\item\em Handles a mouse event in the file tree panel. \end{DoxyCompactList}\end{DoxyCompactItemize}
+
+
+\label{doc-func-members}
+\Hypertarget{filetree__commands_8c_doc-func-members}
+\doxysubsection{Function Documentation}
+\Hypertarget{filetree__commands_8c_ad561a00430e7023a8bf4a03db129e0eb}\index{filetree\_commands.c@{filetree\_commands.c}!filetree\_commands\_mouse@{filetree\_commands\_mouse}}
+\index{filetree\_commands\_mouse@{filetree\_commands\_mouse}!filetree\_commands.c@{filetree\_commands.c}}
+\doxysubsubsection{\texorpdfstring{filetree\_commands\_mouse()}{filetree\_commands\_mouse()}}
+{\footnotesize\ttfamily \label{filetree__commands_8c_ad561a00430e7023a8bf4a03db129e0eb} 
+bool filetree\+\_\+commands\+\_\+mouse (\begin{DoxyParamCaption}\item[{\doxymbox{\hyperlink{structMouseEvent}{Mouse\+Event}}}]{me}{}\end{DoxyParamCaption})}
+
+
+
+Handles a mouse event in the file tree panel. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em me} & Mouse event to handle \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+true if the event was consumed by the file tree 
+\end{DoxyReturn}
+\Hypertarget{filetree__commands_8c_a6540ea9c286302cfc5192365744cd728}\index{filetree\_commands.c@{filetree\_commands.c}!filetree\_commands\_try@{filetree\_commands\_try}}
+\index{filetree\_commands\_try@{filetree\_commands\_try}!filetree\_commands.c@{filetree\_commands.c}}
+\doxysubsubsection{\texorpdfstring{filetree\_commands\_try()}{filetree\_commands\_try()}}
+{\footnotesize\ttfamily \label{filetree__commands_8c_a6540ea9c286302cfc5192365744cd728} 
+bool filetree\+\_\+commands\+\_\+try (\begin{DoxyParamCaption}\item[{\doxymbox{\hyperlink{structKeyEvent}{Key\+Event}}}]{ev}{}\end{DoxyParamCaption})}
+
+
+
+Tries to handle a keyboard event in the file tree context. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em ev} & Keyboard event to handle \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+true if the event was consumed, false if it should fall through to the editor 
+\end{DoxyReturn}

@@ -1,0 +1,133 @@
+\doxysection{/\+home/\+pinho/\+\+Classes/\+\+LCOM/\+shared/\+proj/\+code/\+model/\+render\+\_\+state.h File Reference}
+\hypertarget{render__state_8h}{}\label{render__state_8h}\index{/home/pinho/Classes/LCOM/shared/proj/code/model/render\_state.h@{/home/pinho/Classes/LCOM/shared/proj/code/model/render\_state.h}}
+{\ttfamily \+\#include $<$lcom/\+lcf.\+h$>$}\newline
+\doxysubsubsection*{Macros}
+\begin{DoxyCompactItemize}
+\item 
+\+\#define \doxymbox{\hyperlink{render__state_8h_ac9b14e8585621e890462b1ba321a8668}{RENDER\+\_\+\+NONE}}~0
+\begin{DoxyCompactList}\small\item\em Rendering modes used to indicate the minimum region that must be redrawn. \end{DoxyCompactList}\item 
+\+\#define \doxymbox{\hyperlink{render__state_8h_a92c5975ca3ba058322dec059a53c5cd3}{RENDER\+\_\+\+MOUSE}}~1
+\item 
+\+\#define \doxymbox{\hyperlink{render__state_8h_af5e7c14a5fb4051072e49613b75101c2}{RENDER\+\_\+\+STATUS}}~2
+\item 
+\+\#define \doxymbox{\hyperlink{render__state_8h_aaf309ea62481475244cc99cf186386d7}{RENDER\+\_\+\+CHAR}}~3
+\item 
+\+\#define \doxymbox{\hyperlink{render__state_8h_a650538fa905bbab5678b0c6384c14176}{RENDER\+\_\+\+REMOTE\+\_\+\+LINE}}~4
+\item 
+\+\#define \doxymbox{\hyperlink{render__state_8h_ad7542dd10841878f2a28ef43af11a816}{RENDER\+\_\+\+LINE}}~5
+\item 
+\+\#define \doxymbox{\hyperlink{render__state_8h_a4307d96d65aa2c767ce1e744aa67824b}{RENDER\+\_\+\+WORD}}~6
+\item 
+\+\#define \doxymbox{\hyperlink{render__state_8h_a1c5e55a1eceb2e027eb980e77f384d00}{RENDER\+\_\+\+FULL}}~7
+\end{DoxyCompactItemize}
+\doxysubsubsection*{Functions}
+\begin{DoxyCompactItemize}
+\item 
+void \doxymbox{\hyperlink{render__state_8h_ad90824fdfaf7cf5c9f110e7ed113952c}{set\+\_\+render}} (int mode)
+\begin{DoxyCompactList}\small\item\em Requests a rendering operation. \end{DoxyCompactList}\item 
+int \doxymbox{\hyperlink{render__state_8h_a0e0d5d587aef6a246b0aff13200181a4}{get\+\_\+render}} ()
+\begin{DoxyCompactList}\small\item\em Returns the currently scheduled rendering mode. \end{DoxyCompactList}\item 
+void \doxymbox{\hyperlink{render__state_8h_abefb38cc0d3322faa0bfa2e35b9600a0}{clear\+\_\+render}} ()
+\begin{DoxyCompactList}\small\item\em Clears any pending rendering request. \end{DoxyCompactList}\end{DoxyCompactItemize}
+
+
+\label{doc-define-members}
+\Hypertarget{render__state_8h_doc-define-members}
+\doxysubsection{Macro Definition Documentation}
+\Hypertarget{render__state_8h_aaf309ea62481475244cc99cf186386d7}\index{render\_state.h@{render\_state.h}!RENDER\_CHAR@{RENDER\_CHAR}}
+\index{RENDER\_CHAR@{RENDER\_CHAR}!render\_state.h@{render\_state.h}}
+\doxysubsubsection{\texorpdfstring{RENDER\_CHAR}{RENDER\_CHAR}}
+{\footnotesize\ttfamily \label{render__state_8h_aaf309ea62481475244cc99cf186386d7} 
+\+\#define RENDER\+\_\+\+CHAR~3}
+
+Redraw a single character. \Hypertarget{render__state_8h_a1c5e55a1eceb2e027eb980e77f384d00}\index{render\_state.h@{render\_state.h}!RENDER\_FULL@{RENDER\_FULL}}
+\index{RENDER\_FULL@{RENDER\_FULL}!render\_state.h@{render\_state.h}}
+\doxysubsubsection{\texorpdfstring{RENDER\_FULL}{RENDER\_FULL}}
+{\footnotesize\ttfamily \label{render__state_8h_a1c5e55a1eceb2e027eb980e77f384d00} 
+\+\#define RENDER\+\_\+\+FULL~7}
+
+Perform a full screen redraw. \Hypertarget{render__state_8h_ad7542dd10841878f2a28ef43af11a816}\index{render\_state.h@{render\_state.h}!RENDER\_LINE@{RENDER\_LINE}}
+\index{RENDER\_LINE@{RENDER\_LINE}!render\_state.h@{render\_state.h}}
+\doxysubsubsection{\texorpdfstring{RENDER\_LINE}{RENDER\_LINE}}
+{\footnotesize\ttfamily \label{render__state_8h_ad7542dd10841878f2a28ef43af11a816} 
+\+\#define RENDER\+\_\+\+LINE~5}
+
+Redraw the current line. \Hypertarget{render__state_8h_a92c5975ca3ba058322dec059a53c5cd3}\index{render\_state.h@{render\_state.h}!RENDER\_MOUSE@{RENDER\_MOUSE}}
+\index{RENDER\_MOUSE@{RENDER\_MOUSE}!render\_state.h@{render\_state.h}}
+\doxysubsubsection{\texorpdfstring{RENDER\_MOUSE}{RENDER\_MOUSE}}
+{\footnotesize\ttfamily \label{render__state_8h_a92c5975ca3ba058322dec059a53c5cd3} 
+\+\#define RENDER\+\_\+\+MOUSE~1}
+
+Redraw only the mouse cursor. \Hypertarget{render__state_8h_ac9b14e8585621e890462b1ba321a8668}\index{render\_state.h@{render\_state.h}!RENDER\_NONE@{RENDER\_NONE}}
+\index{RENDER\_NONE@{RENDER\_NONE}!render\_state.h@{render\_state.h}}
+\doxysubsubsection{\texorpdfstring{RENDER\_NONE}{RENDER\_NONE}}
+{\footnotesize\ttfamily \label{render__state_8h_ac9b14e8585621e890462b1ba321a8668} 
+\+\#define RENDER\+\_\+\+NONE~0}
+
+
+
+Rendering modes used to indicate the minimum region that must be redrawn. 
+
+Higher values represent larger rendering operations. The rendering system may promote a requested mode to a more expensive one when multiple updates overlap (e.\+g., rendering both a local and a remote line results in a full redraw). No rendering required. \Hypertarget{render__state_8h_a650538fa905bbab5678b0c6384c14176}\index{render\_state.h@{render\_state.h}!RENDER\_REMOTE\_LINE@{RENDER\_REMOTE\_LINE}}
+\index{RENDER\_REMOTE\_LINE@{RENDER\_REMOTE\_LINE}!render\_state.h@{render\_state.h}}
+\doxysubsubsection{\texorpdfstring{RENDER\_REMOTE\_LINE}{RENDER\_REMOTE\_LINE}}
+{\footnotesize\ttfamily \label{render__state_8h_a650538fa905bbab5678b0c6384c14176} 
+\+\#define RENDER\+\_\+\+REMOTE\+\_\+\+LINE~4}
+
+Redraw a remotely modified line. \Hypertarget{render__state_8h_af5e7c14a5fb4051072e49613b75101c2}\index{render\_state.h@{render\_state.h}!RENDER\_STATUS@{RENDER\_STATUS}}
+\index{RENDER\_STATUS@{RENDER\_STATUS}!render\_state.h@{render\_state.h}}
+\doxysubsubsection{\texorpdfstring{RENDER\_STATUS}{RENDER\_STATUS}}
+{\footnotesize\ttfamily \label{render__state_8h_af5e7c14a5fb4051072e49613b75101c2} 
+\+\#define RENDER\+\_\+\+STATUS~2}
+
+Redraw the status bar. \Hypertarget{render__state_8h_a4307d96d65aa2c767ce1e744aa67824b}\index{render\_state.h@{render\_state.h}!RENDER\_WORD@{RENDER\_WORD}}
+\index{RENDER\_WORD@{RENDER\_WORD}!render\_state.h@{render\_state.h}}
+\doxysubsubsection{\texorpdfstring{RENDER\_WORD}{RENDER\_WORD}}
+{\footnotesize\ttfamily \label{render__state_8h_a4307d96d65aa2c767ce1e744aa67824b} 
+\+\#define RENDER\+\_\+\+WORD~6}
+
+Redraw a word or text region. 
+
+\label{doc-func-members}
+\Hypertarget{render__state_8h_doc-func-members}
+\doxysubsection{Function Documentation}
+\Hypertarget{render__state_8h_abefb38cc0d3322faa0bfa2e35b9600a0}\index{render\_state.h@{render\_state.h}!clear\_render@{clear\_render}}
+\index{clear\_render@{clear\_render}!render\_state.h@{render\_state.h}}
+\doxysubsubsection{\texorpdfstring{clear\_render()}{clear\_render()}}
+{\footnotesize\ttfamily \label{render__state_8h_abefb38cc0d3322faa0bfa2e35b9600a0} 
+void clear\+\_\+render (\begin{DoxyParamCaption}{}{}\end{DoxyParamCaption})}
+
+
+
+Clears any pending rendering request. 
+
+Resets the rendering mode to \doxylink{render__state_8h_ac9b14e8585621e890462b1ba321a8668}{RENDER\+\_\+\+NONE}. \Hypertarget{render__state_8h_a0e0d5d587aef6a246b0aff13200181a4}\index{render\_state.h@{render\_state.h}!get\_render@{get\_render}}
+\index{get\_render@{get\_render}!render\_state.h@{render\_state.h}}
+\doxysubsubsection{\texorpdfstring{get\_render()}{get\_render()}}
+{\footnotesize\ttfamily \label{render__state_8h_a0e0d5d587aef6a246b0aff13200181a4} 
+int get\+\_\+render (\begin{DoxyParamCaption}{}{}\end{DoxyParamCaption})}
+
+
+
+Returns the currently scheduled rendering mode. 
+
+\begin{DoxyReturn}{Returns}
+The current rendering mode. 
+\end{DoxyReturn}
+\Hypertarget{render__state_8h_ad90824fdfaf7cf5c9f110e7ed113952c}\index{render\_state.h@{render\_state.h}!set\_render@{set\_render}}
+\index{set\_render@{set\_render}!render\_state.h@{render\_state.h}}
+\doxysubsubsection{\texorpdfstring{set\_render()}{set\_render()}}
+{\footnotesize\ttfamily \label{render__state_8h_ad90824fdfaf7cf5c9f110e7ed113952c} 
+void set\+\_\+render (\begin{DoxyParamCaption}\item[{int}]{mode}{}\end{DoxyParamCaption})}
+
+
+
+Requests a rendering operation. 
+
+Updates the current rendering mode if the requested mode requires a larger redraw than the currently scheduled one. If both a local line redraw and a remote line redraw are requested before rendering occurs, the mode is promoted to \doxylink{render__state_8h_a1c5e55a1eceb2e027eb980e77f384d00}{RENDER\+\_\+\+FULL}.
+
+
+\begin{DoxyParams}{Parameters}
+{\em mode} & Rendering mode to request. \\
+\hline
+\end{DoxyParams}

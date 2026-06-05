@@ -1,0 +1,57 @@
+\doxysection{/\+home/\+pinho/\+\+Classes/\+\+LCOM/\+shared/\+proj/\+code/\+model/\+render\+\_\+state.c File Reference}
+\hypertarget{render__state_8c}{}\label{render__state_8c}\index{/home/pinho/Classes/LCOM/shared/proj/code/model/render\_state.c@{/home/pinho/Classes/LCOM/shared/proj/code/model/render\_state.c}}
+{\ttfamily \+\#include "{}model/\+render\+\_\+state.\+h"{}}\newline
+\doxysubsubsection*{Functions}
+\begin{DoxyCompactItemize}
+\item 
+void \doxymbox{\hyperlink{render__state_8c_ad90824fdfaf7cf5c9f110e7ed113952c}{set\+\_\+render}} (int mode)
+\begin{DoxyCompactList}\small\item\em Requests a rendering operation. \end{DoxyCompactList}\item 
+int \doxymbox{\hyperlink{render__state_8c_a0e0d5d587aef6a246b0aff13200181a4}{get\+\_\+render}} ()
+\begin{DoxyCompactList}\small\item\em Returns the currently scheduled rendering mode. \end{DoxyCompactList}\item 
+void \doxymbox{\hyperlink{render__state_8c_abefb38cc0d3322faa0bfa2e35b9600a0}{clear\+\_\+render}} ()
+\begin{DoxyCompactList}\small\item\em Clears any pending rendering request. \end{DoxyCompactList}\end{DoxyCompactItemize}
+
+
+\label{doc-func-members}
+\Hypertarget{render__state_8c_doc-func-members}
+\doxysubsection{Function Documentation}
+\Hypertarget{render__state_8c_abefb38cc0d3322faa0bfa2e35b9600a0}\index{render\_state.c@{render\_state.c}!clear\_render@{clear\_render}}
+\index{clear\_render@{clear\_render}!render\_state.c@{render\_state.c}}
+\doxysubsubsection{\texorpdfstring{clear\_render()}{clear\_render()}}
+{\footnotesize\ttfamily \label{render__state_8c_abefb38cc0d3322faa0bfa2e35b9600a0} 
+void clear\+\_\+render (\begin{DoxyParamCaption}{}{}\end{DoxyParamCaption})}
+
+
+
+Clears any pending rendering request. 
+
+Resets the rendering mode to \doxylink{render__state_8h_ac9b14e8585621e890462b1ba321a8668}{RENDER\+\_\+\+NONE}. \Hypertarget{render__state_8c_a0e0d5d587aef6a246b0aff13200181a4}\index{render\_state.c@{render\_state.c}!get\_render@{get\_render}}
+\index{get\_render@{get\_render}!render\_state.c@{render\_state.c}}
+\doxysubsubsection{\texorpdfstring{get\_render()}{get\_render()}}
+{\footnotesize\ttfamily \label{render__state_8c_a0e0d5d587aef6a246b0aff13200181a4} 
+int get\+\_\+render (\begin{DoxyParamCaption}{}{}\end{DoxyParamCaption})}
+
+
+
+Returns the currently scheduled rendering mode. 
+
+\begin{DoxyReturn}{Returns}
+The current rendering mode. 
+\end{DoxyReturn}
+\Hypertarget{render__state_8c_ad90824fdfaf7cf5c9f110e7ed113952c}\index{render\_state.c@{render\_state.c}!set\_render@{set\_render}}
+\index{set\_render@{set\_render}!render\_state.c@{render\_state.c}}
+\doxysubsubsection{\texorpdfstring{set\_render()}{set\_render()}}
+{\footnotesize\ttfamily \label{render__state_8c_ad90824fdfaf7cf5c9f110e7ed113952c} 
+void set\+\_\+render (\begin{DoxyParamCaption}\item[{int}]{mode}{}\end{DoxyParamCaption})}
+
+
+
+Requests a rendering operation. 
+
+Updates the current rendering mode if the requested mode requires a larger redraw than the currently scheduled one. If both a local line redraw and a remote line redraw are requested before rendering occurs, the mode is promoted to \doxylink{render__state_8h_a1c5e55a1eceb2e027eb980e77f384d00}{RENDER\+\_\+\+FULL}.
+
+
+\begin{DoxyParams}{Parameters}
+{\em mode} & Rendering mode to request. \\
+\hline
+\end{DoxyParams}

@@ -1,0 +1,39 @@
+\doxysection{events.\+h}
+\hypertarget{events_8h_source}{}\label{events_8h_source}\index{/home/pinho/Classes/LCOM/shared/proj/code/controller/input/events.h@{/home/pinho/Classes/LCOM/shared/proj/code/controller/input/events.h}}
+\doxymbox{\hyperlink{events_8h}{Go to the documentation of this file.}}
+\begin{DoxyCode}{0}
+\DoxyCodeLine{00001\ \textcolor{preprocessor}{\#pragma\ once}}
+\DoxyCodeLine{00002\ }
+\DoxyCodeLine{00003\ \textcolor{preprocessor}{\#include\ <stdbool.h>}}
+\DoxyCodeLine{00004\ }
+\DoxyCodeLine{00005\ \textcolor{preprocessor}{\#include\ "{}\doxymbox{\hyperlink{keyboard_8h}{controller/input/keyboard.h}}"{}}}
+\DoxyCodeLine{00006\ \textcolor{preprocessor}{\#include\ "{}\doxymbox{\hyperlink{mouse_8h}{controller/input/mouse.h}}"{}}}
+\DoxyCodeLine{00007\ \textcolor{preprocessor}{\#include\ "{}\doxymbox{\hyperlink{serial_8h}{controller/serial.h}}"{}}}
+\DoxyCodeLine{00008\ }
+\DoxyCodeLine{00013\ }
+\DoxyCodeLine{00014\ \textcolor{keyword}{typedef}\ \textcolor{keyword}{enum}\ \{}
+\DoxyCodeLine{00015\ \ \ \doxymbox{\hyperlink{events_8h_a2b2905130ee6827c925a34fe221b95faaf09f2e0e408caf4f871bca463f892534}{INPUT\_EVENT\_KEY}},}
+\DoxyCodeLine{00016\ \ \ \doxymbox{\hyperlink{events_8h_a2b2905130ee6827c925a34fe221b95faaf2d9803f77a44457c04942aae24bdf61}{INPUT\_EVENT\_MOUSE}},}
+\DoxyCodeLine{00017\ \ \ \doxymbox{\hyperlink{events_8h_a2b2905130ee6827c925a34fe221b95faa64f528420de0d3051dd6cc00ceb7ecd0}{INPUT\_EVENT\_SERIAL}}}
+\DoxyCodeLine{00018\ \}\ \doxymbox{\hyperlink{events_8h_a2b2905130ee6827c925a34fe221b95fa}{InputEventType}};}
+\DoxyCodeLine{00019\ }
+\DoxyCodeLine{00021\ \textcolor{keyword}{typedef}\ \textcolor{keyword}{struct\ }\{}
+\DoxyCodeLine{00022\ \ \ \doxymbox{\hyperlink{events_8h_a2b2905130ee6827c925a34fe221b95fa}{InputEventType}}\ \doxymbox{\hyperlink{structInputEvent_a3a252efa580d9727fc0ca5025559eaec}{type}};}
+\DoxyCodeLine{00023\ \ \ \textcolor{keyword}{union\ }\{}
+\DoxyCodeLine{00024\ \ \ \ \ \doxymbox{\hyperlink{structKeyEvent}{KeyEvent}}\ \doxymbox{\hyperlink{structInputEvent_af3f3c076f6d4d34190e3e1a97ebe45dd}{key}};}
+\DoxyCodeLine{00025\ \ \ \ \ \doxymbox{\hyperlink{structMouseEvent}{MouseEvent}}\ \doxymbox{\hyperlink{structInputEvent_a461ed587163ddae6ea3f6dfb3a73787a}{mouse}};}
+\DoxyCodeLine{00026\ \ \ \ \ \doxymbox{\hyperlink{structSerialEvent}{SerialEvent}}\ \doxymbox{\hyperlink{structInputEvent_a7b0a8750afeef20aa3ffef7e8ef15fe1}{serial}};}
+\DoxyCodeLine{00027\ \ \ \}\ data;}
+\DoxyCodeLine{00028\ \}\ \doxymbox{\hyperlink{structInputEvent}{InputEvent}};}
+\DoxyCodeLine{00029\ }
+\DoxyCodeLine{00035\ \textcolor{keywordtype}{bool}\ \doxymbox{\hyperlink{events_8h_aaea4e2597451dfe281e2fdd59db0b04f}{input\_event\_push}}(\doxymbox{\hyperlink{structInputEvent}{InputEvent}}\ ev);}
+\DoxyCodeLine{00036\ }
+\DoxyCodeLine{00042\ \textcolor{keywordtype}{bool}\ \doxymbox{\hyperlink{events_8h_adbfc02c2863f282e546ecf5adefa67bf}{input\_event\_pop}}(\doxymbox{\hyperlink{structInputEvent}{InputEvent}}\ *out);}
+\DoxyCodeLine{00043\ }
+\DoxyCodeLine{00048\ \textcolor{keywordtype}{bool}\ \doxymbox{\hyperlink{events_8h_aab314f2b4857a8365c8c7a1dbe1d55ca}{input\_events\_is\_empty}}();}
+\DoxyCodeLine{00049\ }
+\DoxyCodeLine{00053\ \textcolor{keywordtype}{void}\ \doxymbox{\hyperlink{events_8h_aa4dcd986b9755ecd3e6ad001c086a484}{input\_events\_clear}}();}
+\DoxyCodeLine{00054\ }
+\DoxyCodeLine{00058\ \textcolor{keywordtype}{void}\ \doxymbox{\hyperlink{events_8h_a1949632f04ad9fe6944eaac6b95433a3}{input\_dispatch}}();}
+
+\end{DoxyCode}

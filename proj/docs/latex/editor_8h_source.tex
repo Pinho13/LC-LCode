@@ -1,0 +1,102 @@
+\doxysection{editor.\+h}
+\hypertarget{editor_8h_source}{}\label{editor_8h_source}\index{/home/pinho/Classes/LCOM/shared/proj/code/model/editor/editor.h@{/home/pinho/Classes/LCOM/shared/proj/code/model/editor/editor.h}}
+\doxymbox{\hyperlink{editor_8h}{Go to the documentation of this file.}}
+\begin{DoxyCode}{0}
+\DoxyCodeLine{00001\ \textcolor{preprocessor}{\#pragma\ once}}
+\DoxyCodeLine{00002\ \textcolor{preprocessor}{\#include\ <stdbool.h>}}
+\DoxyCodeLine{00003\ }
+\DoxyCodeLine{00008\ }
+\DoxyCodeLine{00009\ \textcolor{keyword}{typedef}\ \textcolor{keyword}{enum}\ \{}
+\DoxyCodeLine{00010\ \ \ \doxymbox{\hyperlink{editor_8h_a0567671be08cc83cbdff870f77c955aea67e3c0fcaf789fd28f424987b8a40023}{EDITOR\_OK}},}
+\DoxyCodeLine{00011\ \ \ \doxymbox{\hyperlink{editor_8h_a0567671be08cc83cbdff870f77c955aeabcb625207f67f652d1fd2cc09e901b96}{EDITOR\_ERR\_NO\_CLIPBOARD}},}
+\DoxyCodeLine{00012\ \ \ \doxymbox{\hyperlink{editor_8h_a0567671be08cc83cbdff870f77c955aea38d56bf33eb1a6f7c7e079577b5e3011}{EDITOR\_ERR\_ALLOC\_FAILED}}}
+\DoxyCodeLine{00013\ \}\ \doxymbox{\hyperlink{editor_8h_a0567671be08cc83cbdff870f77c955ae}{EditorResult}};}
+\DoxyCodeLine{00014\ }
+\DoxyCodeLine{00016\ \textcolor{keyword}{typedef}\ \textcolor{keyword}{struct\ }\{}
+\DoxyCodeLine{00017\ \ \ \textcolor{keywordtype}{char}\ *\doxymbox{\hyperlink{structLine_a2d6fac0781d58b60a8c299c2ab14cc4b}{buf}};}
+\DoxyCodeLine{00018\ \ \ \textcolor{keywordtype}{int}\ \doxymbox{\hyperlink{structLine_ae7ca09a19bcbe0ae22a88400db20fe21}{len}};}
+\DoxyCodeLine{00019\ \ \ \textcolor{keywordtype}{int}\ \doxymbox{\hyperlink{structLine_a9377f7534ecd364c76e07938eac52e3a}{cap}};}
+\DoxyCodeLine{00020\ \}\ \doxymbox{\hyperlink{structLine}{Line}};}
+\DoxyCodeLine{00021\ }
+\DoxyCodeLine{00026\ \textcolor{keywordtype}{int}\ \doxymbox{\hyperlink{editor_8h_a8dac101a0c4f4b4db55bc6027eeb61ff}{editor\_init}}();}
+\DoxyCodeLine{00027\ }
+\DoxyCodeLine{00031\ \textcolor{keywordtype}{void}\ \doxymbox{\hyperlink{editor_8h_af3960acf2d61e1c377a7ee01c05fd3c7}{editor\_cleanup}}();}
+\DoxyCodeLine{00032\ }
+\DoxyCodeLine{00038\ \textcolor{keywordtype}{void}\ \doxymbox{\hyperlink{editor_8h_a4dbfb17a84c027c8c72997c324b492e1}{editor\_set\_viewport}}(\textcolor{keywordtype}{int}\ rows,\ \textcolor{keywordtype}{int}\ cols);}
+\DoxyCodeLine{00039\ }
+\DoxyCodeLine{00045\ \textcolor{keywordtype}{void}\ \doxymbox{\hyperlink{editor_8h_aa0d935b6c456d4c4c9f65b46868b1a2f}{editor\_scroll\_by}}(\textcolor{keywordtype}{int}\ drow,\ \textcolor{keywordtype}{int}\ dcol);}
+\DoxyCodeLine{00046\ }
+\DoxyCodeLine{00052\ \textcolor{keywordtype}{void}\ \doxymbox{\hyperlink{editor_8h_a10801b59cb4dbc028267a481717603b2}{editor\_set\_cursor}}(\textcolor{keywordtype}{int}\ row,\ \textcolor{keywordtype}{int}\ col);}
+\DoxyCodeLine{00053\ }
+\DoxyCodeLine{00060\ \textcolor{keywordtype}{bool}\ \doxymbox{\hyperlink{editor_8h_a45d2edb29a8fd34637248e7df50b9125}{editor\_consume\_scroll\_dirty}}();}
+\DoxyCodeLine{00061\ }
+\DoxyCodeLine{00067\ \doxymbox{\hyperlink{editor_8h_a0567671be08cc83cbdff870f77c955ae}{EditorResult}}\ \doxymbox{\hyperlink{editor_8h_a45bdf4890fff91c051f2981af1aafef1}{editor\_insert\_char}}(\textcolor{keywordtype}{char}\ c);}
+\DoxyCodeLine{00068\ }
+\DoxyCodeLine{00073\ \doxymbox{\hyperlink{editor_8h_a0567671be08cc83cbdff870f77c955ae}{EditorResult}}\ \doxymbox{\hyperlink{editor_8h_a186dcc776cf47a5ea3bdbc36e1f8aeb4}{editor\_delete\_char}}();}
+\DoxyCodeLine{00074\ }
+\DoxyCodeLine{00079\ \doxymbox{\hyperlink{editor_8h_a0567671be08cc83cbdff870f77c955ae}{EditorResult}}\ \doxymbox{\hyperlink{editor_8h_ab38b7e3d36e3977d384135d3f1923b57}{editor\_delete\_word}}();}
+\DoxyCodeLine{00080\ }
+\DoxyCodeLine{00082\ \textcolor{keywordtype}{void}\ \doxymbox{\hyperlink{editor_8h_a6a2d64b65ab6758ea7cb9dd7bab0af8a}{editor\_move\_left}}();}
+\DoxyCodeLine{00083\ }
+\DoxyCodeLine{00085\ \textcolor{keywordtype}{void}\ \doxymbox{\hyperlink{editor_8h_ad8fd42c1bd561d004eb962660d79b228}{editor\_move\_right}}();}
+\DoxyCodeLine{00086\ }
+\DoxyCodeLine{00088\ \textcolor{keywordtype}{void}\ \doxymbox{\hyperlink{editor_8h_a84140286a39b0db0686087dafd31af71}{editor\_move\_up}}();}
+\DoxyCodeLine{00089\ }
+\DoxyCodeLine{00091\ \textcolor{keywordtype}{void}\ \doxymbox{\hyperlink{editor_8h_af2500229bb38585e9a4db29557c7c01e}{editor\_move\_down}}();}
+\DoxyCodeLine{00092\ }
+\DoxyCodeLine{00094\ \textcolor{keywordtype}{void}\ \doxymbox{\hyperlink{editor_8h_a873bac07284c0de1a65974dda6cd2b81}{editor\_move\_word\_left}}();}
+\DoxyCodeLine{00095\ }
+\DoxyCodeLine{00097\ \textcolor{keywordtype}{void}\ \doxymbox{\hyperlink{editor_8h_a8a8934e0dab4e1ca1ba6e9b36f86f749}{editor\_move\_word\_right}}();}
+\DoxyCodeLine{00098\ }
+\DoxyCodeLine{00100\ \textcolor{keywordtype}{void}\ \doxymbox{\hyperlink{editor_8h_a178a4a6c9265313a69a11fa4a73224b1}{editor\_move\_home}}();}
+\DoxyCodeLine{00101\ }
+\DoxyCodeLine{00103\ \textcolor{keywordtype}{void}\ \doxymbox{\hyperlink{editor_8h_a7e5f7de90710ef8029903631d50814e1}{editor\_move\_end}}();}
+\DoxyCodeLine{00104\ }
+\DoxyCodeLine{00110\ \textcolor{keyword}{const}\ \textcolor{keywordtype}{char}\ *\doxymbox{\hyperlink{editor_8h_a6995a035909bc27c41849806350904fe}{editor\_get\_line}}(\textcolor{keywordtype}{int}\ row);}
+\DoxyCodeLine{00111\ }
+\DoxyCodeLine{00117\ \textcolor{keywordtype}{int}\ \doxymbox{\hyperlink{editor_8h_ac65ca0bfd975b126f38f68e8ee9a088a}{editor\_get\_line\_len}}(\textcolor{keywordtype}{int}\ row);}
+\DoxyCodeLine{00118\ }
+\DoxyCodeLine{00123\ \textcolor{keywordtype}{int}\ \doxymbox{\hyperlink{editor_8h_a4ed99fd52ac81ebaa345a3ff050cbfa8}{editor\_get\_row\_count}}();}
+\DoxyCodeLine{00124\ }
+\DoxyCodeLine{00129\ \textcolor{keywordtype}{int}\ \doxymbox{\hyperlink{editor_8h_a8130bc9a09c8de4585d0807963c68d7b}{editor\_get\_cursor\_row}}();}
+\DoxyCodeLine{00130\ }
+\DoxyCodeLine{00135\ \textcolor{keywordtype}{int}\ \doxymbox{\hyperlink{editor_8h_a793310c7850590313ccfa60b810e32f5}{editor\_get\_cursor\_col}}();}
+\DoxyCodeLine{00136\ }
+\DoxyCodeLine{00141\ \textcolor{keywordtype}{int}\ \doxymbox{\hyperlink{editor_8h_a1c3000668fd618e804049f15506f0158}{editor\_get\_scroll\_row}}();}
+\DoxyCodeLine{00142\ }
+\DoxyCodeLine{00147\ \textcolor{keywordtype}{int}\ \doxymbox{\hyperlink{editor_8h_a034aae826bed6ed2969022206a48e487}{editor\_get\_scroll\_col}}();}
+\DoxyCodeLine{00148\ }
+\DoxyCodeLine{00153\ \doxymbox{\hyperlink{editor_8h_a0567671be08cc83cbdff870f77c955ae}{EditorResult}}\ \doxymbox{\hyperlink{editor_8h_aca9024e808a3690d8431f9eac7343a3a}{editor\_delete\_selection}}();}
+\DoxyCodeLine{00154\ }
+\DoxyCodeLine{00160\ \textcolor{keywordtype}{void}\ \doxymbox{\hyperlink{editor_8h_aa411c2d9dd9f5ba7e8960ec56bb6c3fd}{editor\_sel\_set\_anchor}}();}
+\DoxyCodeLine{00161\ }
+\DoxyCodeLine{00163\ \textcolor{keywordtype}{void}\ \doxymbox{\hyperlink{editor_8h_a257948364e6798b55bca1d4f21fade8f}{editor\_sel\_clear}}();}
+\DoxyCodeLine{00164\ }
+\DoxyCodeLine{00169\ \textcolor{keywordtype}{bool}\ \doxymbox{\hyperlink{editor_8h_a60594bab32622d0e9d62ed9ec7755a35}{editor\_sel\_is\_active}}();}
+\DoxyCodeLine{00170\ }
+\DoxyCodeLine{00178\ \textcolor{keywordtype}{void}\ \doxymbox{\hyperlink{editor_8h_ad170d3aefed805a70d2c633ce4c51c90}{editor\_sel\_get\_range}}(\textcolor{keywordtype}{int}\ *start\_row,\ \textcolor{keywordtype}{int}\ *start\_col,\ \textcolor{keywordtype}{int}\ *end\_row,\ \textcolor{keywordtype}{int}\ *end\_col);}
+\DoxyCodeLine{00179\ }
+\DoxyCodeLine{00186\ \textcolor{keywordtype}{bool}\ \doxymbox{\hyperlink{editor_8h_a8e0f5ed7c20e0ebc718db57c5df4f0dd}{editor\_consume\_sel\_dirty}}();}
+\DoxyCodeLine{00187\ }
+\DoxyCodeLine{00189\ \textcolor{keywordtype}{void}\ \doxymbox{\hyperlink{editor_8h_a21c4a66e3c627bbe84ff4dfd44aa93f7}{editor\_copy\_selection}}();}
+\DoxyCodeLine{00190\ }
+\DoxyCodeLine{00196\ \doxymbox{\hyperlink{editor_8h_a0567671be08cc83cbdff870f77c955ae}{EditorResult}}\ \doxymbox{\hyperlink{editor_8h_a8d303ba11761a2daa302cfe147f5e5cf}{editor\_paste}}();}
+\DoxyCodeLine{00197\ }
+\DoxyCodeLine{00206\ \doxymbox{\hyperlink{editor_8h_a0567671be08cc83cbdff870f77c955ae}{EditorResult}}\ \doxymbox{\hyperlink{editor_8h_ac43fc33f4ab4dc7da2b988e53af5b5fa}{editor\_load\_line}}(\textcolor{keyword}{const}\ \textcolor{keywordtype}{char}\ *text,\ \textcolor{keywordtype}{int}\ len);}
+\DoxyCodeLine{00207\ }
+\DoxyCodeLine{00213\ \textcolor{keywordtype}{void}\ \doxymbox{\hyperlink{editor_8h_a68505b9b790fe9bf905b749af42d093c}{editor\_load\_finalize}}();}
+\DoxyCodeLine{00214\ }
+\DoxyCodeLine{00220\ \textcolor{keywordtype}{void}\ \doxymbox{\hyperlink{editor_8h_a0a5c2c62e540da58f5a267df1c080f55}{editor\_set\_remote\_cursor}}(\textcolor{keywordtype}{int}\ row,\ \textcolor{keywordtype}{int}\ col);}
+\DoxyCodeLine{00221\ }
+\DoxyCodeLine{00232\ \doxymbox{\hyperlink{editor_8h_a0567671be08cc83cbdff870f77c955ae}{EditorResult}}\ \doxymbox{\hyperlink{editor_8h_ae45e5c975ae0f2606e121a7e4cb5969c}{editor\_remote\_insert\_char}}(\textcolor{keywordtype}{char}\ c);}
+\DoxyCodeLine{00233\ }
+\DoxyCodeLine{00243\ \doxymbox{\hyperlink{editor_8h_a0567671be08cc83cbdff870f77c955ae}{EditorResult}}\ \doxymbox{\hyperlink{editor_8h_a4887c573666a081f43c48aec4b9bf656}{editor\_remote\_delete\_char}}();}
+\DoxyCodeLine{00244\ }
+\DoxyCodeLine{00258\ \doxymbox{\hyperlink{editor_8h_a0567671be08cc83cbdff870f77c955ae}{EditorResult}}\ \doxymbox{\hyperlink{editor_8h_a527c9fc277874f68d739d984e1be0c5f}{editor\_remote\_replace\_block}}(\textcolor{keywordtype}{int}\ start\_row,\ \textcolor{keywordtype}{int}\ deleted\_count,\ \textcolor{keywordtype}{int}\ inserted\_count);}
+\DoxyCodeLine{00259\ }
+\DoxyCodeLine{00272\ \doxymbox{\hyperlink{editor_8h_a0567671be08cc83cbdff870f77c955ae}{EditorResult}}\ \doxymbox{\hyperlink{editor_8h_a61a9255828346381bd422d5303a53cdc}{editor\_remote\_update\_line}}(\textcolor{keywordtype}{int}\ row,\ \textcolor{keyword}{const}\ \textcolor{keywordtype}{char}\ *text,\ \textcolor{keywordtype}{int}\ len);}
+\DoxyCodeLine{00273\ \textcolor{keywordtype}{int}\ \doxymbox{\hyperlink{editor_8h_a5e7fb60733b7f237b2d1847a5677d027}{editor\_get\_remote\_cursor\_row}}();}
+\DoxyCodeLine{00274\ }
+\DoxyCodeLine{00279\ \textcolor{keywordtype}{int}\ \doxymbox{\hyperlink{editor_8h_a571a36d3eb8425437b16f1672f2c9d3a}{editor\_get\_remote\_cursor\_col}}();}
+
+\end{DoxyCode}

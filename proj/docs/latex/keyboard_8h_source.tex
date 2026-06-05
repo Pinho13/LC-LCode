@@ -1,0 +1,36 @@
+\doxysection{keyboard.\+h}
+\hypertarget{keyboard_8h_source}{}\label{keyboard_8h_source}\index{/home/pinho/Classes/LCOM/shared/proj/code/controller/input/keyboard.h@{/home/pinho/Classes/LCOM/shared/proj/code/controller/input/keyboard.h}}
+\doxymbox{\hyperlink{keyboard_8h}{Go to the documentation of this file.}}
+\begin{DoxyCode}{0}
+\DoxyCodeLine{00001\ \textcolor{preprocessor}{\#pragma\ once}}
+\DoxyCodeLine{00002\ }
+\DoxyCodeLine{00003\ \textcolor{preprocessor}{\#include\ <lcom/lcf.h>}}
+\DoxyCodeLine{00004\ \textcolor{preprocessor}{\#include\ <stdbool.h>}}
+\DoxyCodeLine{00005\ }
+\DoxyCodeLine{00006\ \textcolor{preprocessor}{\#include\ "{}fw/drivers/keyboard.h"{}}}
+\DoxyCodeLine{00007\ }
+\DoxyCodeLine{00012\ }
+\DoxyCodeLine{00014\ \textcolor{keyword}{typedef}\ \textcolor{keyword}{enum}\ \{}
+\DoxyCodeLine{00015\ \ \ \doxymbox{\hyperlink{keyboard_8h_a224b9163917ac32fc95a60d8c1eec3aaa2e15270378edc4b0861165674c651970}{DIR\_NONE}},}
+\DoxyCodeLine{00016\ \ \ \doxymbox{\hyperlink{keyboard_8h_a224b9163917ac32fc95a60d8c1eec3aaa1307dc42d06472935155dcbe283bc660}{DIR\_LEFT}},}
+\DoxyCodeLine{00017\ \ \ \doxymbox{\hyperlink{keyboard_8h_a224b9163917ac32fc95a60d8c1eec3aaa5dd21ef3d450f62c44082756cab8f6f8}{DIR\_RIGHT}},}
+\DoxyCodeLine{00018\ \ \ \doxymbox{\hyperlink{keyboard_8h_a224b9163917ac32fc95a60d8c1eec3aaa0b76fb863426c07c6c997a8d9523257b}{DIR\_UP}},}
+\DoxyCodeLine{00019\ \ \ \doxymbox{\hyperlink{keyboard_8h_a224b9163917ac32fc95a60d8c1eec3aaab1bf68da897d09488069dd40e54f442d}{DIR\_DOWN}},}
+\DoxyCodeLine{00020\ \ \ \doxymbox{\hyperlink{keyboard_8h_a224b9163917ac32fc95a60d8c1eec3aaa9e07d48e161306f0e7f72941c9f2d417}{DIR\_HOME}},}
+\DoxyCodeLine{00021\ \ \ \doxymbox{\hyperlink{keyboard_8h_a224b9163917ac32fc95a60d8c1eec3aaad6792f0556cf2cd17feb50a6e55a14a9}{DIR\_END}}}
+\DoxyCodeLine{00022\ \}\ \doxymbox{\hyperlink{keyboard_8h_a224b9163917ac32fc95a60d8c1eec3aa}{Direction}};}
+\DoxyCodeLine{00023\ }
+\DoxyCodeLine{00025\ \textcolor{keyword}{typedef}\ \textcolor{keyword}{struct\ }\{}
+\DoxyCodeLine{00026\ \ \ \textcolor{keywordtype}{char}\ \doxymbox{\hyperlink{structKeyEvent_a02af48ca28d588beffd0a126bfcd6453}{c}};}
+\DoxyCodeLine{00027\ \ \ \textcolor{keywordtype}{bool}\ \doxymbox{\hyperlink{structKeyEvent_a0d67e105aa7a13ef6cf813bb9f5d200f}{ctrl}};}
+\DoxyCodeLine{00028\ \ \ \textcolor{keywordtype}{bool}\ \doxymbox{\hyperlink{structKeyEvent_a4a048ced9f18365f1af437a43e351645}{shift}};}
+\DoxyCodeLine{00029\ \ \ \textcolor{keywordtype}{bool}\ \doxymbox{\hyperlink{structKeyEvent_aaaf0b592509dc6ce2972f703506ff7b1}{altgr}};}
+\DoxyCodeLine{00030\ \ \ \textcolor{keywordtype}{bool}\ \doxymbox{\hyperlink{structKeyEvent_a3d2f21158be517dd852510cbd4c1bdba}{backspace}};}
+\DoxyCodeLine{00031\ \ \ \textcolor{keywordtype}{bool}\ \doxymbox{\hyperlink{structKeyEvent_a10dca391f53bb8c32cde58322349a4e6}{enter}};}
+\DoxyCodeLine{00032\ \ \ \textcolor{keywordtype}{bool}\ \doxymbox{\hyperlink{structKeyEvent_a6066ff2a3a1ada570614d0ebcb656f6b}{escape}};}
+\DoxyCodeLine{00033\ \ \ \doxymbox{\hyperlink{keyboard_8h_a224b9163917ac32fc95a60d8c1eec3aa}{Direction}}\ \doxymbox{\hyperlink{structKeyEvent_a0832c4cdb7aa3c0c9547f9efd083fbda}{dir}};}
+\DoxyCodeLine{00034\ \}\ \doxymbox{\hyperlink{structKeyEvent}{KeyEvent}};}
+\DoxyCodeLine{00035\ }
+\DoxyCodeLine{00040\ \textcolor{keywordtype}{void}\ \doxymbox{\hyperlink{keyboard_8h_a6dba9fcc6d02bdd7a19ffe443fd8df3e}{keyboard\_process}}(packet\_scancode\ \doxymbox{\hyperlink{ih_8c_a369fb0b6e0aae57a66084eca39e16fa3}{ps}});}
+
+\end{DoxyCode}

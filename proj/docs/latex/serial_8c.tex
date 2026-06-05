@@ -1,0 +1,61 @@
+\doxysection{/\+home/\+pinho/\+\+Classes/\+\+LCOM/\+shared/\+proj/\+code/\+controller/\+serial.c File Reference}
+\hypertarget{serial_8c}{}\label{serial_8c}\index{/home/pinho/Classes/LCOM/shared/proj/code/controller/serial.c@{/home/pinho/Classes/LCOM/shared/proj/code/controller/serial.c}}
+{\ttfamily \+\#include "{}controller/\+serial.\+h"{}}\newline
+{\ttfamily \+\#include "{}controller/\+commands/\+commands.\+h"{}}\newline
+{\ttfamily \+\#include "{}controller/\+input/\+events.\+h"{}}\newline
+{\ttfamily \+\#include "{}fw/\+drivers/\+serial\+\_\+port.\+h"{}}\newline
+{\ttfamily \+\#include "{}model/\+editor/\+editor.\+h"{}}\newline
+{\ttfamily \+\#include "{}model/\+render\+\_\+state.\+h"{}}\newline
+\doxysubsubsection*{Enumerations}
+\begin{DoxyCompactItemize}
+\item 
+enum \doxymbox{\hyperlink{serial_8c_ad77822a0ad67023ae49897b8b80c151d}{Protocol\+State}} \{ \doxymbox{\hyperlink{serial_8c_ad77822a0ad67023ae49897b8b80c151dae728a72a38e4025ac268366df9df7246}{STATE\+\_\+\+WAIT\+\_\+\+START}}
+, \doxymbox{\hyperlink{serial_8c_ad77822a0ad67023ae49897b8b80c151da5de5dae3446672a8e2d99ca0f00e837f}{STATE\+\_\+\+READ\+\_\+\+CMD}}
+, \doxymbox{\hyperlink{serial_8c_ad77822a0ad67023ae49897b8b80c151da13658e9b8347839c7548204f1b58f55a}{STATE\+\_\+\+READ\+\_\+\+LEN}}
+, \doxymbox{\hyperlink{serial_8c_ad77822a0ad67023ae49897b8b80c151da818dadcf56669957a0fbeab10f4e82e8}{STATE\+\_\+\+READ\+\_\+\+PAYLOAD}}
+ \}
+\end{DoxyCompactItemize}
+\doxysubsubsection*{Functions}
+\begin{DoxyCompactItemize}
+\item 
+void \doxymbox{\hyperlink{group__Serial_ga72ebc9c8b6ee1b881cfa1497b89de292}{serial\+\_\+process}} ()
+\begin{DoxyCompactList}\small\item\em Processes incoming bytes from the serial port. \end{DoxyCompactList}\item 
+void \doxymbox{\hyperlink{group__Serial_ga380bf8b50ebd3fcb0c08334f64cdec9c}{build\+\_\+packet\+\_\+serial}} (\doxymbox{\hyperlink{group__Serial_gad3fd96d1dee1731337015b1bea6f96db}{Serial\+Command}} cmd, uint8\+\_\+t \texorpdfstring{$\ast$}{*}payload, int len, uint16\+\_\+t num\+\_\+lines)
+\begin{DoxyCompactList}\small\item\em Builds and transmits a serial packet over the UART. \end{DoxyCompactList}\end{DoxyCompactItemize}
+
+
+\label{doc-enum-members}
+\Hypertarget{serial_8c_doc-enum-members}
+\doxysubsection{Enumeration Type Documentation}
+\Hypertarget{serial_8c_ad77822a0ad67023ae49897b8b80c151d}\index{serial.c@{serial.c}!ProtocolState@{ProtocolState}}
+\index{ProtocolState@{ProtocolState}!serial.c@{serial.c}}
+\doxysubsubsection{\texorpdfstring{ProtocolState}{ProtocolState}}
+{\footnotesize\ttfamily \label{serial_8c_ad77822a0ad67023ae49897b8b80c151d} 
+enum \doxymbox{\hyperlink{serial_8c_ad77822a0ad67023ae49897b8b80c151d}{Protocol\+State}}}
+
+\begin{DoxyEnumFields}[2]{Enumerator}
+\raisebox{\heightof{T}}[0pt][0pt]{\index{STATE\_WAIT\_START@{STATE\_WAIT\_START}!serial.c@{serial.c}}
+\index{serial.c@{serial.c}!STATE\_WAIT\_START@{STATE\_WAIT\_START}}
+}\Hypertarget{serial_8c_ad77822a0ad67023ae49897b8b80c151dae728a72a38e4025ac268366df9df7246}\label{serial_8c_ad77822a0ad67023ae49897b8b80c151dae728a72a38e4025ac268366df9df7246} 
+STATE\+\_\+\+WAIT\+\_\+\+START&\\
+\hline
+
+\raisebox{\heightof{T}}[0pt][0pt]{\index{STATE\_READ\_CMD@{STATE\_READ\_CMD}!serial.c@{serial.c}}
+\index{serial.c@{serial.c}!STATE\_READ\_CMD@{STATE\_READ\_CMD}}
+}\Hypertarget{serial_8c_ad77822a0ad67023ae49897b8b80c151da5de5dae3446672a8e2d99ca0f00e837f}\label{serial_8c_ad77822a0ad67023ae49897b8b80c151da5de5dae3446672a8e2d99ca0f00e837f} 
+STATE\+\_\+\+READ\+\_\+\+CMD&\\
+\hline
+
+\raisebox{\heightof{T}}[0pt][0pt]{\index{STATE\_READ\_LEN@{STATE\_READ\_LEN}!serial.c@{serial.c}}
+\index{serial.c@{serial.c}!STATE\_READ\_LEN@{STATE\_READ\_LEN}}
+}\Hypertarget{serial_8c_ad77822a0ad67023ae49897b8b80c151da13658e9b8347839c7548204f1b58f55a}\label{serial_8c_ad77822a0ad67023ae49897b8b80c151da13658e9b8347839c7548204f1b58f55a} 
+STATE\+\_\+\+READ\+\_\+\+LEN&\\
+\hline
+
+\raisebox{\heightof{T}}[0pt][0pt]{\index{STATE\_READ\_PAYLOAD@{STATE\_READ\_PAYLOAD}!serial.c@{serial.c}}
+\index{serial.c@{serial.c}!STATE\_READ\_PAYLOAD@{STATE\_READ\_PAYLOAD}}
+}\Hypertarget{serial_8c_ad77822a0ad67023ae49897b8b80c151da818dadcf56669957a0fbeab10f4e82e8}\label{serial_8c_ad77822a0ad67023ae49897b8b80c151da818dadcf56669957a0fbeab10f4e82e8} 
+STATE\+\_\+\+READ\+\_\+\+PAYLOAD&\\
+\hline
+
+\end{DoxyEnumFields}

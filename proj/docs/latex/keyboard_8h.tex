@@ -1,0 +1,118 @@
+\doxysection{/\+home/\+pinho/\+\+Classes/\+\+LCOM/\+shared/\+proj/\+code/\+controller/\+input/\+keyboard.h File Reference}
+\hypertarget{keyboard_8h}{}\label{keyboard_8h}\index{/home/pinho/Classes/LCOM/shared/proj/code/controller/input/keyboard.h@{/home/pinho/Classes/LCOM/shared/proj/code/controller/input/keyboard.h}}
+
+
+Keyboard scancode processing and decoded key event type.  
+
+
+{\ttfamily \+\#include $<$lcom/\+lcf.\+h$>$}\newline
+{\ttfamily \+\#include $<$stdbool.\+h$>$}\newline
+{\ttfamily \+\#include "{}fw/\+drivers/\+keyboard.\+h"{}}\newline
+\doxysubsubsection*{Classes}
+\begin{DoxyCompactItemize}
+\item 
+struct \doxymbox{\hyperlink{structKeyEvent}{Key\+Event}}
+\begin{DoxyCompactList}\small\item\em Decoded keyboard event with character, modifier flags, and direction. \end{DoxyCompactList}\end{DoxyCompactItemize}
+\doxysubsubsection*{Enumerations}
+\begin{DoxyCompactItemize}
+\item 
+enum \doxymbox{\hyperlink{keyboard_8h_a224b9163917ac32fc95a60d8c1eec3aa}{Direction}} \{ \newline
+\doxymbox{\hyperlink{keyboard_8h_a224b9163917ac32fc95a60d8c1eec3aaa2e15270378edc4b0861165674c651970}{DIR\+\_\+\+NONE}}
+, \doxymbox{\hyperlink{keyboard_8h_a224b9163917ac32fc95a60d8c1eec3aaa1307dc42d06472935155dcbe283bc660}{DIR\+\_\+\+LEFT}}
+, \doxymbox{\hyperlink{keyboard_8h_a224b9163917ac32fc95a60d8c1eec3aaa5dd21ef3d450f62c44082756cab8f6f8}{DIR\+\_\+\+RIGHT}}
+, \doxymbox{\hyperlink{keyboard_8h_a224b9163917ac32fc95a60d8c1eec3aaa0b76fb863426c07c6c997a8d9523257b}{DIR\+\_\+\+UP}}
+, \newline
+\doxymbox{\hyperlink{keyboard_8h_a224b9163917ac32fc95a60d8c1eec3aaab1bf68da897d09488069dd40e54f442d}{DIR\+\_\+\+DOWN}}
+, \doxymbox{\hyperlink{keyboard_8h_a224b9163917ac32fc95a60d8c1eec3aaa9e07d48e161306f0e7f72941c9f2d417}{DIR\+\_\+\+HOME}}
+, \doxymbox{\hyperlink{keyboard_8h_a224b9163917ac32fc95a60d8c1eec3aaad6792f0556cf2cd17feb50a6e55a14a9}{DIR\+\_\+\+END}}
+ \}
+\begin{DoxyCompactList}\small\item\em Cursor movement directions, decoded from arrow and navigation scancodes. \end{DoxyCompactList}\end{DoxyCompactItemize}
+\doxysubsubsection*{Functions}
+\begin{DoxyCompactItemize}
+\item 
+void \doxymbox{\hyperlink{keyboard_8h_a6dba9fcc6d02bdd7a19ffe443fd8df3e}{keyboard\+\_\+process}} (packet\+\_\+scancode \doxymbox{\hyperlink{ih_8c_a369fb0b6e0aae57a66084eca39e16fa3}{ps}})
+\begin{DoxyCompactList}\small\item\em Processes a raw scancode packet into a \doxylink{structKeyEvent}{Key\+Event} and pushes it to the input queue. \end{DoxyCompactList}\end{DoxyCompactItemize}
+
+
+\doxysubsection{Detailed Description}
+Keyboard scancode processing and decoded key event type. 
+
+
+
+\label{doc-enum-members}
+\Hypertarget{keyboard_8h_doc-enum-members}
+\doxysubsection{Enumeration Type Documentation}
+\Hypertarget{keyboard_8h_a224b9163917ac32fc95a60d8c1eec3aa}\index{keyboard.h@{keyboard.h}!Direction@{Direction}}
+\index{Direction@{Direction}!keyboard.h@{keyboard.h}}
+\doxysubsubsection{\texorpdfstring{Direction}{Direction}}
+{\footnotesize\ttfamily \label{keyboard_8h_a224b9163917ac32fc95a60d8c1eec3aa} 
+enum \doxymbox{\hyperlink{keyboard_8h_a224b9163917ac32fc95a60d8c1eec3aa}{Direction}}}
+
+
+
+Cursor movement directions, decoded from arrow and navigation scancodes. 
+
+\begin{DoxyEnumFields}[2]{Enumerator}
+\raisebox{\heightof{T}}[0pt][0pt]{\index{DIR\_NONE@{DIR\_NONE}!keyboard.h@{keyboard.h}}
+\index{keyboard.h@{keyboard.h}!DIR\_NONE@{DIR\_NONE}}
+}\Hypertarget{keyboard_8h_a224b9163917ac32fc95a60d8c1eec3aaa2e15270378edc4b0861165674c651970}\label{keyboard_8h_a224b9163917ac32fc95a60d8c1eec3aaa2e15270378edc4b0861165674c651970} 
+DIR\+\_\+\+NONE&\\
+\hline
+
+\raisebox{\heightof{T}}[0pt][0pt]{\index{DIR\_LEFT@{DIR\_LEFT}!keyboard.h@{keyboard.h}}
+\index{keyboard.h@{keyboard.h}!DIR\_LEFT@{DIR\_LEFT}}
+}\Hypertarget{keyboard_8h_a224b9163917ac32fc95a60d8c1eec3aaa1307dc42d06472935155dcbe283bc660}\label{keyboard_8h_a224b9163917ac32fc95a60d8c1eec3aaa1307dc42d06472935155dcbe283bc660} 
+DIR\+\_\+\+LEFT&\\
+\hline
+
+\raisebox{\heightof{T}}[0pt][0pt]{\index{DIR\_RIGHT@{DIR\_RIGHT}!keyboard.h@{keyboard.h}}
+\index{keyboard.h@{keyboard.h}!DIR\_RIGHT@{DIR\_RIGHT}}
+}\Hypertarget{keyboard_8h_a224b9163917ac32fc95a60d8c1eec3aaa5dd21ef3d450f62c44082756cab8f6f8}\label{keyboard_8h_a224b9163917ac32fc95a60d8c1eec3aaa5dd21ef3d450f62c44082756cab8f6f8} 
+DIR\+\_\+\+RIGHT&\\
+\hline
+
+\raisebox{\heightof{T}}[0pt][0pt]{\index{DIR\_UP@{DIR\_UP}!keyboard.h@{keyboard.h}}
+\index{keyboard.h@{keyboard.h}!DIR\_UP@{DIR\_UP}}
+}\Hypertarget{keyboard_8h_a224b9163917ac32fc95a60d8c1eec3aaa0b76fb863426c07c6c997a8d9523257b}\label{keyboard_8h_a224b9163917ac32fc95a60d8c1eec3aaa0b76fb863426c07c6c997a8d9523257b} 
+DIR\+\_\+\+UP&\\
+\hline
+
+\raisebox{\heightof{T}}[0pt][0pt]{\index{DIR\_DOWN@{DIR\_DOWN}!keyboard.h@{keyboard.h}}
+\index{keyboard.h@{keyboard.h}!DIR\_DOWN@{DIR\_DOWN}}
+}\Hypertarget{keyboard_8h_a224b9163917ac32fc95a60d8c1eec3aaab1bf68da897d09488069dd40e54f442d}\label{keyboard_8h_a224b9163917ac32fc95a60d8c1eec3aaab1bf68da897d09488069dd40e54f442d} 
+DIR\+\_\+\+DOWN&\\
+\hline
+
+\raisebox{\heightof{T}}[0pt][0pt]{\index{DIR\_HOME@{DIR\_HOME}!keyboard.h@{keyboard.h}}
+\index{keyboard.h@{keyboard.h}!DIR\_HOME@{DIR\_HOME}}
+}\Hypertarget{keyboard_8h_a224b9163917ac32fc95a60d8c1eec3aaa9e07d48e161306f0e7f72941c9f2d417}\label{keyboard_8h_a224b9163917ac32fc95a60d8c1eec3aaa9e07d48e161306f0e7f72941c9f2d417} 
+DIR\+\_\+\+HOME&\\
+\hline
+
+\raisebox{\heightof{T}}[0pt][0pt]{\index{DIR\_END@{DIR\_END}!keyboard.h@{keyboard.h}}
+\index{keyboard.h@{keyboard.h}!DIR\_END@{DIR\_END}}
+}\Hypertarget{keyboard_8h_a224b9163917ac32fc95a60d8c1eec3aaad6792f0556cf2cd17feb50a6e55a14a9}\label{keyboard_8h_a224b9163917ac32fc95a60d8c1eec3aaad6792f0556cf2cd17feb50a6e55a14a9} 
+DIR\+\_\+\+END&\\
+\hline
+
+\end{DoxyEnumFields}
+
+
+\label{doc-func-members}
+\Hypertarget{keyboard_8h_doc-func-members}
+\doxysubsection{Function Documentation}
+\Hypertarget{keyboard_8h_a6dba9fcc6d02bdd7a19ffe443fd8df3e}\index{keyboard.h@{keyboard.h}!keyboard\_process@{keyboard\_process}}
+\index{keyboard\_process@{keyboard\_process}!keyboard.h@{keyboard.h}}
+\doxysubsubsection{\texorpdfstring{keyboard\_process()}{keyboard\_process()}}
+{\footnotesize\ttfamily \label{keyboard_8h_a6dba9fcc6d02bdd7a19ffe443fd8df3e} 
+void keyboard\+\_\+process (\begin{DoxyParamCaption}\item[{packet\+\_\+scancode}]{ps}{}\end{DoxyParamCaption})}
+
+
+
+Processes a raw scancode packet into a \doxylink{structKeyEvent}{Key\+Event} and pushes it to the input queue. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em \doxylink{ih_8c_a369fb0b6e0aae57a66084eca39e16fa3}{ps}} & Scancode packet from the keyboard interrupt handler \\
+\hline
+\end{DoxyParams}

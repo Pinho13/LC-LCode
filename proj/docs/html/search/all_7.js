@@ -1,0 +1,13 @@
+var searchData=
+[
+  ['h_0',['h',['../structRect.html#af9111a21106ba65952da60320ea91df6',1,'Rect']]],
+  ['handler_1',['handler',['../structCommandEntry.html#aeddc472a418053d47258ee82f0acd8b4',1,'CommandEntry']]],
+  ['highlight_5fcache_2ec_2',['highlight_cache.c',['../highlight__cache_8c.html',1,'']]],
+  ['highlight_5fcache_2eh_3',['highlight_cache.h',['../highlight__cache_8h.html',1,'']]],
+  ['highlight_5fcache_5fcleanup_4',['highlight_cache_cleanup',['../highlight__cache_8c.html#af1573d272bd252bc5fb05d6fc1638384',1,'highlight_cache_cleanup(void):&#160;highlight_cache.c'],['../highlight__cache_8h.html#af1573d272bd252bc5fb05d6fc1638384',1,'highlight_cache_cleanup(void):&#160;highlight_cache.c']]],
+  ['highlight_5fcache_5ffree_5frow_5',['highlight_cache_free_row',['../highlight__cache_8c.html#af90ff9cde50abb44a6982b9e6fc0a943',1,'highlight_cache_free_row(int row):&#160;highlight_cache.c'],['../highlight__cache_8h.html#af90ff9cde50abb44a6982b9e6fc0a943',1,'highlight_cache_free_row(int row):&#160;highlight_cache.c']]],
+  ['highlight_5fcache_5fget_5fline_6',['highlight_cache_get_line',['../highlight__cache_8c.html#ae78b97e86768258427860fa5a1078c92',1,'highlight_cache_get_line(int row):&#160;highlight_cache.c'],['../highlight__cache_8h.html#ae78b97e86768258427860fa5a1078c92',1,'highlight_cache_get_line(int row):&#160;highlight_cache.c']]],
+  ['highlight_5fcache_5frebuild_5ffrom_7',['highlight_cache_rebuild_from',['../highlight__cache_8c.html#aec6c1315d10fd8892b0873d68a139d45',1,'highlight_cache_rebuild_from(int row):&#160;highlight_cache.c'],['../highlight__cache_8h.html#aec6c1315d10fd8892b0873d68a139d45',1,'highlight_cache_rebuild_from(int row):&#160;highlight_cache.c']]],
+  ['highlight_5fcache_5fset_5flanguage_8',['highlight_cache_set_language',['../highlight__cache_8c.html#a1efc98715eb6720b67b67bb73249e5d5',1,'highlight_cache_set_language(SyntaxLanguage lang):&#160;highlight_cache.c'],['../highlight__cache_8h.html#a1efc98715eb6720b67b67bb73249e5d5',1,'highlight_cache_set_language(SyntaxLanguage lang):&#160;highlight_cache.c']]],
+  ['highlight_5fcache_5fsync_9',['highlight_cache_sync',['../highlight__cache_8c.html#a501d99ed20831593ed201127e3c503f8',1,'highlight_cache_sync(int new_count, int cursor_row):&#160;highlight_cache.c'],['../highlight__cache_8h.html#a501d99ed20831593ed201127e3c503f8',1,'highlight_cache_sync(int new_count, int cursor_row):&#160;highlight_cache.c']]]
+];

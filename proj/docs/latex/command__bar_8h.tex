@@ -1,0 +1,284 @@
+\doxysection{/\+home/\+pinho/\+\+Classes/\+\+LCOM/\+shared/\+proj/\+code/\+model/\+command\+\_\+bar/\+command\+\_\+bar.h File Reference}
+\hypertarget{command__bar_8h}{}\label{command__bar_8h}\index{/home/pinho/Classes/LCOM/shared/proj/code/model/command\_bar/command\_bar.h@{/home/pinho/Classes/LCOM/shared/proj/code/model/command\_bar/command\_bar.h}}
+
+
+Status bar state:\+ mode switching, command input, filename, and timed status messages.  
+
+
+{\ttfamily \+\#include $<$lcom/\+lcf.\+h$>$}\newline
+\doxysubsubsection*{Macros}
+\begin{DoxyCompactItemize}
+\item 
+\+\#define \doxymbox{\hyperlink{command__bar_8h_a8427d0088582c17327e754f5f08c5a56}{CMD\+\_\+\+BUF\+\_\+\+SIZE}}~128
+\begin{DoxyCompactList}\small\item\em Maximum number of characters in the command input buffer. \end{DoxyCompactList}\end{DoxyCompactItemize}
+\doxysubsubsection*{Enumerations}
+\begin{DoxyCompactItemize}
+\item 
+enum \doxymbox{\hyperlink{command__bar_8h_ae407211b031b4edacd5a81520b2fc371}{Editor\+Mode}} \{ \doxymbox{\hyperlink{command__bar_8h_ae407211b031b4edacd5a81520b2fc371ae552a1691e4f05f7096201626112dcf1}{MODE\+\_\+\+EDITOR}}
+, \doxymbox{\hyperlink{command__bar_8h_ae407211b031b4edacd5a81520b2fc371a49c09e9b497bede2a4bc6b72ceda5291}{MODE\+\_\+\+COMMAND}}
+ \}
+\end{DoxyCompactItemize}
+\doxysubsubsection*{Functions}
+\begin{DoxyCompactItemize}
+\item 
+void \doxymbox{\hyperlink{command__bar_8h_a34c39efb7347293d8a54fc307a947f6e}{command\+\_\+bar\+\_\+init}} (const char \texorpdfstring{$\ast$}{*}filename)
+\begin{DoxyCompactList}\small\item\em Initializes the command bar with the given filename. \end{DoxyCompactList}\item 
+\doxymbox{\hyperlink{command__bar_8h_ae407211b031b4edacd5a81520b2fc371}{Editor\+Mode}} \doxymbox{\hyperlink{command__bar_8h_a1c6e9126132bb7d3b2a17fc42073600d}{command\+\_\+bar\+\_\+get\+\_\+mode}} ()
+\begin{DoxyCompactList}\small\item\em Returns the current editor mode. \end{DoxyCompactList}\item 
+const char \texorpdfstring{$\ast$}{*} \doxymbox{\hyperlink{command__bar_8h_af5a19fed0dc8acfa7ddf11ff24e7577c}{command\+\_\+bar\+\_\+get\+\_\+filename}} ()
+\begin{DoxyCompactList}\small\item\em Returns the filename currently shown in the status bar. \end{DoxyCompactList}\item 
+void \doxymbox{\hyperlink{command__bar_8h_a99e049f4effcaabe7304f924f6320d57}{command\+\_\+bar\+\_\+set\+\_\+filename}} (const char \texorpdfstring{$\ast$}{*}name)
+\begin{DoxyCompactList}\small\item\em Updates the filename shown in the status bar. \end{DoxyCompactList}\item 
+void \doxymbox{\hyperlink{command__bar_8h_a17ff776edc8c35d69449a8dfa46c4a1e}{command\+\_\+bar\+\_\+start}} ()
+\begin{DoxyCompactList}\small\item\em Switches to MODE\+\_\+\+COMMAND with an empty input buffer. \end{DoxyCompactList}\item 
+void \doxymbox{\hyperlink{command__bar_8h_a35dd0813af5e2fb595aa8658aaba6f49}{command\+\_\+bar\+\_\+start\+\_\+prefill}} (const char \texorpdfstring{$\ast$}{*}text)
+\begin{DoxyCompactList}\small\item\em Switches to MODE\+\_\+\+COMMAND with a pre-\/filled input buffer. \end{DoxyCompactList}\item 
+void \doxymbox{\hyperlink{command__bar_8h_aac627fe1fbe060ca69e4aa3ea9641450}{command\+\_\+bar\+\_\+cancel}} ()
+\begin{DoxyCompactList}\small\item\em Cancels the active command and returns to MODE\+\_\+\+EDITOR. \end{DoxyCompactList}\item 
+const char \texorpdfstring{$\ast$}{*} \doxymbox{\hyperlink{command__bar_8h_a0641240f1fd45af344a8cd0a5a6c779e}{command\+\_\+bar\+\_\+get\+\_\+input}} ()
+\begin{DoxyCompactList}\small\item\em Returns the current command input text. \end{DoxyCompactList}\item 
+void \doxymbox{\hyperlink{command__bar_8h_a593d3f476e867f4e25bbf6a447370c79}{command\+\_\+bar\+\_\+insert}} (char c)
+\begin{DoxyCompactList}\small\item\em Appends a character to the command input buffer. \end{DoxyCompactList}\item 
+void \doxymbox{\hyperlink{command__bar_8h_ad8ecb0841f04cc5aee5396b13d362c72}{command\+\_\+bar\+\_\+delete}} ()
+\begin{DoxyCompactList}\small\item\em Deletes the last character from the command input buffer. \end{DoxyCompactList}\item 
+const char \texorpdfstring{$\ast$}{*} \doxymbox{\hyperlink{command__bar_8h_a309cd15e61fe9ed80fec116044e20107}{command\+\_\+bar\+\_\+commit}} ()
+\begin{DoxyCompactList}\small\item\em Finalizes the command input and returns to MODE\+\_\+\+EDITOR. \end{DoxyCompactList}\item 
+void \doxymbox{\hyperlink{command__bar_8h_a325096430e04d1d8829b482b7b61377c}{command\+\_\+bar\+\_\+set\+\_\+status}} (const char \texorpdfstring{$\ast$}{*}msg)
+\begin{DoxyCompactList}\small\item\em Displays a timed status message in the status bar. \end{DoxyCompactList}\item 
+bool \doxymbox{\hyperlink{command__bar_8h_ade2b13827cfe4751ebf8c8d43406fff9}{command\+\_\+bar\+\_\+tick}} ()
+\begin{DoxyCompactList}\small\item\em Advances the status message timer and clears it if expired. \end{DoxyCompactList}\item 
+const char \texorpdfstring{$\ast$}{*} \doxymbox{\hyperlink{command__bar_8h_a712a35ab45b86bd9eefc6257554dc123}{command\+\_\+bar\+\_\+get\+\_\+status}} ()
+\begin{DoxyCompactList}\small\item\em Returns the current status message. \end{DoxyCompactList}\end{DoxyCompactItemize}
+
+
+\doxysubsection{Detailed Description}
+Status bar state:\+ mode switching, command input, filename, and timed status messages. 
+
+
+
+\label{doc-define-members}
+\Hypertarget{command__bar_8h_doc-define-members}
+\doxysubsection{Macro Definition Documentation}
+\Hypertarget{command__bar_8h_a8427d0088582c17327e754f5f08c5a56}\index{command\_bar.h@{command\_bar.h}!CMD\_BUF\_SIZE@{CMD\_BUF\_SIZE}}
+\index{CMD\_BUF\_SIZE@{CMD\_BUF\_SIZE}!command\_bar.h@{command\_bar.h}}
+\doxysubsubsection{\texorpdfstring{CMD\_BUF\_SIZE}{CMD\_BUF\_SIZE}}
+{\footnotesize\ttfamily \label{command__bar_8h_a8427d0088582c17327e754f5f08c5a56} 
+\+\#define CMD\+\_\+\+BUF\+\_\+\+SIZE~128}
+
+
+
+Maximum number of characters in the command input buffer. 
+
+
+
+\label{doc-enum-members}
+\Hypertarget{command__bar_8h_doc-enum-members}
+\doxysubsection{Enumeration Type Documentation}
+\Hypertarget{command__bar_8h_ae407211b031b4edacd5a81520b2fc371}\index{command\_bar.h@{command\_bar.h}!EditorMode@{EditorMode}}
+\index{EditorMode@{EditorMode}!command\_bar.h@{command\_bar.h}}
+\doxysubsubsection{\texorpdfstring{EditorMode}{EditorMode}}
+{\footnotesize\ttfamily \label{command__bar_8h_ae407211b031b4edacd5a81520b2fc371} 
+enum \doxymbox{\hyperlink{command__bar_8h_ae407211b031b4edacd5a81520b2fc371}{Editor\+Mode}}}
+
+\begin{DoxyEnumFields}[2]{Enumerator}
+\raisebox{\heightof{T}}[0pt][0pt]{\index{MODE\_EDITOR@{MODE\_EDITOR}!command\_bar.h@{command\_bar.h}}
+\index{command\_bar.h@{command\_bar.h}!MODE\_EDITOR@{MODE\_EDITOR}}
+}\Hypertarget{command__bar_8h_ae407211b031b4edacd5a81520b2fc371ae552a1691e4f05f7096201626112dcf1}\label{command__bar_8h_ae407211b031b4edacd5a81520b2fc371ae552a1691e4f05f7096201626112dcf1} 
+MODE\+\_\+\+EDITOR&\\
+\hline
+
+\raisebox{\heightof{T}}[0pt][0pt]{\index{MODE\_COMMAND@{MODE\_COMMAND}!command\_bar.h@{command\_bar.h}}
+\index{command\_bar.h@{command\_bar.h}!MODE\_COMMAND@{MODE\_COMMAND}}
+}\Hypertarget{command__bar_8h_ae407211b031b4edacd5a81520b2fc371a49c09e9b497bede2a4bc6b72ceda5291}\label{command__bar_8h_ae407211b031b4edacd5a81520b2fc371a49c09e9b497bede2a4bc6b72ceda5291} 
+MODE\+\_\+\+COMMAND&\\
+\hline
+
+\end{DoxyEnumFields}
+
+
+\label{doc-func-members}
+\Hypertarget{command__bar_8h_doc-func-members}
+\doxysubsection{Function Documentation}
+\Hypertarget{command__bar_8h_aac627fe1fbe060ca69e4aa3ea9641450}\index{command\_bar.h@{command\_bar.h}!command\_bar\_cancel@{command\_bar\_cancel}}
+\index{command\_bar\_cancel@{command\_bar\_cancel}!command\_bar.h@{command\_bar.h}}
+\doxysubsubsection{\texorpdfstring{command\_bar\_cancel()}{command\_bar\_cancel()}}
+{\footnotesize\ttfamily \label{command__bar_8h_aac627fe1fbe060ca69e4aa3ea9641450} 
+void command\+\_\+bar\+\_\+cancel (\begin{DoxyParamCaption}{}{}\end{DoxyParamCaption})}
+
+
+
+Cancels the active command and returns to MODE\+\_\+\+EDITOR. 
+
+\Hypertarget{command__bar_8h_a309cd15e61fe9ed80fec116044e20107}\index{command\_bar.h@{command\_bar.h}!command\_bar\_commit@{command\_bar\_commit}}
+\index{command\_bar\_commit@{command\_bar\_commit}!command\_bar.h@{command\_bar.h}}
+\doxysubsubsection{\texorpdfstring{command\_bar\_commit()}{command\_bar\_commit()}}
+{\footnotesize\ttfamily \label{command__bar_8h_a309cd15e61fe9ed80fec116044e20107} 
+const char \texorpdfstring{$\ast$}{*} command\+\_\+bar\+\_\+commit (\begin{DoxyParamCaption}{}{}\end{DoxyParamCaption})}
+
+
+
+Finalizes the command input and returns to MODE\+\_\+\+EDITOR. 
+
+\begin{DoxyReturn}{Returns}
+Null-\/terminated string with the committed command text 
+\end{DoxyReturn}
+\Hypertarget{command__bar_8h_ad8ecb0841f04cc5aee5396b13d362c72}\index{command\_bar.h@{command\_bar.h}!command\_bar\_delete@{command\_bar\_delete}}
+\index{command\_bar\_delete@{command\_bar\_delete}!command\_bar.h@{command\_bar.h}}
+\doxysubsubsection{\texorpdfstring{command\_bar\_delete()}{command\_bar\_delete()}}
+{\footnotesize\ttfamily \label{command__bar_8h_ad8ecb0841f04cc5aee5396b13d362c72} 
+void command\+\_\+bar\+\_\+delete (\begin{DoxyParamCaption}{}{}\end{DoxyParamCaption})}
+
+
+
+Deletes the last character from the command input buffer. 
+
+\Hypertarget{command__bar_8h_af5a19fed0dc8acfa7ddf11ff24e7577c}\index{command\_bar.h@{command\_bar.h}!command\_bar\_get\_filename@{command\_bar\_get\_filename}}
+\index{command\_bar\_get\_filename@{command\_bar\_get\_filename}!command\_bar.h@{command\_bar.h}}
+\doxysubsubsection{\texorpdfstring{command\_bar\_get\_filename()}{command\_bar\_get\_filename()}}
+{\footnotesize\ttfamily \label{command__bar_8h_af5a19fed0dc8acfa7ddf11ff24e7577c} 
+const char \texorpdfstring{$\ast$}{*} command\+\_\+bar\+\_\+get\+\_\+filename (\begin{DoxyParamCaption}{}{}\end{DoxyParamCaption})}
+
+
+
+Returns the filename currently shown in the status bar. 
+
+\begin{DoxyReturn}{Returns}
+Null-\/terminated filename string 
+\end{DoxyReturn}
+\Hypertarget{command__bar_8h_a0641240f1fd45af344a8cd0a5a6c779e}\index{command\_bar.h@{command\_bar.h}!command\_bar\_get\_input@{command\_bar\_get\_input}}
+\index{command\_bar\_get\_input@{command\_bar\_get\_input}!command\_bar.h@{command\_bar.h}}
+\doxysubsubsection{\texorpdfstring{command\_bar\_get\_input()}{command\_bar\_get\_input()}}
+{\footnotesize\ttfamily \label{command__bar_8h_a0641240f1fd45af344a8cd0a5a6c779e} 
+const char \texorpdfstring{$\ast$}{*} command\+\_\+bar\+\_\+get\+\_\+input (\begin{DoxyParamCaption}{}{}\end{DoxyParamCaption})}
+
+
+
+Returns the current command input text. 
+
+\begin{DoxyReturn}{Returns}
+Null-\/terminated string with the text typed so far. Empty string outside MODE\+\_\+\+COMMAND 
+\end{DoxyReturn}
+\Hypertarget{command__bar_8h_a1c6e9126132bb7d3b2a17fc42073600d}\index{command\_bar.h@{command\_bar.h}!command\_bar\_get\_mode@{command\_bar\_get\_mode}}
+\index{command\_bar\_get\_mode@{command\_bar\_get\_mode}!command\_bar.h@{command\_bar.h}}
+\doxysubsubsection{\texorpdfstring{command\_bar\_get\_mode()}{command\_bar\_get\_mode()}}
+{\footnotesize\ttfamily \label{command__bar_8h_a1c6e9126132bb7d3b2a17fc42073600d} 
+\doxymbox{\hyperlink{command__bar_8h_ae407211b031b4edacd5a81520b2fc371}{Editor\+Mode}} command\+\_\+bar\+\_\+get\+\_\+mode (\begin{DoxyParamCaption}{}{}\end{DoxyParamCaption})}
+
+
+
+Returns the current editor mode. 
+
+\begin{DoxyReturn}{Returns}
+MODE\+\_\+\+EDITOR during normal editing; MODE\+\_\+\+COMMAND when typing a command 
+\end{DoxyReturn}
+\Hypertarget{command__bar_8h_a712a35ab45b86bd9eefc6257554dc123}\index{command\_bar.h@{command\_bar.h}!command\_bar\_get\_status@{command\_bar\_get\_status}}
+\index{command\_bar\_get\_status@{command\_bar\_get\_status}!command\_bar.h@{command\_bar.h}}
+\doxysubsubsection{\texorpdfstring{command\_bar\_get\_status()}{command\_bar\_get\_status()}}
+{\footnotesize\ttfamily \label{command__bar_8h_a712a35ab45b86bd9eefc6257554dc123} 
+const char \texorpdfstring{$\ast$}{*} command\+\_\+bar\+\_\+get\+\_\+status (\begin{DoxyParamCaption}{}{}\end{DoxyParamCaption})}
+
+
+
+Returns the current status message. 
+
+\begin{DoxyReturn}{Returns}
+Null-\/terminated status string. Empty string if no message is active 
+\end{DoxyReturn}
+\Hypertarget{command__bar_8h_a34c39efb7347293d8a54fc307a947f6e}\index{command\_bar.h@{command\_bar.h}!command\_bar\_init@{command\_bar\_init}}
+\index{command\_bar\_init@{command\_bar\_init}!command\_bar.h@{command\_bar.h}}
+\doxysubsubsection{\texorpdfstring{command\_bar\_init()}{command\_bar\_init()}}
+{\footnotesize\ttfamily \label{command__bar_8h_a34c39efb7347293d8a54fc307a947f6e} 
+void command\+\_\+bar\+\_\+init (\begin{DoxyParamCaption}\item[{const char \texorpdfstring{$\ast$}{*}}]{filename}{}\end{DoxyParamCaption})}
+
+
+
+Initializes the command bar with the given filename. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em filename} & Initial filename to display in the status bar \\
+\hline
+\end{DoxyParams}
+\Hypertarget{command__bar_8h_a593d3f476e867f4e25bbf6a447370c79}\index{command\_bar.h@{command\_bar.h}!command\_bar\_insert@{command\_bar\_insert}}
+\index{command\_bar\_insert@{command\_bar\_insert}!command\_bar.h@{command\_bar.h}}
+\doxysubsubsection{\texorpdfstring{command\_bar\_insert()}{command\_bar\_insert()}}
+{\footnotesize\ttfamily \label{command__bar_8h_a593d3f476e867f4e25bbf6a447370c79} 
+void command\+\_\+bar\+\_\+insert (\begin{DoxyParamCaption}\item[{char}]{c}{}\end{DoxyParamCaption})}
+
+
+
+Appends a character to the command input buffer. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em c} & Character to insert \\
+\hline
+\end{DoxyParams}
+\Hypertarget{command__bar_8h_a99e049f4effcaabe7304f924f6320d57}\index{command\_bar.h@{command\_bar.h}!command\_bar\_set\_filename@{command\_bar\_set\_filename}}
+\index{command\_bar\_set\_filename@{command\_bar\_set\_filename}!command\_bar.h@{command\_bar.h}}
+\doxysubsubsection{\texorpdfstring{command\_bar\_set\_filename()}{command\_bar\_set\_filename()}}
+{\footnotesize\ttfamily \label{command__bar_8h_a99e049f4effcaabe7304f924f6320d57} 
+void command\+\_\+bar\+\_\+set\+\_\+filename (\begin{DoxyParamCaption}\item[{const char \texorpdfstring{$\ast$}{*}}]{name}{}\end{DoxyParamCaption})}
+
+
+
+Updates the filename shown in the status bar. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em name} & Null-\/terminated filename string \\
+\hline
+\end{DoxyParams}
+\Hypertarget{command__bar_8h_a325096430e04d1d8829b482b7b61377c}\index{command\_bar.h@{command\_bar.h}!command\_bar\_set\_status@{command\_bar\_set\_status}}
+\index{command\_bar\_set\_status@{command\_bar\_set\_status}!command\_bar.h@{command\_bar.h}}
+\doxysubsubsection{\texorpdfstring{command\_bar\_set\_status()}{command\_bar\_set\_status()}}
+{\footnotesize\ttfamily \label{command__bar_8h_a325096430e04d1d8829b482b7b61377c} 
+void command\+\_\+bar\+\_\+set\+\_\+status (\begin{DoxyParamCaption}\item[{const char \texorpdfstring{$\ast$}{*}}]{msg}{}\end{DoxyParamCaption})}
+
+
+
+Displays a timed status message in the status bar. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em msg} & Null-\/terminated message string. Shown until it expires or is replaced \\
+\hline
+\end{DoxyParams}
+\Hypertarget{command__bar_8h_a17ff776edc8c35d69449a8dfa46c4a1e}\index{command\_bar.h@{command\_bar.h}!command\_bar\_start@{command\_bar\_start}}
+\index{command\_bar\_start@{command\_bar\_start}!command\_bar.h@{command\_bar.h}}
+\doxysubsubsection{\texorpdfstring{command\_bar\_start()}{command\_bar\_start()}}
+{\footnotesize\ttfamily \label{command__bar_8h_a17ff776edc8c35d69449a8dfa46c4a1e} 
+void command\+\_\+bar\+\_\+start (\begin{DoxyParamCaption}{}{}\end{DoxyParamCaption})}
+
+
+
+Switches to MODE\+\_\+\+COMMAND with an empty input buffer. 
+
+\Hypertarget{command__bar_8h_a35dd0813af5e2fb595aa8658aaba6f49}\index{command\_bar.h@{command\_bar.h}!command\_bar\_start\_prefill@{command\_bar\_start\_prefill}}
+\index{command\_bar\_start\_prefill@{command\_bar\_start\_prefill}!command\_bar.h@{command\_bar.h}}
+\doxysubsubsection{\texorpdfstring{command\_bar\_start\_prefill()}{command\_bar\_start\_prefill()}}
+{\footnotesize\ttfamily \label{command__bar_8h_a35dd0813af5e2fb595aa8658aaba6f49} 
+void command\+\_\+bar\+\_\+start\+\_\+prefill (\begin{DoxyParamCaption}\item[{const char \texorpdfstring{$\ast$}{*}}]{text}{}\end{DoxyParamCaption})}
+
+
+
+Switches to MODE\+\_\+\+COMMAND with a pre-\/filled input buffer. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em text} & Initial content for the command input \\
+\hline
+\end{DoxyParams}
+\Hypertarget{command__bar_8h_ade2b13827cfe4751ebf8c8d43406fff9}\index{command\_bar.h@{command\_bar.h}!command\_bar\_tick@{command\_bar\_tick}}
+\index{command\_bar\_tick@{command\_bar\_tick}!command\_bar.h@{command\_bar.h}}
+\doxysubsubsection{\texorpdfstring{command\_bar\_tick()}{command\_bar\_tick()}}
+{\footnotesize\ttfamily \label{command__bar_8h_ade2b13827cfe4751ebf8c8d43406fff9} 
+bool command\+\_\+bar\+\_\+tick (\begin{DoxyParamCaption}{}{}\end{DoxyParamCaption})}
+
+
+
+Advances the status message timer and clears it if expired. 
+
+Should be called once per tick. Returns true if the message just expired, signalling that the status bar needs a redraw. \begin{DoxyReturn}{Returns}
+true if the status message expired this tick 
+\end{DoxyReturn}

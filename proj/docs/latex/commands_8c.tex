@@ -1,0 +1,141 @@
+\doxysection{/\+home/\+pinho/\+\+Classes/\+\+LCOM/\+shared/\+proj/\+code/\+controller/\+commands/\+commands.c File Reference}
+\hypertarget{commands_8c}{}\label{commands_8c}\index{/home/pinho/Classes/LCOM/shared/proj/code/controller/commands/commands.c@{/home/pinho/Classes/LCOM/shared/proj/code/controller/commands/commands.c}}
+{\ttfamily \+\#include "{}controller/\+commands/\+commands.\+h"{}}\newline
+{\ttfamily \+\#include "{}controller/\+commands/\+filetree\+\_\+commands.\+h"{}}\newline
+{\ttfamily \+\#include "{}model/\+filetree/\+filetree.\+h"{}}\newline
+{\ttfamily \+\#include "{}model/\+editor/\+editor.\+h"{}}\newline
+{\ttfamily \+\#include "{}model/\+command\+\_\+bar/\+command\+\_\+bar.\+h"{}}\newline
+{\ttfamily \+\#include "{}view/\+renderer/\+scene.\+h"{}}\newline
+{\ttfamily \+\#include "{}view/\+editor/\+syntax.\+h"{}}\newline
+{\ttfamily \+\#include "{}model/\+render\+\_\+state.\+h"{}}\newline
+{\ttfamily \+\#include "{}controller/\+serial.\+h"{}}\newline
+{\ttfamily \+\#include $<$stdio.\+h$>$}\newline
+{\ttfamily \+\#include $<$string.\+h$>$}\newline
+\doxysubsubsection*{Classes}
+\begin{DoxyCompactItemize}
+\item 
+struct \doxymbox{\hyperlink{structCommandEntry}{Command\+Entry}}
+\end{DoxyCompactItemize}
+\doxysubsubsection*{Macros}
+\begin{DoxyCompactItemize}
+\item 
+\+\#define \doxymbox{\hyperlink{commands_8c_a183364c49678985470bba11d3609f749}{FILE\+\_\+\+READ\+\_\+\+BUF}}~4096
+\end{DoxyCompactItemize}
+\doxysubsubsection*{Typedefs}
+\begin{DoxyCompactItemize}
+\item 
+typedef void(\texorpdfstring{$\ast$}{*} \doxymbox{\hyperlink{commands_8c_a9911711df4397aa3de7fb881c2fa3cbe}{Command\+Handler}}) (const char \texorpdfstring{$\ast$}{*}args)
+\end{DoxyCompactItemize}
+\doxysubsubsection*{Functions}
+\begin{DoxyCompactItemize}
+\item 
+bool \doxymbox{\hyperlink{commands_8c_a02913501d0fd4576f6225a4a94868b45}{get\+\_\+quit}} ()
+\begin{DoxyCompactList}\small\item\em Returns whether the quit flag has been set. \end{DoxyCompactList}\item 
+void \doxymbox{\hyperlink{commands_8c_a9686ce9aa62a76100d504d48ad22fa2a}{commands\+\_\+open\+\_\+file}} (const char \texorpdfstring{$\ast$}{*}path)
+\begin{DoxyCompactList}\small\item\em Opens a file by path:\+ loads its contents into the editor and updates the status bar. \end{DoxyCompactList}\item 
+void \doxymbox{\hyperlink{commands_8c_a43edba7f38994ae30d35760545316f1e}{commands\+\_\+dispatch}} (\doxymbox{\hyperlink{structKeyEvent}{Key\+Event}} ev)
+\begin{DoxyCompactList}\small\item\em Dispatches a keyboard event to the appropriate command handler. \end{DoxyCompactList}\item 
+void \doxymbox{\hyperlink{commands_8c_a0fcc865af33499e9e4c618918ca371e2}{commands\+\_\+dispatch\+\_\+mouse}} (\doxymbox{\hyperlink{structMouseEvent}{Mouse\+Event}} me)
+\begin{DoxyCompactList}\small\item\em Dispatches a mouse event to the appropriate command handler. \end{DoxyCompactList}\item 
+void \doxymbox{\hyperlink{commands_8c_adeb44b7c5b307c0da72ababb20cbd9e9}{commands\+\_\+dispatch\+\_\+serial}} (\doxymbox{\hyperlink{structSerialEvent}{Serial\+Event}} se)
+\begin{DoxyCompactList}\small\item\em Dispatches a serial event from the remote peer. \end{DoxyCompactList}\end{DoxyCompactItemize}
+
+
+\label{doc-define-members}
+\Hypertarget{commands_8c_doc-define-members}
+\doxysubsection{Macro Definition Documentation}
+\Hypertarget{commands_8c_a183364c49678985470bba11d3609f749}\index{commands.c@{commands.c}!FILE\_READ\_BUF@{FILE\_READ\_BUF}}
+\index{FILE\_READ\_BUF@{FILE\_READ\_BUF}!commands.c@{commands.c}}
+\doxysubsubsection{\texorpdfstring{FILE\_READ\_BUF}{FILE\_READ\_BUF}}
+{\footnotesize\ttfamily \label{commands_8c_a183364c49678985470bba11d3609f749} 
+\+\#define FILE\+\_\+\+READ\+\_\+\+BUF~4096}
+
+
+
+\label{doc-typedef-members}
+\Hypertarget{commands_8c_doc-typedef-members}
+\doxysubsection{Typedef Documentation}
+\Hypertarget{commands_8c_a9911711df4397aa3de7fb881c2fa3cbe}\index{commands.c@{commands.c}!CommandHandler@{CommandHandler}}
+\index{CommandHandler@{CommandHandler}!commands.c@{commands.c}}
+\doxysubsubsection{\texorpdfstring{CommandHandler}{CommandHandler}}
+{\footnotesize\ttfamily \label{commands_8c_a9911711df4397aa3de7fb881c2fa3cbe} 
+typedef void(\texorpdfstring{$\ast$}{*} Command\+Handler) (const char \texorpdfstring{$\ast$}{*}args)}
+
+
+
+\label{doc-func-members}
+\Hypertarget{commands_8c_doc-func-members}
+\doxysubsection{Function Documentation}
+\Hypertarget{commands_8c_a43edba7f38994ae30d35760545316f1e}\index{commands.c@{commands.c}!commands\_dispatch@{commands\_dispatch}}
+\index{commands\_dispatch@{commands\_dispatch}!commands.c@{commands.c}}
+\doxysubsubsection{\texorpdfstring{commands\_dispatch()}{commands\_dispatch()}}
+{\footnotesize\ttfamily \label{commands_8c_a43edba7f38994ae30d35760545316f1e} 
+void commands\+\_\+dispatch (\begin{DoxyParamCaption}\item[{\doxymbox{\hyperlink{structKeyEvent}{Key\+Event}}}]{ev}{}\end{DoxyParamCaption})}
+
+
+
+Dispatches a keyboard event to the appropriate command handler. 
+
+Routes to filetree\+\_\+commands if the file tree is focused, otherwise to editor commands 
+\begin{DoxyParams}{Parameters}
+{\em ev} & Decoded keyboard event to dispatch \\
+\hline
+\end{DoxyParams}
+\Hypertarget{commands_8c_a0fcc865af33499e9e4c618918ca371e2}\index{commands.c@{commands.c}!commands\_dispatch\_mouse@{commands\_dispatch\_mouse}}
+\index{commands\_dispatch\_mouse@{commands\_dispatch\_mouse}!commands.c@{commands.c}}
+\doxysubsubsection{\texorpdfstring{commands\_dispatch\_mouse()}{commands\_dispatch\_mouse()}}
+{\footnotesize\ttfamily \label{commands_8c_a0fcc865af33499e9e4c618918ca371e2} 
+void commands\+\_\+dispatch\+\_\+mouse (\begin{DoxyParamCaption}\item[{\doxymbox{\hyperlink{structMouseEvent}{Mouse\+Event}}}]{me}{}\end{DoxyParamCaption})}
+
+
+
+Dispatches a mouse event to the appropriate command handler. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em me} & Mouse event to dispatch \\
+\hline
+\end{DoxyParams}
+\Hypertarget{commands_8c_adeb44b7c5b307c0da72ababb20cbd9e9}\index{commands.c@{commands.c}!commands\_dispatch\_serial@{commands\_dispatch\_serial}}
+\index{commands\_dispatch\_serial@{commands\_dispatch\_serial}!commands.c@{commands.c}}
+\doxysubsubsection{\texorpdfstring{commands\_dispatch\_serial()}{commands\_dispatch\_serial()}}
+{\footnotesize\ttfamily \label{commands_8c_adeb44b7c5b307c0da72ababb20cbd9e9} 
+void commands\+\_\+dispatch\+\_\+serial (\begin{DoxyParamCaption}\item[{\doxymbox{\hyperlink{structSerialEvent}{Serial\+Event}}}]{se}{}\end{DoxyParamCaption})}
+
+
+
+Dispatches a serial event from the remote peer. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em se} & Serial event to dispatch \\
+\hline
+\end{DoxyParams}
+\Hypertarget{commands_8c_a9686ce9aa62a76100d504d48ad22fa2a}\index{commands.c@{commands.c}!commands\_open\_file@{commands\_open\_file}}
+\index{commands\_open\_file@{commands\_open\_file}!commands.c@{commands.c}}
+\doxysubsubsection{\texorpdfstring{commands\_open\_file()}{commands\_open\_file()}}
+{\footnotesize\ttfamily \label{commands_8c_a9686ce9aa62a76100d504d48ad22fa2a} 
+void commands\+\_\+open\+\_\+file (\begin{DoxyParamCaption}\item[{const char \texorpdfstring{$\ast$}{*}}]{path}{}\end{DoxyParamCaption})}
+
+
+
+Opens a file by path:\+ loads its contents into the editor and updates the status bar. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em path} & Null-\/terminated absolute path to the file \\
+\hline
+\end{DoxyParams}
+\Hypertarget{commands_8c_a02913501d0fd4576f6225a4a94868b45}\index{commands.c@{commands.c}!get\_quit@{get\_quit}}
+\index{get\_quit@{get\_quit}!commands.c@{commands.c}}
+\doxysubsubsection{\texorpdfstring{get\_quit()}{get\_quit()}}
+{\footnotesize\ttfamily \label{commands_8c_a02913501d0fd4576f6225a4a94868b45} 
+bool get\+\_\+quit (\begin{DoxyParamCaption}{}{}\end{DoxyParamCaption})}
+
+
+
+Returns whether the quit flag has been set. 
+
+\begin{DoxyReturn}{Returns}
+true if the application should exit the main loop 
+\end{DoxyReturn}

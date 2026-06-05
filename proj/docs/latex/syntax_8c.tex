@@ -1,0 +1,60 @@
+\doxysection{/\+home/\+pinho/\+\+Classes/\+\+LCOM/\+shared/\+proj/\+code/\+view/\+editor/\+syntax.c File Reference}
+\hypertarget{syntax_8c}{}\label{syntax_8c}\index{/home/pinho/Classes/LCOM/shared/proj/code/view/editor/syntax.c@{/home/pinho/Classes/LCOM/shared/proj/code/view/editor/syntax.c}}
+{\ttfamily \+\#include "{}view/\+editor/\+syntax.\+h"{}}\newline
+{\ttfamily \+\#include $<$string.\+h$>$}\newline
+{\ttfamily \+\#include $<$stdbool.\+h$>$}\newline
+\doxysubsubsection*{Functions}
+\begin{DoxyCompactItemize}
+\item 
+\doxymbox{\hyperlink{syntax_8h_a85c9a23a5eedbf98a8e829326a7bf93a}{Syntax\+Language}} \doxymbox{\hyperlink{syntax_8c_af8a9ce78771455a350686e3bcb566879}{syntax\+\_\+detect\+\_\+language}} (const char \texorpdfstring{$\ast$}{*}filename)
+\begin{DoxyCompactList}\small\item\em Detects the syntax language from filename (extension). \end{DoxyCompactList}\item 
+void \doxymbox{\hyperlink{syntax_8c_a29aa28d7f6b03b5cc98a9426d6456a55}{syntax\+\_\+highlight\+\_\+line}} (const char \texorpdfstring{$\ast$}{*}line, int len, bool in\+\_\+block\+\_\+comment, \doxymbox{\hyperlink{syntax_8h_a85c9a23a5eedbf98a8e829326a7bf93a}{Syntax\+Language}} lang, uint32\+\_\+t \texorpdfstring{$\ast$}{*}colors, bool \texorpdfstring{$\ast$}{*}out\+\_\+block\+\_\+comment)
+\begin{DoxyCompactList}\small\item\em Parses a line and fills a color array with one uint32\+\_\+t per character. \end{DoxyCompactList}\end{DoxyCompactItemize}
+
+
+\label{doc-func-members}
+\Hypertarget{syntax_8c_doc-func-members}
+\doxysubsection{Function Documentation}
+\Hypertarget{syntax_8c_af8a9ce78771455a350686e3bcb566879}\index{syntax.c@{syntax.c}!syntax\_detect\_language@{syntax\_detect\_language}}
+\index{syntax\_detect\_language@{syntax\_detect\_language}!syntax.c@{syntax.c}}
+\doxysubsubsection{\texorpdfstring{syntax\_detect\_language()}{syntax\_detect\_language()}}
+{\footnotesize\ttfamily \label{syntax_8c_af8a9ce78771455a350686e3bcb566879} 
+\doxymbox{\hyperlink{syntax_8h_a85c9a23a5eedbf98a8e829326a7bf93a}{Syntax\+Language}} syntax\+\_\+detect\+\_\+language (\begin{DoxyParamCaption}\item[{const char \texorpdfstring{$\ast$}{*}}]{filename}{}\end{DoxyParamCaption})}
+
+
+
+Detects the syntax language from filename (extension). 
+
+
+\begin{DoxyParams}{Parameters}
+{\em filename} & Filename to inspect. \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+Detected \doxylink{syntax_8h_a85c9a23a5eedbf98a8e829326a7bf93a}{Syntax\+Language}. SYNTAX\+\_\+\+LANG\+\_\+\+NONE if none recognized -\/ In LCode\textquotesingle{}s case, any other than C 
+\end{DoxyReturn}
+\Hypertarget{syntax_8c_a29aa28d7f6b03b5cc98a9426d6456a55}\index{syntax.c@{syntax.c}!syntax\_highlight\_line@{syntax\_highlight\_line}}
+\index{syntax\_highlight\_line@{syntax\_highlight\_line}!syntax.c@{syntax.c}}
+\doxysubsubsection{\texorpdfstring{syntax\_highlight\_line()}{syntax\_highlight\_line()}}
+{\footnotesize\ttfamily \label{syntax_8c_a29aa28d7f6b03b5cc98a9426d6456a55} 
+void syntax\+\_\+highlight\+\_\+line (\begin{DoxyParamCaption}\item[{const char \texorpdfstring{$\ast$}{*}}]{line}{, }\item[{int}]{len}{, }\item[{bool}]{in\+\_\+block\+\_\+comment}{, }\item[{\doxymbox{\hyperlink{syntax_8h_a85c9a23a5eedbf98a8e829326a7bf93a}{Syntax\+Language}}}]{lang}{, }\item[{uint32\+\_\+t \texorpdfstring{$\ast$}{*}}]{colors}{, }\item[{bool \texorpdfstring{$\ast$}{*}}]{out\+\_\+block\+\_\+comment}{}\end{DoxyParamCaption})}
+
+
+
+Parses a line and fills a color array with one uint32\+\_\+t per character. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em line} & Pointer to the line text (not null-\/terminated) \\
+\hline
+{\em len} & Number of characters in the line \\
+\hline
+{\em in\+\_\+block\+\_\+comment} & true if the line starts inside an open block comment \\
+\hline
+{\em lang} & Language to use for tokenization \\
+\hline
+{\em colors} & Output buffer of at least len uint32\+\_\+t values. Or NULL to compute block-\/comment state only without writing colors \\
+\hline
+{\em out\+\_\+block\+\_\+comment} & Set to true if the line ends inside an open block comment \\
+\hline
+\end{DoxyParams}

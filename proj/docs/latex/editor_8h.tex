@@ -1,0 +1,711 @@
+\doxysection{/\+home/\+pinho/\+\+Classes/\+\+LCOM/\+shared/\+proj/\+code/\+model/\+editor/\+editor.h File Reference}
+\hypertarget{editor_8h}{}\label{editor_8h}\index{/home/pinho/Classes/LCOM/shared/proj/code/model/editor/editor.h@{/home/pinho/Classes/LCOM/shared/proj/code/model/editor/editor.h}}
+
+
+Handles the editor:\+ Text buffer, cursor, scroll, selection, clipboard, and remote peer state.  
+
+
+{\ttfamily \+\#include $<$stdbool.\+h$>$}\newline
+\doxysubsubsection*{Classes}
+\begin{DoxyCompactItemize}
+\item 
+struct \doxymbox{\hyperlink{structLine}{Line}}
+\begin{DoxyCompactList}\small\item\em A single line of text with a growable buffer. \end{DoxyCompactList}\end{DoxyCompactItemize}
+\doxysubsubsection*{Enumerations}
+\begin{DoxyCompactItemize}
+\item 
+enum \doxymbox{\hyperlink{editor_8h_a0567671be08cc83cbdff870f77c955ae}{Editor\+Result}} \{ \doxymbox{\hyperlink{editor_8h_a0567671be08cc83cbdff870f77c955aea67e3c0fcaf789fd28f424987b8a40023}{EDITOR\+\_\+\+OK}}
+, \doxymbox{\hyperlink{editor_8h_a0567671be08cc83cbdff870f77c955aeabcb625207f67f652d1fd2cc09e901b96}{EDITOR\+\_\+\+ERR\+\_\+\+NO\+\_\+\+CLIPBOARD}}
+, \doxymbox{\hyperlink{editor_8h_a0567671be08cc83cbdff870f77c955aea38d56bf33eb1a6f7c7e079577b5e3011}{EDITOR\+\_\+\+ERR\+\_\+\+ALLOC\+\_\+\+FAILED}}
+ \}
+\end{DoxyCompactItemize}
+\doxysubsubsection*{Functions}
+\begin{DoxyCompactItemize}
+\item 
+int \doxymbox{\hyperlink{editor_8h_a8dac101a0c4f4b4db55bc6027eeb61ff}{editor\+\_\+init}} ()
+\begin{DoxyCompactList}\small\item\em Initializes the editor with an empty buffer. \end{DoxyCompactList}\item 
+void \doxymbox{\hyperlink{editor_8h_af3960acf2d61e1c377a7ee01c05fd3c7}{editor\+\_\+cleanup}} ()
+\begin{DoxyCompactList}\small\item\em Releases all resources owned by the editor. \end{DoxyCompactList}\item 
+void \doxymbox{\hyperlink{editor_8h_a4dbfb17a84c027c8c72997c324b492e1}{editor\+\_\+set\+\_\+viewport}} (int rows, int cols)
+\begin{DoxyCompactList}\small\item\em Sets the visible area so the editor can clamp scroll and cursor. \end{DoxyCompactList}\item 
+void \doxymbox{\hyperlink{editor_8h_aa0d935b6c456d4c4c9f65b46868b1a2f}{editor\+\_\+scroll\+\_\+by}} (int drow, int dcol)
+\begin{DoxyCompactList}\small\item\em Scrolls the view by a row and column delta. \end{DoxyCompactList}\item 
+void \doxymbox{\hyperlink{editor_8h_a10801b59cb4dbc028267a481717603b2}{editor\+\_\+set\+\_\+cursor}} (int row, int col)
+\begin{DoxyCompactList}\small\item\em Moves the cursor to an absolute position. \end{DoxyCompactList}\item 
+bool \doxymbox{\hyperlink{editor_8h_a45d2edb29a8fd34637248e7df50b9125}{editor\+\_\+consume\+\_\+scroll\+\_\+dirty}} ()
+\begin{DoxyCompactList}\small\item\em Returns and clears the scroll-\/dirty flag. \end{DoxyCompactList}\item 
+\doxymbox{\hyperlink{editor_8h_a0567671be08cc83cbdff870f77c955ae}{Editor\+Result}} \doxymbox{\hyperlink{editor_8h_a45bdf4890fff91c051f2981af1aafef1}{editor\+\_\+insert\+\_\+char}} (char c)
+\begin{DoxyCompactList}\small\item\em Inserts a character at the cursor position and advances the cursor. \end{DoxyCompactList}\item 
+\doxymbox{\hyperlink{editor_8h_a0567671be08cc83cbdff870f77c955ae}{Editor\+Result}} \doxymbox{\hyperlink{editor_8h_a186dcc776cf47a5ea3bdbc36e1f8aeb4}{editor\+\_\+delete\+\_\+char}} ()
+\begin{DoxyCompactList}\small\item\em Deletes the character before the cursor (backspace). \end{DoxyCompactList}\item 
+\doxymbox{\hyperlink{editor_8h_a0567671be08cc83cbdff870f77c955ae}{Editor\+Result}} \doxymbox{\hyperlink{editor_8h_ab38b7e3d36e3977d384135d3f1923b57}{editor\+\_\+delete\+\_\+word}} ()
+\begin{DoxyCompactList}\small\item\em Deletes the word before the cursor. \end{DoxyCompactList}\item 
+void \doxymbox{\hyperlink{editor_8h_a6a2d64b65ab6758ea7cb9dd7bab0af8a}{editor\+\_\+move\+\_\+left}} ()
+\begin{DoxyCompactList}\small\item\em Moves the cursor one column to the left, wrapping to the previous line. \end{DoxyCompactList}\item 
+void \doxymbox{\hyperlink{editor_8h_ad8fd42c1bd561d004eb962660d79b228}{editor\+\_\+move\+\_\+right}} ()
+\begin{DoxyCompactList}\small\item\em Moves the cursor one column to the right, wrapping to the next line. \end{DoxyCompactList}\item 
+void \doxymbox{\hyperlink{editor_8h_a84140286a39b0db0686087dafd31af71}{editor\+\_\+move\+\_\+up}} ()
+\begin{DoxyCompactList}\small\item\em Moves the cursor one row up, clamped to the first row. \end{DoxyCompactList}\item 
+void \doxymbox{\hyperlink{editor_8h_af2500229bb38585e9a4db29557c7c01e}{editor\+\_\+move\+\_\+down}} ()
+\begin{DoxyCompactList}\small\item\em Moves the cursor one row down, clamped to the last row. \end{DoxyCompactList}\item 
+void \doxymbox{\hyperlink{editor_8h_a873bac07284c0de1a65974dda6cd2b81}{editor\+\_\+move\+\_\+word\+\_\+left}} ()
+\begin{DoxyCompactList}\small\item\em Moves the cursor to the start of the previous word. \end{DoxyCompactList}\item 
+void \doxymbox{\hyperlink{editor_8h_a8a8934e0dab4e1ca1ba6e9b36f86f749}{editor\+\_\+move\+\_\+word\+\_\+right}} ()
+\begin{DoxyCompactList}\small\item\em Moves the cursor to the start of the next word. \end{DoxyCompactList}\item 
+void \doxymbox{\hyperlink{editor_8h_a178a4a6c9265313a69a11fa4a73224b1}{editor\+\_\+move\+\_\+home}} ()
+\begin{DoxyCompactList}\small\item\em Moves the cursor to column 0 of the current row. \end{DoxyCompactList}\item 
+void \doxymbox{\hyperlink{editor_8h_a7e5f7de90710ef8029903631d50814e1}{editor\+\_\+move\+\_\+end}} ()
+\begin{DoxyCompactList}\small\item\em Moves the cursor past the last character of the current row. \end{DoxyCompactList}\item 
+const char \texorpdfstring{$\ast$}{*} \doxymbox{\hyperlink{editor_8h_a6995a035909bc27c41849806350904fe}{editor\+\_\+get\+\_\+line}} (int row)
+\begin{DoxyCompactList}\small\item\em Used to acces tetx in a line. \end{DoxyCompactList}\item 
+int \doxymbox{\hyperlink{editor_8h_ac65ca0bfd975b126f38f68e8ee9a088a}{editor\+\_\+get\+\_\+line\+\_\+len}} (int row)
+\begin{DoxyCompactList}\small\item\em Returns the number of characters in a line. \end{DoxyCompactList}\item 
+int \doxymbox{\hyperlink{editor_8h_a4ed99fd52ac81ebaa345a3ff050cbfa8}{editor\+\_\+get\+\_\+row\+\_\+count}} ()
+\begin{DoxyCompactList}\small\item\em Returns the total number of lines in the buffer. \end{DoxyCompactList}\item 
+int \doxymbox{\hyperlink{editor_8h_a8130bc9a09c8de4585d0807963c68d7b}{editor\+\_\+get\+\_\+cursor\+\_\+row}} ()
+\begin{DoxyCompactList}\small\item\em Returns the cursor\textquotesingle{}s current row. \end{DoxyCompactList}\item 
+int \doxymbox{\hyperlink{editor_8h_a793310c7850590313ccfa60b810e32f5}{editor\+\_\+get\+\_\+cursor\+\_\+col}} ()
+\begin{DoxyCompactList}\small\item\em Returns the cursor\textquotesingle{}s current column. \end{DoxyCompactList}\item 
+int \doxymbox{\hyperlink{editor_8h_a1c3000668fd618e804049f15506f0158}{editor\+\_\+get\+\_\+scroll\+\_\+row}} ()
+\begin{DoxyCompactList}\small\item\em Returns the first visible row. \end{DoxyCompactList}\item 
+int \doxymbox{\hyperlink{editor_8h_a034aae826bed6ed2969022206a48e487}{editor\+\_\+get\+\_\+scroll\+\_\+col}} ()
+\begin{DoxyCompactList}\small\item\em Returns the first visible column. \end{DoxyCompactList}\item 
+\doxymbox{\hyperlink{editor_8h_a0567671be08cc83cbdff870f77c955ae}{Editor\+Result}} \doxymbox{\hyperlink{editor_8h_aca9024e808a3690d8431f9eac7343a3a}{editor\+\_\+delete\+\_\+selection}} ()
+\begin{DoxyCompactList}\small\item\em Deletes all text covered by the active selection. \end{DoxyCompactList}\item 
+void \doxymbox{\hyperlink{editor_8h_aa411c2d9dd9f5ba7e8960ec56bb6c3fd}{editor\+\_\+sel\+\_\+set\+\_\+anchor}} ()
+\begin{DoxyCompactList}\small\item\em Sets the selection anchor at the current cursor position. \end{DoxyCompactList}\item 
+void \doxymbox{\hyperlink{editor_8h_a257948364e6798b55bca1d4f21fade8f}{editor\+\_\+sel\+\_\+clear}} ()
+\begin{DoxyCompactList}\small\item\em Clears the active selection without modifying the buffer. \end{DoxyCompactList}\item 
+bool \doxymbox{\hyperlink{editor_8h_a60594bab32622d0e9d62ed9ec7755a35}{editor\+\_\+sel\+\_\+is\+\_\+active}} ()
+\begin{DoxyCompactList}\small\item\em Returns whether a selection is currently active. \end{DoxyCompactList}\item 
+void \doxymbox{\hyperlink{editor_8h_ad170d3aefed805a70d2c633ce4c51c90}{editor\+\_\+sel\+\_\+get\+\_\+range}} (int \texorpdfstring{$\ast$}{*}start\+\_\+row, int \texorpdfstring{$\ast$}{*}start\+\_\+col, int \texorpdfstring{$\ast$}{*}end\+\_\+row, int \texorpdfstring{$\ast$}{*}end\+\_\+col)
+\begin{DoxyCompactList}\small\item\em Returns the selection range in order (start before end). \end{DoxyCompactList}\item 
+bool \doxymbox{\hyperlink{editor_8h_a8e0f5ed7c20e0ebc718db57c5df4f0dd}{editor\+\_\+consume\+\_\+sel\+\_\+dirty}} ()
+\begin{DoxyCompactList}\small\item\em Returns and clears the selection-\/dirty flag. \end{DoxyCompactList}\item 
+void \doxymbox{\hyperlink{editor_8h_a21c4a66e3c627bbe84ff4dfd44aa93f7}{editor\+\_\+copy\+\_\+selection}} ()
+\begin{DoxyCompactList}\small\item\em Copies the active selection text to the internal clipboard. \end{DoxyCompactList}\item 
+\doxymbox{\hyperlink{editor_8h_a0567671be08cc83cbdff870f77c955ae}{Editor\+Result}} \doxymbox{\hyperlink{editor_8h_a8d303ba11761a2daa302cfe147f5e5cf}{editor\+\_\+paste}} ()
+\begin{DoxyCompactList}\small\item\em Inserts the clipboard contents at the cursor position. \end{DoxyCompactList}\item 
+\doxymbox{\hyperlink{editor_8h_a0567671be08cc83cbdff870f77c955ae}{Editor\+Result}} \doxymbox{\hyperlink{editor_8h_ac43fc33f4ab4dc7da2b988e53af5b5fa}{editor\+\_\+load\+\_\+line}} (const char \texorpdfstring{$\ast$}{*}text, int len)
+\begin{DoxyCompactList}\small\item\em Appends a line to the buffer during file loading. \end{DoxyCompactList}\item 
+void \doxymbox{\hyperlink{editor_8h_a68505b9b790fe9bf905b749af42d093c}{editor\+\_\+load\+\_\+finalize}} ()
+\begin{DoxyCompactList}\small\item\em Finalizes a load sequence started with \doxylink{editor_8h_ac43fc33f4ab4dc7da2b988e53af5b5fa}{editor\+\_\+load\+\_\+line()}. \end{DoxyCompactList}\item 
+void \doxymbox{\hyperlink{editor_8h_a0a5c2c62e540da58f5a267df1c080f55}{editor\+\_\+set\+\_\+remote\+\_\+cursor}} (int row, int col)
+\begin{DoxyCompactList}\small\item\em Sets the remote peer\textquotesingle{}s cursor position. \end{DoxyCompactList}\item 
+\doxymbox{\hyperlink{editor_8h_a0567671be08cc83cbdff870f77c955ae}{Editor\+Result}} \doxymbox{\hyperlink{editor_8h_ae45e5c975ae0f2606e121a7e4cb5969c}{editor\+\_\+remote\+\_\+insert\+\_\+char}} (char c)
+\begin{DoxyCompactList}\small\item\em Inserts a character at the remote cursor position. \end{DoxyCompactList}\item 
+\doxymbox{\hyperlink{editor_8h_a0567671be08cc83cbdff870f77c955ae}{Editor\+Result}} \doxymbox{\hyperlink{editor_8h_a4887c573666a081f43c48aec4b9bf656}{editor\+\_\+remote\+\_\+delete\+\_\+char}} ()
+\begin{DoxyCompactList}\small\item\em Deletes the character immediately before the remote cursor position. \end{DoxyCompactList}\item 
+\doxymbox{\hyperlink{editor_8h_a0567671be08cc83cbdff870f77c955ae}{Editor\+Result}} \doxymbox{\hyperlink{editor_8h_a527c9fc277874f68d739d984e1be0c5f}{editor\+\_\+remote\+\_\+replace\+\_\+block}} (int start\+\_\+row, int deleted\+\_\+count, int inserted\+\_\+count)
+\begin{DoxyCompactList}\small\item\em Prepares the text buffer for a block replacement. \end{DoxyCompactList}\item 
+\doxymbox{\hyperlink{editor_8h_a0567671be08cc83cbdff870f77c955ae}{Editor\+Result}} \doxymbox{\hyperlink{editor_8h_a61a9255828346381bd422d5303a53cdc}{editor\+\_\+remote\+\_\+update\+\_\+line}} (int row, const char \texorpdfstring{$\ast$}{*}text, int len)
+\begin{DoxyCompactList}\small\item\em Overwrites a specific line with new text received from the network. \end{DoxyCompactList}\item 
+int \doxymbox{\hyperlink{editor_8h_a5e7fb60733b7f237b2d1847a5677d027}{editor\+\_\+get\+\_\+remote\+\_\+cursor\+\_\+row}} ()
+\item 
+int \doxymbox{\hyperlink{editor_8h_a571a36d3eb8425437b16f1672f2c9d3a}{editor\+\_\+get\+\_\+remote\+\_\+cursor\+\_\+col}} ()
+\begin{DoxyCompactList}\small\item\em Returns the remote peer\textquotesingle{}s cursor column. \end{DoxyCompactList}\end{DoxyCompactItemize}
+
+
+\doxysubsection{Detailed Description}
+Handles the editor:\+ Text buffer, cursor, scroll, selection, clipboard, and remote peer state. 
+
+
+
+\label{doc-enum-members}
+\Hypertarget{editor_8h_doc-enum-members}
+\doxysubsection{Enumeration Type Documentation}
+\Hypertarget{editor_8h_a0567671be08cc83cbdff870f77c955ae}\index{editor.h@{editor.h}!EditorResult@{EditorResult}}
+\index{EditorResult@{EditorResult}!editor.h@{editor.h}}
+\doxysubsubsection{\texorpdfstring{EditorResult}{EditorResult}}
+{\footnotesize\ttfamily \label{editor_8h_a0567671be08cc83cbdff870f77c955ae} 
+enum \doxymbox{\hyperlink{editor_8h_a0567671be08cc83cbdff870f77c955ae}{Editor\+Result}}}
+
+\begin{DoxyEnumFields}[2]{Enumerator}
+\raisebox{\heightof{T}}[0pt][0pt]{\index{EDITOR\_OK@{EDITOR\_OK}!editor.h@{editor.h}}
+\index{editor.h@{editor.h}!EDITOR\_OK@{EDITOR\_OK}}
+}\Hypertarget{editor_8h_a0567671be08cc83cbdff870f77c955aea67e3c0fcaf789fd28f424987b8a40023}\label{editor_8h_a0567671be08cc83cbdff870f77c955aea67e3c0fcaf789fd28f424987b8a40023} 
+EDITOR\+\_\+\+OK&\\
+\hline
+
+\raisebox{\heightof{T}}[0pt][0pt]{\index{EDITOR\_ERR\_NO\_CLIPBOARD@{EDITOR\_ERR\_NO\_CLIPBOARD}!editor.h@{editor.h}}
+\index{editor.h@{editor.h}!EDITOR\_ERR\_NO\_CLIPBOARD@{EDITOR\_ERR\_NO\_CLIPBOARD}}
+}\Hypertarget{editor_8h_a0567671be08cc83cbdff870f77c955aeabcb625207f67f652d1fd2cc09e901b96}\label{editor_8h_a0567671be08cc83cbdff870f77c955aeabcb625207f67f652d1fd2cc09e901b96} 
+EDITOR\+\_\+\+ERR\+\_\+\+NO\+\_\+\+CLIPBOARD&\\
+\hline
+
+\raisebox{\heightof{T}}[0pt][0pt]{\index{EDITOR\_ERR\_ALLOC\_FAILED@{EDITOR\_ERR\_ALLOC\_FAILED}!editor.h@{editor.h}}
+\index{editor.h@{editor.h}!EDITOR\_ERR\_ALLOC\_FAILED@{EDITOR\_ERR\_ALLOC\_FAILED}}
+}\Hypertarget{editor_8h_a0567671be08cc83cbdff870f77c955aea38d56bf33eb1a6f7c7e079577b5e3011}\label{editor_8h_a0567671be08cc83cbdff870f77c955aea38d56bf33eb1a6f7c7e079577b5e3011} 
+EDITOR\+\_\+\+ERR\+\_\+\+ALLOC\+\_\+\+FAILED&\\
+\hline
+
+\end{DoxyEnumFields}
+
+
+\label{doc-func-members}
+\Hypertarget{editor_8h_doc-func-members}
+\doxysubsection{Function Documentation}
+\Hypertarget{editor_8h_af3960acf2d61e1c377a7ee01c05fd3c7}\index{editor.h@{editor.h}!editor\_cleanup@{editor\_cleanup}}
+\index{editor\_cleanup@{editor\_cleanup}!editor.h@{editor.h}}
+\doxysubsubsection{\texorpdfstring{editor\_cleanup()}{editor\_cleanup()}}
+{\footnotesize\ttfamily \label{editor_8h_af3960acf2d61e1c377a7ee01c05fd3c7} 
+void editor\+\_\+cleanup (\begin{DoxyParamCaption}{}{}\end{DoxyParamCaption})}
+
+
+
+Releases all resources owned by the editor. 
+
+\Hypertarget{editor_8h_a45d2edb29a8fd34637248e7df50b9125}\index{editor.h@{editor.h}!editor\_consume\_scroll\_dirty@{editor\_consume\_scroll\_dirty}}
+\index{editor\_consume\_scroll\_dirty@{editor\_consume\_scroll\_dirty}!editor.h@{editor.h}}
+\doxysubsubsection{\texorpdfstring{editor\_consume\_scroll\_dirty()}{editor\_consume\_scroll\_dirty()}}
+{\footnotesize\ttfamily \label{editor_8h_a45d2edb29a8fd34637248e7df50b9125} 
+bool editor\+\_\+consume\+\_\+scroll\+\_\+dirty (\begin{DoxyParamCaption}{}{}\end{DoxyParamCaption})}
+
+
+
+Returns and clears the scroll-\/dirty flag. 
+
+Set whenever the scroll position changes. Callers use this to trigger a full redraw \begin{DoxyReturn}{Returns}
+true if the scroll position changed since the last call 
+\end{DoxyReturn}
+\Hypertarget{editor_8h_a8e0f5ed7c20e0ebc718db57c5df4f0dd}\index{editor.h@{editor.h}!editor\_consume\_sel\_dirty@{editor\_consume\_sel\_dirty}}
+\index{editor\_consume\_sel\_dirty@{editor\_consume\_sel\_dirty}!editor.h@{editor.h}}
+\doxysubsubsection{\texorpdfstring{editor\_consume\_sel\_dirty()}{editor\_consume\_sel\_dirty()}}
+{\footnotesize\ttfamily \label{editor_8h_a8e0f5ed7c20e0ebc718db57c5df4f0dd} 
+bool editor\+\_\+consume\+\_\+sel\+\_\+dirty (\begin{DoxyParamCaption}{}{}\end{DoxyParamCaption})}
+
+
+
+Returns and clears the selection-\/dirty flag. 
+
+Set whenever the selection changes. Callers use this to trigger a redraw \begin{DoxyReturn}{Returns}
+true if the selection changed since the last call 
+\end{DoxyReturn}
+\Hypertarget{editor_8h_a21c4a66e3c627bbe84ff4dfd44aa93f7}\index{editor.h@{editor.h}!editor\_copy\_selection@{editor\_copy\_selection}}
+\index{editor\_copy\_selection@{editor\_copy\_selection}!editor.h@{editor.h}}
+\doxysubsubsection{\texorpdfstring{editor\_copy\_selection()}{editor\_copy\_selection()}}
+{\footnotesize\ttfamily \label{editor_8h_a21c4a66e3c627bbe84ff4dfd44aa93f7} 
+void editor\+\_\+copy\+\_\+selection (\begin{DoxyParamCaption}{}{}\end{DoxyParamCaption})}
+
+
+
+Copies the active selection text to the internal clipboard. 
+
+\Hypertarget{editor_8h_a186dcc776cf47a5ea3bdbc36e1f8aeb4}\index{editor.h@{editor.h}!editor\_delete\_char@{editor\_delete\_char}}
+\index{editor\_delete\_char@{editor\_delete\_char}!editor.h@{editor.h}}
+\doxysubsubsection{\texorpdfstring{editor\_delete\_char()}{editor\_delete\_char()}}
+{\footnotesize\ttfamily \label{editor_8h_a186dcc776cf47a5ea3bdbc36e1f8aeb4} 
+\doxymbox{\hyperlink{editor_8h_a0567671be08cc83cbdff870f77c955ae}{Editor\+Result}} editor\+\_\+delete\+\_\+char (\begin{DoxyParamCaption}{}{}\end{DoxyParamCaption})}
+
+
+
+Deletes the character before the cursor (backspace). 
+
+\begin{DoxyReturn}{Returns}
+EDITOR\+\_\+\+OK on success; EDITOR\+\_\+\+ERR\+\_\+\+ALLOC\+\_\+\+FAILED on allocation failure 
+\end{DoxyReturn}
+\Hypertarget{editor_8h_aca9024e808a3690d8431f9eac7343a3a}\index{editor.h@{editor.h}!editor\_delete\_selection@{editor\_delete\_selection}}
+\index{editor\_delete\_selection@{editor\_delete\_selection}!editor.h@{editor.h}}
+\doxysubsubsection{\texorpdfstring{editor\_delete\_selection()}{editor\_delete\_selection()}}
+{\footnotesize\ttfamily \label{editor_8h_aca9024e808a3690d8431f9eac7343a3a} 
+\doxymbox{\hyperlink{editor_8h_a0567671be08cc83cbdff870f77c955ae}{Editor\+Result}} editor\+\_\+delete\+\_\+selection (\begin{DoxyParamCaption}{}{}\end{DoxyParamCaption})}
+
+
+
+Deletes all text covered by the active selection. 
+
+\begin{DoxyReturn}{Returns}
+EDITOR\+\_\+\+OK on success; EDITOR\+\_\+\+ERR\+\_\+\+ALLOC\+\_\+\+FAILED on allocation failure 
+\end{DoxyReturn}
+\Hypertarget{editor_8h_ab38b7e3d36e3977d384135d3f1923b57}\index{editor.h@{editor.h}!editor\_delete\_word@{editor\_delete\_word}}
+\index{editor\_delete\_word@{editor\_delete\_word}!editor.h@{editor.h}}
+\doxysubsubsection{\texorpdfstring{editor\_delete\_word()}{editor\_delete\_word()}}
+{\footnotesize\ttfamily \label{editor_8h_ab38b7e3d36e3977d384135d3f1923b57} 
+\doxymbox{\hyperlink{editor_8h_a0567671be08cc83cbdff870f77c955ae}{Editor\+Result}} editor\+\_\+delete\+\_\+word (\begin{DoxyParamCaption}{}{}\end{DoxyParamCaption})}
+
+
+
+Deletes the word before the cursor. 
+
+\begin{DoxyReturn}{Returns}
+EDITOR\+\_\+\+OK on success; EDITOR\+\_\+\+ERR\+\_\+\+ALLOC\+\_\+\+FAILED on allocation failure 
+\end{DoxyReturn}
+\Hypertarget{editor_8h_a793310c7850590313ccfa60b810e32f5}\index{editor.h@{editor.h}!editor\_get\_cursor\_col@{editor\_get\_cursor\_col}}
+\index{editor\_get\_cursor\_col@{editor\_get\_cursor\_col}!editor.h@{editor.h}}
+\doxysubsubsection{\texorpdfstring{editor\_get\_cursor\_col()}{editor\_get\_cursor\_col()}}
+{\footnotesize\ttfamily \label{editor_8h_a793310c7850590313ccfa60b810e32f5} 
+int editor\+\_\+get\+\_\+cursor\+\_\+col (\begin{DoxyParamCaption}{}{}\end{DoxyParamCaption})}
+
+
+
+Returns the cursor\textquotesingle{}s current column. 
+
+\begin{DoxyReturn}{Returns}
+Column index (0-\/based) 
+\end{DoxyReturn}
+\Hypertarget{editor_8h_a8130bc9a09c8de4585d0807963c68d7b}\index{editor.h@{editor.h}!editor\_get\_cursor\_row@{editor\_get\_cursor\_row}}
+\index{editor\_get\_cursor\_row@{editor\_get\_cursor\_row}!editor.h@{editor.h}}
+\doxysubsubsection{\texorpdfstring{editor\_get\_cursor\_row()}{editor\_get\_cursor\_row()}}
+{\footnotesize\ttfamily \label{editor_8h_a8130bc9a09c8de4585d0807963c68d7b} 
+int editor\+\_\+get\+\_\+cursor\+\_\+row (\begin{DoxyParamCaption}{}{}\end{DoxyParamCaption})}
+
+
+
+Returns the cursor\textquotesingle{}s current row. 
+
+\begin{DoxyReturn}{Returns}
+Row index (0-\/based) 
+\end{DoxyReturn}
+\Hypertarget{editor_8h_a6995a035909bc27c41849806350904fe}\index{editor.h@{editor.h}!editor\_get\_line@{editor\_get\_line}}
+\index{editor\_get\_line@{editor\_get\_line}!editor.h@{editor.h}}
+\doxysubsubsection{\texorpdfstring{editor\_get\_line()}{editor\_get\_line()}}
+{\footnotesize\ttfamily \label{editor_8h_a6995a035909bc27c41849806350904fe} 
+const char \texorpdfstring{$\ast$}{*} editor\+\_\+get\+\_\+line (\begin{DoxyParamCaption}\item[{int}]{row}{}\end{DoxyParamCaption})}
+
+
+
+Used to acces tetx in a line. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em row} & \doxylink{structLine}{Line} index (0-\/based) \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+Pointer to the line\textquotesingle{}s character buffer. Not null-\/terminated 
+\end{DoxyReturn}
+\Hypertarget{editor_8h_ac65ca0bfd975b126f38f68e8ee9a088a}\index{editor.h@{editor.h}!editor\_get\_line\_len@{editor\_get\_line\_len}}
+\index{editor\_get\_line\_len@{editor\_get\_line\_len}!editor.h@{editor.h}}
+\doxysubsubsection{\texorpdfstring{editor\_get\_line\_len()}{editor\_get\_line\_len()}}
+{\footnotesize\ttfamily \label{editor_8h_ac65ca0bfd975b126f38f68e8ee9a088a} 
+int editor\+\_\+get\+\_\+line\+\_\+len (\begin{DoxyParamCaption}\item[{int}]{row}{}\end{DoxyParamCaption})}
+
+
+
+Returns the number of characters in a line. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em row} & \doxylink{structLine}{Line} index (0-\/based) \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+Character count, excluding null terminator 
+\end{DoxyReturn}
+\Hypertarget{editor_8h_a571a36d3eb8425437b16f1672f2c9d3a}\index{editor.h@{editor.h}!editor\_get\_remote\_cursor\_col@{editor\_get\_remote\_cursor\_col}}
+\index{editor\_get\_remote\_cursor\_col@{editor\_get\_remote\_cursor\_col}!editor.h@{editor.h}}
+\doxysubsubsection{\texorpdfstring{editor\_get\_remote\_cursor\_col()}{editor\_get\_remote\_cursor\_col()}}
+{\footnotesize\ttfamily \label{editor_8h_a571a36d3eb8425437b16f1672f2c9d3a} 
+int editor\+\_\+get\+\_\+remote\+\_\+cursor\+\_\+col (\begin{DoxyParamCaption}{}{}\end{DoxyParamCaption})}
+
+
+
+Returns the remote peer\textquotesingle{}s cursor column. 
+
+\begin{DoxyReturn}{Returns}
+Column index (0-\/based). -\/1 if no position has been received yet 
+\end{DoxyReturn}
+\Hypertarget{editor_8h_a5e7fb60733b7f237b2d1847a5677d027}\index{editor.h@{editor.h}!editor\_get\_remote\_cursor\_row@{editor\_get\_remote\_cursor\_row}}
+\index{editor\_get\_remote\_cursor\_row@{editor\_get\_remote\_cursor\_row}!editor.h@{editor.h}}
+\doxysubsubsection{\texorpdfstring{editor\_get\_remote\_cursor\_row()}{editor\_get\_remote\_cursor\_row()}}
+{\footnotesize\ttfamily \label{editor_8h_a5e7fb60733b7f237b2d1847a5677d027} 
+int editor\+\_\+get\+\_\+remote\+\_\+cursor\+\_\+row (\begin{DoxyParamCaption}{}{}\end{DoxyParamCaption})}
+
+\Hypertarget{editor_8h_a4ed99fd52ac81ebaa345a3ff050cbfa8}\index{editor.h@{editor.h}!editor\_get\_row\_count@{editor\_get\_row\_count}}
+\index{editor\_get\_row\_count@{editor\_get\_row\_count}!editor.h@{editor.h}}
+\doxysubsubsection{\texorpdfstring{editor\_get\_row\_count()}{editor\_get\_row\_count()}}
+{\footnotesize\ttfamily \label{editor_8h_a4ed99fd52ac81ebaa345a3ff050cbfa8} 
+int editor\+\_\+get\+\_\+row\+\_\+count (\begin{DoxyParamCaption}{}{}\end{DoxyParamCaption})}
+
+
+
+Returns the total number of lines in the buffer. 
+
+\begin{DoxyReturn}{Returns}
+Row count 
+\end{DoxyReturn}
+\Hypertarget{editor_8h_a034aae826bed6ed2969022206a48e487}\index{editor.h@{editor.h}!editor\_get\_scroll\_col@{editor\_get\_scroll\_col}}
+\index{editor\_get\_scroll\_col@{editor\_get\_scroll\_col}!editor.h@{editor.h}}
+\doxysubsubsection{\texorpdfstring{editor\_get\_scroll\_col()}{editor\_get\_scroll\_col()}}
+{\footnotesize\ttfamily \label{editor_8h_a034aae826bed6ed2969022206a48e487} 
+int editor\+\_\+get\+\_\+scroll\+\_\+col (\begin{DoxyParamCaption}{}{}\end{DoxyParamCaption})}
+
+
+
+Returns the first visible column. 
+
+\begin{DoxyReturn}{Returns}
+Scroll column offset (0-\/based) 
+\end{DoxyReturn}
+\Hypertarget{editor_8h_a1c3000668fd618e804049f15506f0158}\index{editor.h@{editor.h}!editor\_get\_scroll\_row@{editor\_get\_scroll\_row}}
+\index{editor\_get\_scroll\_row@{editor\_get\_scroll\_row}!editor.h@{editor.h}}
+\doxysubsubsection{\texorpdfstring{editor\_get\_scroll\_row()}{editor\_get\_scroll\_row()}}
+{\footnotesize\ttfamily \label{editor_8h_a1c3000668fd618e804049f15506f0158} 
+int editor\+\_\+get\+\_\+scroll\+\_\+row (\begin{DoxyParamCaption}{}{}\end{DoxyParamCaption})}
+
+
+
+Returns the first visible row. 
+
+\begin{DoxyReturn}{Returns}
+Scroll row offset (0-\/based) 
+\end{DoxyReturn}
+\Hypertarget{editor_8h_a8dac101a0c4f4b4db55bc6027eeb61ff}\index{editor.h@{editor.h}!editor\_init@{editor\_init}}
+\index{editor\_init@{editor\_init}!editor.h@{editor.h}}
+\doxysubsubsection{\texorpdfstring{editor\_init()}{editor\_init()}}
+{\footnotesize\ttfamily \label{editor_8h_a8dac101a0c4f4b4db55bc6027eeb61ff} 
+int editor\+\_\+init (\begin{DoxyParamCaption}{}{}\end{DoxyParamCaption})}
+
+
+
+Initializes the editor with an empty buffer. 
+
+\begin{DoxyReturn}{Returns}
+0 on success. Non-\/zero on failure 
+\end{DoxyReturn}
+\Hypertarget{editor_8h_a45bdf4890fff91c051f2981af1aafef1}\index{editor.h@{editor.h}!editor\_insert\_char@{editor\_insert\_char}}
+\index{editor\_insert\_char@{editor\_insert\_char}!editor.h@{editor.h}}
+\doxysubsubsection{\texorpdfstring{editor\_insert\_char()}{editor\_insert\_char()}}
+{\footnotesize\ttfamily \label{editor_8h_a45bdf4890fff91c051f2981af1aafef1} 
+\doxymbox{\hyperlink{editor_8h_a0567671be08cc83cbdff870f77c955ae}{Editor\+Result}} editor\+\_\+insert\+\_\+char (\begin{DoxyParamCaption}\item[{char}]{c}{}\end{DoxyParamCaption})}
+
+
+
+Inserts a character at the cursor position and advances the cursor. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em c} & Character to insert \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+EDITOR\+\_\+\+OK on success; EDITOR\+\_\+\+ERR\+\_\+\+ALLOC\+\_\+\+FAILED on allocation failure 
+\end{DoxyReturn}
+\Hypertarget{editor_8h_a68505b9b790fe9bf905b749af42d093c}\index{editor.h@{editor.h}!editor\_load\_finalize@{editor\_load\_finalize}}
+\index{editor\_load\_finalize@{editor\_load\_finalize}!editor.h@{editor.h}}
+\doxysubsubsection{\texorpdfstring{editor\_load\_finalize()}{editor\_load\_finalize()}}
+{\footnotesize\ttfamily \label{editor_8h_a68505b9b790fe9bf905b749af42d093c} 
+void editor\+\_\+load\+\_\+finalize (\begin{DoxyParamCaption}{}{}\end{DoxyParamCaption})}
+
+
+
+Finalizes a load sequence started with \doxylink{editor_8h_ac43fc33f4ab4dc7da2b988e53af5b5fa}{editor\+\_\+load\+\_\+line()}. 
+
+Resets the cursor and scroll to the top of the file \Hypertarget{editor_8h_ac43fc33f4ab4dc7da2b988e53af5b5fa}\index{editor.h@{editor.h}!editor\_load\_line@{editor\_load\_line}}
+\index{editor\_load\_line@{editor\_load\_line}!editor.h@{editor.h}}
+\doxysubsubsection{\texorpdfstring{editor\_load\_line()}{editor\_load\_line()}}
+{\footnotesize\ttfamily \label{editor_8h_ac43fc33f4ab4dc7da2b988e53af5b5fa} 
+\doxymbox{\hyperlink{editor_8h_a0567671be08cc83cbdff870f77c955ae}{Editor\+Result}} editor\+\_\+load\+\_\+line (\begin{DoxyParamCaption}\item[{const char \texorpdfstring{$\ast$}{*}}]{text}{, }\item[{int}]{len}{}\end{DoxyParamCaption})}
+
+
+
+Appends a line to the buffer during file loading. 
+
+Must be followed by \doxylink{editor_8h_a68505b9b790fe9bf905b749af42d093c}{editor\+\_\+load\+\_\+finalize()} after all lines are loaded 
+\begin{DoxyParams}{Parameters}
+{\em text} & Pointer to the line text (need not be null-\/terminated) \\
+\hline
+{\em len} & Number of characters to copy \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+EDITOR\+\_\+\+OK on success; EDITOR\+\_\+\+ERR\+\_\+\+ALLOC\+\_\+\+FAILED on allocation failure 
+\end{DoxyReturn}
+\Hypertarget{editor_8h_af2500229bb38585e9a4db29557c7c01e}\index{editor.h@{editor.h}!editor\_move\_down@{editor\_move\_down}}
+\index{editor\_move\_down@{editor\_move\_down}!editor.h@{editor.h}}
+\doxysubsubsection{\texorpdfstring{editor\_move\_down()}{editor\_move\_down()}}
+{\footnotesize\ttfamily \label{editor_8h_af2500229bb38585e9a4db29557c7c01e} 
+void editor\+\_\+move\+\_\+down (\begin{DoxyParamCaption}{}{}\end{DoxyParamCaption})}
+
+
+
+Moves the cursor one row down, clamped to the last row. 
+
+\Hypertarget{editor_8h_a7e5f7de90710ef8029903631d50814e1}\index{editor.h@{editor.h}!editor\_move\_end@{editor\_move\_end}}
+\index{editor\_move\_end@{editor\_move\_end}!editor.h@{editor.h}}
+\doxysubsubsection{\texorpdfstring{editor\_move\_end()}{editor\_move\_end()}}
+{\footnotesize\ttfamily \label{editor_8h_a7e5f7de90710ef8029903631d50814e1} 
+void editor\+\_\+move\+\_\+end (\begin{DoxyParamCaption}{}{}\end{DoxyParamCaption})}
+
+
+
+Moves the cursor past the last character of the current row. 
+
+\Hypertarget{editor_8h_a178a4a6c9265313a69a11fa4a73224b1}\index{editor.h@{editor.h}!editor\_move\_home@{editor\_move\_home}}
+\index{editor\_move\_home@{editor\_move\_home}!editor.h@{editor.h}}
+\doxysubsubsection{\texorpdfstring{editor\_move\_home()}{editor\_move\_home()}}
+{\footnotesize\ttfamily \label{editor_8h_a178a4a6c9265313a69a11fa4a73224b1} 
+void editor\+\_\+move\+\_\+home (\begin{DoxyParamCaption}{}{}\end{DoxyParamCaption})}
+
+
+
+Moves the cursor to column 0 of the current row. 
+
+\Hypertarget{editor_8h_a6a2d64b65ab6758ea7cb9dd7bab0af8a}\index{editor.h@{editor.h}!editor\_move\_left@{editor\_move\_left}}
+\index{editor\_move\_left@{editor\_move\_left}!editor.h@{editor.h}}
+\doxysubsubsection{\texorpdfstring{editor\_move\_left()}{editor\_move\_left()}}
+{\footnotesize\ttfamily \label{editor_8h_a6a2d64b65ab6758ea7cb9dd7bab0af8a} 
+void editor\+\_\+move\+\_\+left (\begin{DoxyParamCaption}{}{}\end{DoxyParamCaption})}
+
+
+
+Moves the cursor one column to the left, wrapping to the previous line. 
+
+\Hypertarget{editor_8h_ad8fd42c1bd561d004eb962660d79b228}\index{editor.h@{editor.h}!editor\_move\_right@{editor\_move\_right}}
+\index{editor\_move\_right@{editor\_move\_right}!editor.h@{editor.h}}
+\doxysubsubsection{\texorpdfstring{editor\_move\_right()}{editor\_move\_right()}}
+{\footnotesize\ttfamily \label{editor_8h_ad8fd42c1bd561d004eb962660d79b228} 
+void editor\+\_\+move\+\_\+right (\begin{DoxyParamCaption}{}{}\end{DoxyParamCaption})}
+
+
+
+Moves the cursor one column to the right, wrapping to the next line. 
+
+\Hypertarget{editor_8h_a84140286a39b0db0686087dafd31af71}\index{editor.h@{editor.h}!editor\_move\_up@{editor\_move\_up}}
+\index{editor\_move\_up@{editor\_move\_up}!editor.h@{editor.h}}
+\doxysubsubsection{\texorpdfstring{editor\_move\_up()}{editor\_move\_up()}}
+{\footnotesize\ttfamily \label{editor_8h_a84140286a39b0db0686087dafd31af71} 
+void editor\+\_\+move\+\_\+up (\begin{DoxyParamCaption}{}{}\end{DoxyParamCaption})}
+
+
+
+Moves the cursor one row up, clamped to the first row. 
+
+\Hypertarget{editor_8h_a873bac07284c0de1a65974dda6cd2b81}\index{editor.h@{editor.h}!editor\_move\_word\_left@{editor\_move\_word\_left}}
+\index{editor\_move\_word\_left@{editor\_move\_word\_left}!editor.h@{editor.h}}
+\doxysubsubsection{\texorpdfstring{editor\_move\_word\_left()}{editor\_move\_word\_left()}}
+{\footnotesize\ttfamily \label{editor_8h_a873bac07284c0de1a65974dda6cd2b81} 
+void editor\+\_\+move\+\_\+word\+\_\+left (\begin{DoxyParamCaption}{}{}\end{DoxyParamCaption})}
+
+
+
+Moves the cursor to the start of the previous word. 
+
+\Hypertarget{editor_8h_a8a8934e0dab4e1ca1ba6e9b36f86f749}\index{editor.h@{editor.h}!editor\_move\_word\_right@{editor\_move\_word\_right}}
+\index{editor\_move\_word\_right@{editor\_move\_word\_right}!editor.h@{editor.h}}
+\doxysubsubsection{\texorpdfstring{editor\_move\_word\_right()}{editor\_move\_word\_right()}}
+{\footnotesize\ttfamily \label{editor_8h_a8a8934e0dab4e1ca1ba6e9b36f86f749} 
+void editor\+\_\+move\+\_\+word\+\_\+right (\begin{DoxyParamCaption}{}{}\end{DoxyParamCaption})}
+
+
+
+Moves the cursor to the start of the next word. 
+
+\Hypertarget{editor_8h_a8d303ba11761a2daa302cfe147f5e5cf}\index{editor.h@{editor.h}!editor\_paste@{editor\_paste}}
+\index{editor\_paste@{editor\_paste}!editor.h@{editor.h}}
+\doxysubsubsection{\texorpdfstring{editor\_paste()}{editor\_paste()}}
+{\footnotesize\ttfamily \label{editor_8h_a8d303ba11761a2daa302cfe147f5e5cf} 
+\doxymbox{\hyperlink{editor_8h_a0567671be08cc83cbdff870f77c955ae}{Editor\+Result}} editor\+\_\+paste (\begin{DoxyParamCaption}{}{}\end{DoxyParamCaption})}
+
+
+
+Inserts the clipboard contents at the cursor position. 
+
+\begin{DoxyReturn}{Returns}
+EDITOR\+\_\+\+OK on success; EDITOR\+\_\+\+ERR\+\_\+\+NO\+\_\+\+CLIPBOARD if the clipboard is empty; EDITOR\+\_\+\+ERR\+\_\+\+ALLOC\+\_\+\+FAILED on allocation failure 
+\end{DoxyReturn}
+\Hypertarget{editor_8h_a4887c573666a081f43c48aec4b9bf656}\index{editor.h@{editor.h}!editor\_remote\_delete\_char@{editor\_remote\_delete\_char}}
+\index{editor\_remote\_delete\_char@{editor\_remote\_delete\_char}!editor.h@{editor.h}}
+\doxysubsubsection{\texorpdfstring{editor\_remote\_delete\_char()}{editor\_remote\_delete\_char()}}
+{\footnotesize\ttfamily \label{editor_8h_a4887c573666a081f43c48aec4b9bf656} 
+\doxymbox{\hyperlink{editor_8h_a0567671be08cc83cbdff870f77c955ae}{Editor\+Result}} editor\+\_\+remote\+\_\+delete\+\_\+char (\begin{DoxyParamCaption}{}{}\end{DoxyParamCaption})}
+
+
+
+Deletes the character immediately before the remote cursor position. 
+
+If the remote cursor is at the beginning of a line, it merges the current line with the previous line, performing a {\ttfamily memmove} to collapse the rows array. Works similarly to editor\+\_\+delete\+\_\+char but without updating the local cursor position.
+
+\begin{DoxyReturn}{Returns}
+EDITOR\+\_\+\+OK on success, or EDITOR\+\_\+\+ERR\+\_\+\+ALLOC\+\_\+\+FAILED on memory error. 
+\end{DoxyReturn}
+\Hypertarget{editor_8h_ae45e5c975ae0f2606e121a7e4cb5969c}\index{editor.h@{editor.h}!editor\_remote\_insert\_char@{editor\_remote\_insert\_char}}
+\index{editor\_remote\_insert\_char@{editor\_remote\_insert\_char}!editor.h@{editor.h}}
+\doxysubsubsection{\texorpdfstring{editor\_remote\_insert\_char()}{editor\_remote\_insert\_char()}}
+{\footnotesize\ttfamily \label{editor_8h_ae45e5c975ae0f2606e121a7e4cb5969c} 
+\doxymbox{\hyperlink{editor_8h_a0567671be08cc83cbdff870f77c955ae}{Editor\+Result}} editor\+\_\+remote\+\_\+insert\+\_\+char (\begin{DoxyParamCaption}\item[{char}]{c}{}\end{DoxyParamCaption})}
+
+
+
+Inserts a character at the remote cursor position. 
+
+Manages the memory reallocation if the line needs to grow, and pushes the text right. If a newline character is inserted, it splits the current line dynamically. The implementation assumes that the cursor is always within the bounds of the document and it is very similar to editor\+\_\+insert\+\_\+char, without updating the local cursor position.
+
+
+\begin{DoxyParams}{Parameters}
+{\em c} & The character to insert. \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+EDITOR\+\_\+\+OK on success, or EDITOR\+\_\+\+ERR\+\_\+\+ALLOC\+\_\+\+FAILED on memory error. 
+\end{DoxyReturn}
+\Hypertarget{editor_8h_a527c9fc277874f68d739d984e1be0c5f}\index{editor.h@{editor.h}!editor\_remote\_replace\_block@{editor\_remote\_replace\_block}}
+\index{editor\_remote\_replace\_block@{editor\_remote\_replace\_block}!editor.h@{editor.h}}
+\doxysubsubsection{\texorpdfstring{editor\_remote\_replace\_block()}{editor\_remote\_replace\_block()}}
+{\footnotesize\ttfamily \label{editor_8h_a527c9fc277874f68d739d984e1be0c5f} 
+\doxymbox{\hyperlink{editor_8h_a0567671be08cc83cbdff870f77c955ae}{Editor\+Result}} editor\+\_\+remote\+\_\+replace\+\_\+block (\begin{DoxyParamCaption}\item[{int}]{start\+\_\+row}{, }\item[{int}]{deleted\+\_\+count}{, }\item[{int}]{inserted\+\_\+count}{}\end{DoxyParamCaption})}
+
+
+
+Prepares the text buffer for a block replacement. 
+
+This is the core of the remote block processing algorithm. It handles the structural memory shifts ({\ttfamily memmove} on the lines array) required when multiple lines are deleted or inserted at once. For example, during a Paste or Cut operation, it dynamically expands or shrinks the total row count of the buffer.
+
+
+\begin{DoxyParams}{Parameters}
+{\em start\+\_\+row} & The index of the first row to be affected. \\
+\hline
+{\em deleted\+\_\+count} & Number of lines to remove from the buffer. \\
+\hline
+{\em inserted\+\_\+count} & Number of empty lines to allocate and make room for. \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+EDITOR\+\_\+\+OK on success, or EDITOR\+\_\+\+ERR\+\_\+\+ALLOC\+\_\+\+FAILED on memory error. 
+\end{DoxyReturn}
+\Hypertarget{editor_8h_a61a9255828346381bd422d5303a53cdc}\index{editor.h@{editor.h}!editor\_remote\_update\_line@{editor\_remote\_update\_line}}
+\index{editor\_remote\_update\_line@{editor\_remote\_update\_line}!editor.h@{editor.h}}
+\doxysubsubsection{\texorpdfstring{editor\_remote\_update\_line()}{editor\_remote\_update\_line()}}
+{\footnotesize\ttfamily \label{editor_8h_a61a9255828346381bd422d5303a53cdc} 
+\doxymbox{\hyperlink{editor_8h_a0567671be08cc83cbdff870f77c955ae}{Editor\+Result}} editor\+\_\+remote\+\_\+update\+\_\+line (\begin{DoxyParamCaption}\item[{int}]{row}{, }\item[{const char \texorpdfstring{$\ast$}{*}}]{text}{, }\item[{int}]{len}{}\end{DoxyParamCaption})}
+
+
+
+Overwrites a specific line with new text received from the network. 
+
+Used immediately after {\ttfamily \doxylink{editor_8h_a527c9fc277874f68d739d984e1be0c5f}{editor\+\_\+remote\+\_\+replace\+\_\+block}} to fill the newly created empty lines with the actual payload text. Reallocates the internal buffer if the new text is larger than the previous capacity.
+
+
+\begin{DoxyParams}{Parameters}
+{\em row} & The index of the line to update. \\
+\hline
+{\em text} & The new string to be copied into the line. \\
+\hline
+{\em len} & The length of the new string. \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+EDITOR\+\_\+\+OK on success, or EDITOR\+\_\+\+ERR\+\_\+\+ALLOC\+\_\+\+FAILED on memory error. 
+\end{DoxyReturn}
+\Hypertarget{editor_8h_aa0d935b6c456d4c4c9f65b46868b1a2f}\index{editor.h@{editor.h}!editor\_scroll\_by@{editor\_scroll\_by}}
+\index{editor\_scroll\_by@{editor\_scroll\_by}!editor.h@{editor.h}}
+\doxysubsubsection{\texorpdfstring{editor\_scroll\_by()}{editor\_scroll\_by()}}
+{\footnotesize\ttfamily \label{editor_8h_aa0d935b6c456d4c4c9f65b46868b1a2f} 
+void editor\+\_\+scroll\+\_\+by (\begin{DoxyParamCaption}\item[{int}]{drow}{, }\item[{int}]{dcol}{}\end{DoxyParamCaption})}
+
+
+
+Scrolls the view by a row and column delta. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em drow} & Delta rows (positive = down) \\
+\hline
+{\em dcol} & Delta Columns (positive = right) \\
+\hline
+\end{DoxyParams}
+\Hypertarget{editor_8h_a257948364e6798b55bca1d4f21fade8f}\index{editor.h@{editor.h}!editor\_sel\_clear@{editor\_sel\_clear}}
+\index{editor\_sel\_clear@{editor\_sel\_clear}!editor.h@{editor.h}}
+\doxysubsubsection{\texorpdfstring{editor\_sel\_clear()}{editor\_sel\_clear()}}
+{\footnotesize\ttfamily \label{editor_8h_a257948364e6798b55bca1d4f21fade8f} 
+void editor\+\_\+sel\+\_\+clear (\begin{DoxyParamCaption}{}{}\end{DoxyParamCaption})}
+
+
+
+Clears the active selection without modifying the buffer. 
+
+\Hypertarget{editor_8h_ad170d3aefed805a70d2c633ce4c51c90}\index{editor.h@{editor.h}!editor\_sel\_get\_range@{editor\_sel\_get\_range}}
+\index{editor\_sel\_get\_range@{editor\_sel\_get\_range}!editor.h@{editor.h}}
+\doxysubsubsection{\texorpdfstring{editor\_sel\_get\_range()}{editor\_sel\_get\_range()}}
+{\footnotesize\ttfamily \label{editor_8h_ad170d3aefed805a70d2c633ce4c51c90} 
+void editor\+\_\+sel\+\_\+get\+\_\+range (\begin{DoxyParamCaption}\item[{int \texorpdfstring{$\ast$}{*}}]{start\+\_\+row}{, }\item[{int \texorpdfstring{$\ast$}{*}}]{start\+\_\+col}{, }\item[{int \texorpdfstring{$\ast$}{*}}]{end\+\_\+row}{, }\item[{int \texorpdfstring{$\ast$}{*}}]{end\+\_\+col}{}\end{DoxyParamCaption})}
+
+
+
+Returns the selection range in order (start before end). 
+
+
+\begin{DoxyParams}{Parameters}
+{\em start\+\_\+row} & first row of the selection \\
+\hline
+{\em start\+\_\+col} & first column of the selection \\
+\hline
+{\em end\+\_\+row} & last row of the selection \\
+\hline
+{\em end\+\_\+col} & last column of the selection \\
+\hline
+\end{DoxyParams}
+\Hypertarget{editor_8h_a60594bab32622d0e9d62ed9ec7755a35}\index{editor.h@{editor.h}!editor\_sel\_is\_active@{editor\_sel\_is\_active}}
+\index{editor\_sel\_is\_active@{editor\_sel\_is\_active}!editor.h@{editor.h}}
+\doxysubsubsection{\texorpdfstring{editor\_sel\_is\_active()}{editor\_sel\_is\_active()}}
+{\footnotesize\ttfamily \label{editor_8h_a60594bab32622d0e9d62ed9ec7755a35} 
+bool editor\+\_\+sel\+\_\+is\+\_\+active (\begin{DoxyParamCaption}{}{}\end{DoxyParamCaption})}
+
+
+
+Returns whether a selection is currently active. 
+
+\begin{DoxyReturn}{Returns}
+true if a selection anchor has been set and the selection is non-\/empty 
+\end{DoxyReturn}
+\Hypertarget{editor_8h_aa411c2d9dd9f5ba7e8960ec56bb6c3fd}\index{editor.h@{editor.h}!editor\_sel\_set\_anchor@{editor\_sel\_set\_anchor}}
+\index{editor\_sel\_set\_anchor@{editor\_sel\_set\_anchor}!editor.h@{editor.h}}
+\doxysubsubsection{\texorpdfstring{editor\_sel\_set\_anchor()}{editor\_sel\_set\_anchor()}}
+{\footnotesize\ttfamily \label{editor_8h_aa411c2d9dd9f5ba7e8960ec56bb6c3fd} 
+void editor\+\_\+sel\+\_\+set\+\_\+anchor (\begin{DoxyParamCaption}{}{}\end{DoxyParamCaption})}
+
+
+
+Sets the selection anchor at the current cursor position. 
+
+Subsequent cursor moves extend the selection from this anchor \Hypertarget{editor_8h_a10801b59cb4dbc028267a481717603b2}\index{editor.h@{editor.h}!editor\_set\_cursor@{editor\_set\_cursor}}
+\index{editor\_set\_cursor@{editor\_set\_cursor}!editor.h@{editor.h}}
+\doxysubsubsection{\texorpdfstring{editor\_set\_cursor()}{editor\_set\_cursor()}}
+{\footnotesize\ttfamily \label{editor_8h_a10801b59cb4dbc028267a481717603b2} 
+void editor\+\_\+set\+\_\+cursor (\begin{DoxyParamCaption}\item[{int}]{row}{, }\item[{int}]{col}{}\end{DoxyParamCaption})}
+
+
+
+Moves the cursor to an absolute position. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em row} & Target row (0-\/based) \\
+\hline
+{\em col} & Target column (0-\/based) \\
+\hline
+\end{DoxyParams}
+\Hypertarget{editor_8h_a0a5c2c62e540da58f5a267df1c080f55}\index{editor.h@{editor.h}!editor\_set\_remote\_cursor@{editor\_set\_remote\_cursor}}
+\index{editor\_set\_remote\_cursor@{editor\_set\_remote\_cursor}!editor.h@{editor.h}}
+\doxysubsubsection{\texorpdfstring{editor\_set\_remote\_cursor()}{editor\_set\_remote\_cursor()}}
+{\footnotesize\ttfamily \label{editor_8h_a0a5c2c62e540da58f5a267df1c080f55} 
+void editor\+\_\+set\+\_\+remote\+\_\+cursor (\begin{DoxyParamCaption}\item[{int}]{row}{, }\item[{int}]{col}{}\end{DoxyParamCaption})}
+
+
+
+Sets the remote peer\textquotesingle{}s cursor position. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em row} & Row index (0-\/based) \\
+\hline
+{\em col} & Column index (0-\/based) \\
+\hline
+\end{DoxyParams}
+\Hypertarget{editor_8h_a4dbfb17a84c027c8c72997c324b492e1}\index{editor.h@{editor.h}!editor\_set\_viewport@{editor\_set\_viewport}}
+\index{editor\_set\_viewport@{editor\_set\_viewport}!editor.h@{editor.h}}
+\doxysubsubsection{\texorpdfstring{editor\_set\_viewport()}{editor\_set\_viewport()}}
+{\footnotesize\ttfamily \label{editor_8h_a4dbfb17a84c027c8c72997c324b492e1} 
+void editor\+\_\+set\+\_\+viewport (\begin{DoxyParamCaption}\item[{int}]{rows}{, }\item[{int}]{cols}{}\end{DoxyParamCaption})}
+
+
+
+Sets the visible area so the editor can clamp scroll and cursor. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em rows} & Number of visible text rows \\
+\hline
+{\em cols} & Number of visible text columns \\
+\hline
+\end{DoxyParams}

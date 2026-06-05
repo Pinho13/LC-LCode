@@ -1,0 +1,63 @@
+\doxysection{Serial\+Event Struct Reference}
+\hypertarget{structSerialEvent}{}\label{structSerialEvent}\index{SerialEvent@{SerialEvent}}
+
+
+Structure representing a fully assembled serial packet (event).  
+
+
+
+
+{\ttfamily \+\#include $<$serial.\+h$>$}
+
+\doxysubsubsection*{Public Attributes}
+\begin{DoxyCompactItemize}
+\item 
+uint8\+\_\+t \doxymbox{\hyperlink{structSerialEvent_a1e9d069f656c8068497fc54dcce845c6}{cmd}}
+\begin{DoxyCompactList}\small\item\em Command ID (from \doxylink{group__Serial_gad3fd96d1dee1731337015b1bea6f96db}{Serial\+Command} enum). \end{DoxyCompactList}\item 
+uint8\+\_\+t \doxymbox{\hyperlink{structSerialEvent_af77b27bd674289f62f7538d9ed305812}{payload\+\_\+buf}} \+[256]\+
+\begin{DoxyCompactList}\small\item\em Array containing the raw payload data. \end{DoxyCompactList}\item 
+uint8\+\_\+t \doxymbox{\hyperlink{structSerialEvent_a5373f48a5f7e96f3cfeaa0179174ea89}{payload\+\_\+len}}
+\begin{DoxyCompactList}\small\item\em Number of valid bytes in payload\+\_\+buf. \end{DoxyCompactList}\end{DoxyCompactItemize}
+
+
+\doxysubsection{Detailed Description}
+Structure representing a fully assembled serial packet (event). 
+
+\label{doc-variable-members}
+\Hypertarget{structSerialEvent_doc-variable-members}
+\doxysubsection{Member Data Documentation}
+\Hypertarget{structSerialEvent_a1e9d069f656c8068497fc54dcce845c6}\index{SerialEvent@{SerialEvent}!cmd@{cmd}}
+\index{cmd@{cmd}!SerialEvent@{SerialEvent}}
+\doxysubsubsection{\texorpdfstring{cmd}{cmd}}
+{\footnotesize\ttfamily \label{structSerialEvent_a1e9d069f656c8068497fc54dcce845c6} 
+uint8\+\_\+t Serial\+Event::\+cmd}
+
+
+
+Command ID (from \doxylink{group__Serial_gad3fd96d1dee1731337015b1bea6f96db}{Serial\+Command} enum). 
+
+\Hypertarget{structSerialEvent_af77b27bd674289f62f7538d9ed305812}\index{SerialEvent@{SerialEvent}!payload\_buf@{payload\_buf}}
+\index{payload\_buf@{payload\_buf}!SerialEvent@{SerialEvent}}
+\doxysubsubsection{\texorpdfstring{payload\_buf}{payload\_buf}}
+{\footnotesize\ttfamily \label{structSerialEvent_af77b27bd674289f62f7538d9ed305812} 
+uint8\+\_\+t Serial\+Event::\+payload\+\_\+buf\+[256]\+}
+
+
+
+Array containing the raw payload data. 
+
+\Hypertarget{structSerialEvent_a5373f48a5f7e96f3cfeaa0179174ea89}\index{SerialEvent@{SerialEvent}!payload\_len@{payload\_len}}
+\index{payload\_len@{payload\_len}!SerialEvent@{SerialEvent}}
+\doxysubsubsection{\texorpdfstring{payload\_len}{payload\_len}}
+{\footnotesize\ttfamily \label{structSerialEvent_a5373f48a5f7e96f3cfeaa0179174ea89} 
+uint8\+\_\+t Serial\+Event::\+payload\+\_\+len}
+
+
+
+Number of valid bytes in payload\+\_\+buf. 
+
+
+
+The documentation for this struct was generated from the following file:\+\begin{DoxyCompactItemize}
+\item 
+/\+home/\+pinho/\+\+Classes/\+\+LCOM/\+shared/\+proj/\+code/\+controller/\+\doxymbox{\hyperlink{serial_8h}{serial.\+h}}\end{DoxyCompactItemize}

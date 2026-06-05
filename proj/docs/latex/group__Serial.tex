@@ -1,0 +1,156 @@
+\doxysection{Serial }
+\hypertarget{group__Serial}{}\label{group__Serial}\index{Serial@{Serial}}
+
+
+Serial communication protocol and packet formatting for Collaborative Editing.  
+
+
+\doxysubsubsection*{Classes}
+\begin{DoxyCompactItemize}
+\item 
+struct \doxymbox{\hyperlink{structSerialEvent}{Serial\+Event}}
+\begin{DoxyCompactList}\small\item\em Structure representing a fully assembled serial packet (event). \end{DoxyCompactList}\end{DoxyCompactItemize}
+\doxysubsubsection*{Macros}
+\begin{DoxyCompactItemize}
+\item 
+\+\#define \doxymbox{\hyperlink{group__Serial_gafee60f9afa160785b54be923ad4642ea}{PKT\+\_\+\+START\+\_\+\+BYTE}}~0x\+FE
+\begin{DoxyCompactList}\small\item\em Synchronization byte used to identify the start of a serial packet. \end{DoxyCompactList}\end{DoxyCompactItemize}
+\doxysubsubsection*{Enumerations}
+\begin{DoxyCompactItemize}
+\item 
+enum \doxymbox{\hyperlink{group__Serial_gad3fd96d1dee1731337015b1bea6f96db}{Serial\+Command}} \{ \newline
+\doxymbox{\hyperlink{group__Serial_ggad3fd96d1dee1731337015b1bea6f96dba85ca3315e33831bc2b1c65f8c1de1dd0}{CMD\+\_\+\+INSERT\+\_\+\+CHAR}} = 0x01
+, \doxymbox{\hyperlink{group__Serial_ggad3fd96d1dee1731337015b1bea6f96dbaf56024446eafcb400bf4985e8a034d1c}{CMD\+\_\+\+DELETE\+\_\+\+CHAR}} = 0x02
+, \doxymbox{\hyperlink{group__Serial_ggad3fd96d1dee1731337015b1bea6f96dbad3455fa1951ef7d4b0ccb7f1873c585e}{CMD\+\_\+\+MOVE\+\_\+\+CURSOR}} = 0x03
+, \doxymbox{\hyperlink{group__Serial_ggad3fd96d1dee1731337015b1bea6f96dba033e0928d083aa899d4c4c0abcf64e07}{CMD\+\_\+\+REPLACE\+\_\+\+BLOCK}} = 0x05
+, \newline
+\doxymbox{\hyperlink{group__Serial_ggad3fd96d1dee1731337015b1bea6f96dbab61b969a37ff27d1afd3de116116c6aa}{CMD\+\_\+\+UPDATE\+\_\+\+LINE}} = 0x06
+, \doxymbox{\hyperlink{group__Serial_ggad3fd96d1dee1731337015b1bea6f96dba3b5e130846bae4c73bbde29b38e12a96}{CMD\+\_\+\+FILE\+\_\+\+START}} = 0x10
+, \doxymbox{\hyperlink{group__Serial_ggad3fd96d1dee1731337015b1bea6f96dbacfef94226536c2a57c0840a89a938f00}{CMD\+\_\+\+FILE\+\_\+\+LINE}} = 0x11
+ \}
+\begin{DoxyCompactList}\small\item\em Enumeration of all supported serial commands for Delta Sync. \end{DoxyCompactList}\end{DoxyCompactItemize}
+\doxysubsubsection*{Functions}
+\begin{DoxyCompactItemize}
+\item 
+void \doxymbox{\hyperlink{group__Serial_ga72ebc9c8b6ee1b881cfa1497b89de292}{serial\+\_\+process}} ()
+\begin{DoxyCompactList}\small\item\em Processes incoming bytes from the serial port. \end{DoxyCompactList}\item 
+void \doxymbox{\hyperlink{group__Serial_ga380bf8b50ebd3fcb0c08334f64cdec9c}{build\+\_\+packet\+\_\+serial}} (\doxymbox{\hyperlink{group__Serial_gad3fd96d1dee1731337015b1bea6f96db}{Serial\+Command}} cmd, uint8\+\_\+t \texorpdfstring{$\ast$}{*}payload, int len, uint16\+\_\+t num\+\_\+lines)
+\begin{DoxyCompactList}\small\item\em Builds and transmits a serial packet over the UART. \end{DoxyCompactList}\end{DoxyCompactItemize}
+
+
+\doxysubsection{Detailed Description}
+Serial communication protocol and packet formatting for Collaborative Editing. 
+
+
+
+\label{doc-define-members}
+\Hypertarget{group__Serial_doc-define-members}
+\doxysubsection{Macro Definition Documentation}
+\Hypertarget{group__Serial_gafee60f9afa160785b54be923ad4642ea}\index{Serial@{Serial}!PKT\_START\_BYTE@{PKT\_START\_BYTE}}
+\index{PKT\_START\_BYTE@{PKT\_START\_BYTE}!Serial@{Serial}}
+\doxysubsubsection{\texorpdfstring{PKT\_START\_BYTE}{PKT\_START\_BYTE}}
+{\footnotesize\ttfamily \label{group__Serial_gafee60f9afa160785b54be923ad4642ea} 
+\+\#define PKT\+\_\+\+START\+\_\+\+BYTE~0x\+FE}
+
+
+
+Synchronization byte used to identify the start of a serial packet. 
+
+
+
+\label{doc-enum-members}
+\Hypertarget{group__Serial_doc-enum-members}
+\doxysubsection{Enumeration Type Documentation}
+\Hypertarget{group__Serial_gad3fd96d1dee1731337015b1bea6f96db}\index{Serial@{Serial}!SerialCommand@{SerialCommand}}
+\index{SerialCommand@{SerialCommand}!Serial@{Serial}}
+\doxysubsubsection{\texorpdfstring{SerialCommand}{SerialCommand}}
+{\footnotesize\ttfamily \label{group__Serial_gad3fd96d1dee1731337015b1bea6f96db} 
+enum \doxymbox{\hyperlink{group__Serial_gad3fd96d1dee1731337015b1bea6f96db}{Serial\+Command}}}
+
+
+
+Enumeration of all supported serial commands for Delta Sync. 
+
+This protocol avoids sending the entire file on every change. Instead, it transmits precise "{}\+Deltas"{} (insertions, deletions, and block replacements). \begin{DoxyEnumFields}[2]{Enumerator}
+\raisebox{\heightof{T}}[0pt][0pt]{\index{CMD\_INSERT\_CHAR@{CMD\_INSERT\_CHAR}!Serial@{Serial}}
+\index{Serial@{Serial}!CMD\_INSERT\_CHAR@{CMD\_INSERT\_CHAR}}
+}\Hypertarget{group__Serial_ggad3fd96d1dee1731337015b1bea6f96dba85ca3315e33831bc2b1c65f8c1de1dd0}\label{group__Serial_ggad3fd96d1dee1731337015b1bea6f96dba85ca3315e33831bc2b1c65f8c1de1dd0} 
+CMD\+\_\+\+INSERT\+\_\+\+CHAR&Insert a character. Payload:\+ 1 byte. \\
+\hline
+
+\raisebox{\heightof{T}}[0pt][0pt]{\index{CMD\_DELETE\_CHAR@{CMD\_DELETE\_CHAR}!Serial@{Serial}}
+\index{Serial@{Serial}!CMD\_DELETE\_CHAR@{CMD\_DELETE\_CHAR}}
+}\Hypertarget{group__Serial_ggad3fd96d1dee1731337015b1bea6f96dbaf56024446eafcb400bf4985e8a034d1c}\label{group__Serial_ggad3fd96d1dee1731337015b1bea6f96dbaf56024446eafcb400bf4985e8a034d1c} 
+CMD\+\_\+\+DELETE\+\_\+\+CHAR&Delete char before cursor. Payload:\+ 0 bytes. \\
+\hline
+
+\raisebox{\heightof{T}}[0pt][0pt]{\index{CMD\_MOVE\_CURSOR@{CMD\_MOVE\_CURSOR}!Serial@{Serial}}
+\index{Serial@{Serial}!CMD\_MOVE\_CURSOR@{CMD\_MOVE\_CURSOR}}
+}\Hypertarget{group__Serial_ggad3fd96d1dee1731337015b1bea6f96dbad3455fa1951ef7d4b0ccb7f1873c585e}\label{group__Serial_ggad3fd96d1dee1731337015b1bea6f96dbad3455fa1951ef7d4b0ccb7f1873c585e} 
+CMD\+\_\+\+MOVE\+\_\+\+CURSOR&Move remote cursor. Payload:\+ 4 bytes (2 row, 2 col). \\
+\hline
+
+\raisebox{\heightof{T}}[0pt][0pt]{\index{CMD\_REPLACE\_BLOCK@{CMD\_REPLACE\_BLOCK}!Serial@{Serial}}
+\index{Serial@{Serial}!CMD\_REPLACE\_BLOCK@{CMD\_REPLACE\_BLOCK}}
+}\Hypertarget{group__Serial_ggad3fd96d1dee1731337015b1bea6f96dba033e0928d083aa899d4c4c0abcf64e07}\label{group__Serial_ggad3fd96d1dee1731337015b1bea6f96dba033e0928d083aa899d4c4c0abcf64e07} 
+CMD\+\_\+\+REPLACE\+\_\+\+BLOCK&Prepare memory for block edit. Payload:\+ 6 bytes (2 start\+\_\+row, rows\+\_\+deleted, rows\+\_\+inserted). \\
+\hline
+
+\raisebox{\heightof{T}}[0pt][0pt]{\index{CMD\_UPDATE\_LINE@{CMD\_UPDATE\_LINE}!Serial@{Serial}}
+\index{Serial@{Serial}!CMD\_UPDATE\_LINE@{CMD\_UPDATE\_LINE}}
+}\Hypertarget{group__Serial_ggad3fd96d1dee1731337015b1bea6f96dbab61b969a37ff27d1afd3de116116c6aa}\label{group__Serial_ggad3fd96d1dee1731337015b1bea6f96dbab61b969a37ff27d1afd3de116116c6aa} 
+CMD\+\_\+\+UPDATE\+\_\+\+LINE&Overwrite a line. Payload:\+ 2 bytes (row\+\_\+index) + text (max 250 char). \\
+\hline
+
+\raisebox{\heightof{T}}[0pt][0pt]{\index{CMD\_FILE\_START@{CMD\_FILE\_START}!Serial@{Serial}}
+\index{Serial@{Serial}!CMD\_FILE\_START@{CMD\_FILE\_START}}
+}\Hypertarget{group__Serial_ggad3fd96d1dee1731337015b1bea6f96dba3b5e130846bae4c73bbde29b38e12a96}\label{group__Serial_ggad3fd96d1dee1731337015b1bea6f96dba3b5e130846bae4c73bbde29b38e12a96} 
+CMD\+\_\+\+FILE\+\_\+\+START&Start file share. Payload:\+ 2 bytes (Numlines) + filename. \\
+\hline
+
+\raisebox{\heightof{T}}[0pt][0pt]{\index{CMD\_FILE\_LINE@{CMD\_FILE\_LINE}!Serial@{Serial}}
+\index{Serial@{Serial}!CMD\_FILE\_LINE@{CMD\_FILE\_LINE}}
+}\Hypertarget{group__Serial_ggad3fd96d1dee1731337015b1bea6f96dbacfef94226536c2a57c0840a89a938f00}\label{group__Serial_ggad3fd96d1dee1731337015b1bea6f96dbacfef94226536c2a57c0840a89a938f00} 
+CMD\+\_\+\+FILE\+\_\+\+LINE&Send file line during sync. Payload:\+ text (max 252 char). \\
+\hline
+
+\end{DoxyEnumFields}
+
+
+\label{doc-func-members}
+\Hypertarget{group__Serial_doc-func-members}
+\doxysubsection{Function Documentation}
+\Hypertarget{group__Serial_ga380bf8b50ebd3fcb0c08334f64cdec9c}\index{Serial@{Serial}!build\_packet\_serial@{build\_packet\_serial}}
+\index{build\_packet\_serial@{build\_packet\_serial}!Serial@{Serial}}
+\doxysubsubsection{\texorpdfstring{build\_packet\_serial()}{build\_packet\_serial()}}
+{\footnotesize\ttfamily \label{group__Serial_ga380bf8b50ebd3fcb0c08334f64cdec9c} 
+void build\+\_\+packet\+\_\+serial (\begin{DoxyParamCaption}\item[{\doxymbox{\hyperlink{group__Serial_gad3fd96d1dee1731337015b1bea6f96db}{Serial\+Command}}}]{cmd}{, }\item[{uint8\+\_\+t \texorpdfstring{$\ast$}{*}}]{payload}{, }\item[{int}]{len}{, }\item[{uint16\+\_\+t}]{num\+\_\+lines}{}\end{DoxyParamCaption})}
+
+
+
+Builds and transmits a serial packet over the UART. 
+
+Encapsulates the payload with the START\+\_\+\+BYTE, command ID, and length.
+
+
+\begin{DoxyParams}{Parameters}
+{\em cmd} & The command to execute (\doxylink{group__Serial_gad3fd96d1dee1731337015b1bea6f96db}{Serial\+Command}). \\
+\hline
+{\em payload} & Pointer to the payload data buffer. \\
+\hline
+{\em len} & Size of the payload in bytes. \\
+\hline
+{\em num\+\_\+lines} & 16-\/bit integer used for row indexes or line counts. \\
+\hline
+\end{DoxyParams}
+\Hypertarget{group__Serial_ga72ebc9c8b6ee1b881cfa1497b89de292}\index{Serial@{Serial}!serial\_process@{serial\_process}}
+\index{serial\_process@{serial\_process}!Serial@{Serial}}
+\doxysubsubsection{\texorpdfstring{serial\_process()}{serial\_process()}}
+{\footnotesize\ttfamily \label{group__Serial_ga72ebc9c8b6ee1b881cfa1497b89de292} 
+void serial\+\_\+process (\begin{DoxyParamCaption}{}{}\end{DoxyParamCaption})}
+
+
+
+Processes incoming bytes from the serial port. 
+
+Implements a state machine (WAIT\+\_\+\+START -\/\texorpdfstring{$>$}{>} READ\+\_\+\+CMD -\/\texorpdfstring{$>$}{>} READ\+\_\+\+LEN -\/\texorpdfstring{$>$}{>} READ\+\_\+\+PAYLOAD) to assemble bytes into {\ttfamily \doxylink{structSerialEvent}{Serial\+Event}} structs and pushes them to the input queue. 

@@ -1,0 +1,195 @@
+\doxysection{/\+home/\+pinho/\+\+Classes/\+\+LCOM/\+shared/\+proj/\+code/\+view/\+renderer/\+scene.h File Reference}
+\hypertarget{scene_8h}{}\label{scene_8h}\index{/home/pinho/Classes/LCOM/shared/proj/code/view/renderer/scene.h@{/home/pinho/Classes/LCOM/shared/proj/code/view/renderer/scene.h}}
+
+
+Editor scene rendering and screen-\/to-\/model hit-\/mapping.  
+
+
+{\ttfamily \+\#include $<$lcom/\+lcf.\+h$>$}\newline
+{\ttfamily \+\#include "{}view/\+editor/\+syntax.\+h"{}}\newline
+\doxysubsubsection*{Enumerations}
+\begin{DoxyCompactItemize}
+\item 
+enum \doxymbox{\hyperlink{scene_8h_a7c532973d0a015d853c7b7a9d3b61e57}{Scene\+ID}} \{ \doxymbox{\hyperlink{scene_8h_a7c532973d0a015d853c7b7a9d3b61e57a571a2016a8cc7d9fc507d003e084984a}{SCENE\+\_\+\+EDITOR}}
+ \}
+\end{DoxyCompactItemize}
+\doxysubsubsection*{Functions}
+\begin{DoxyCompactItemize}
+\item 
+int \doxymbox{\hyperlink{scene_8h_ab48b73a2c786acdd606ac6e209711136}{scene\+\_\+init}} (\doxymbox{\hyperlink{scene_8h_a7c532973d0a015d853c7b7a9d3b61e57}{Scene\+ID}} id)
+\begin{DoxyCompactList}\small\item\em Initializes the scene, layout, and mouse cursor. \end{DoxyCompactList}\item 
+void \doxymbox{\hyperlink{scene_8h_aa02abbcd1d65efb3af66c66a8c9b33ca}{scene\+\_\+cleanup}} ()
+\begin{DoxyCompactList}\small\item\em Releases all resources owned by the scene. \end{DoxyCompactList}\item 
+int \doxymbox{\hyperlink{scene_8h_af213493d9d4212e50735603954a9fd54}{scene\+\_\+get\+\_\+vis\+\_\+rows}} ()
+\begin{DoxyCompactList}\small\item\em Returns the number of visible text rows in the editor area. \end{DoxyCompactList}\item 
+void \doxymbox{\hyperlink{scene_8h_a937874eec6821c1cd29456eec9c207b9}{view\+\_\+render}} ()
+\begin{DoxyCompactList}\small\item\em Renders the current scene and flips changed regions to the screen. \end{DoxyCompactList}\item 
+bool \doxymbox{\hyperlink{scene_8h_a0574606f438f060b952840ebbd4214f6}{scene\+\_\+px\+\_\+to\+\_\+text}} (int px, int py, int \texorpdfstring{$\ast$}{*}out\+\_\+row, int \texorpdfstring{$\ast$}{*}out\+\_\+col)
+\begin{DoxyCompactList}\small\item\em Screen coordinates to text position mapping. Converts pixel coordinates to editor row and column. \end{DoxyCompactList}\item 
+bool \doxymbox{\hyperlink{scene_8h_ae02a81d65f9697db9f177adb348fbb4b}{scene\+\_\+click\+\_\+scrollbar}} (int px, int py)
+\begin{DoxyCompactList}\small\item\em Handles a click on the scrollbar, scrolling to the clicked position. \end{DoxyCompactList}\item 
+bool \doxymbox{\hyperlink{scene_8h_a5ce9a7144b4355e750bfac7af3dd0c26}{scene\+\_\+px\+\_\+to\+\_\+filetree}} (int px, int py, int \texorpdfstring{$\ast$}{*}out\+\_\+index)
+\begin{DoxyCompactList}\small\item\em Converts a pixel coordinate to a file tree entry index. \end{DoxyCompactList}\item 
+void \doxymbox{\hyperlink{scene_8h_ac4005623c1b9079fc0312c5e3262394e}{scene\+\_\+set\+\_\+language}} (\doxymbox{\hyperlink{syntax_8h_a85c9a23a5eedbf98a8e829326a7bf93a}{Syntax\+Language}} lang)
+\begin{DoxyCompactList}\small\item\em Sets the syntax highlighting language for the current file. \end{DoxyCompactList}\end{DoxyCompactItemize}
+
+
+\doxysubsection{Detailed Description}
+Editor scene rendering and screen-\/to-\/model hit-\/mapping. 
+
+
+
+\label{doc-enum-members}
+\Hypertarget{scene_8h_doc-enum-members}
+\doxysubsection{Enumeration Type Documentation}
+\Hypertarget{scene_8h_a7c532973d0a015d853c7b7a9d3b61e57}\index{scene.h@{scene.h}!SceneID@{SceneID}}
+\index{SceneID@{SceneID}!scene.h@{scene.h}}
+\doxysubsubsection{\texorpdfstring{SceneID}{SceneID}}
+{\footnotesize\ttfamily \label{scene_8h_a7c532973d0a015d853c7b7a9d3b61e57} 
+enum \doxymbox{\hyperlink{scene_8h_a7c532973d0a015d853c7b7a9d3b61e57}{Scene\+ID}}}
+
+\begin{DoxyEnumFields}[2]{Enumerator}
+\raisebox{\heightof{T}}[0pt][0pt]{\index{SCENE\_EDITOR@{SCENE\_EDITOR}!scene.h@{scene.h}}
+\index{scene.h@{scene.h}!SCENE\_EDITOR@{SCENE\_EDITOR}}
+}\Hypertarget{scene_8h_a7c532973d0a015d853c7b7a9d3b61e57a571a2016a8cc7d9fc507d003e084984a}\label{scene_8h_a7c532973d0a015d853c7b7a9d3b61e57a571a2016a8cc7d9fc507d003e084984a} 
+SCENE\+\_\+\+EDITOR&\\
+\hline
+
+\end{DoxyEnumFields}
+
+
+\label{doc-func-members}
+\Hypertarget{scene_8h_doc-func-members}
+\doxysubsection{Function Documentation}
+\Hypertarget{scene_8h_aa02abbcd1d65efb3af66c66a8c9b33ca}\index{scene.h@{scene.h}!scene\_cleanup@{scene\_cleanup}}
+\index{scene\_cleanup@{scene\_cleanup}!scene.h@{scene.h}}
+\doxysubsubsection{\texorpdfstring{scene\_cleanup()}{scene\_cleanup()}}
+{\footnotesize\ttfamily \label{scene_8h_aa02abbcd1d65efb3af66c66a8c9b33ca} 
+void scene\+\_\+cleanup (\begin{DoxyParamCaption}{}{}\end{DoxyParamCaption})}
+
+
+
+Releases all resources owned by the scene. 
+
+\Hypertarget{scene_8h_ae02a81d65f9697db9f177adb348fbb4b}\index{scene.h@{scene.h}!scene\_click\_scrollbar@{scene\_click\_scrollbar}}
+\index{scene\_click\_scrollbar@{scene\_click\_scrollbar}!scene.h@{scene.h}}
+\doxysubsubsection{\texorpdfstring{scene\_click\_scrollbar()}{scene\_click\_scrollbar()}}
+{\footnotesize\ttfamily \label{scene_8h_ae02a81d65f9697db9f177adb348fbb4b} 
+bool scene\+\_\+click\+\_\+scrollbar (\begin{DoxyParamCaption}\item[{int}]{px}{, }\item[{int}]{py}{}\end{DoxyParamCaption})}
+
+
+
+Handles a click on the scrollbar, scrolling to the clicked position. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em px} & Pixel x coordinate \\
+\hline
+{\em py} & Pixel y coordinate \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+true if the pixel falls inside the scrollbar, false otherwise 
+\end{DoxyReturn}
+\Hypertarget{scene_8h_af213493d9d4212e50735603954a9fd54}\index{scene.h@{scene.h}!scene\_get\_vis\_rows@{scene\_get\_vis\_rows}}
+\index{scene\_get\_vis\_rows@{scene\_get\_vis\_rows}!scene.h@{scene.h}}
+\doxysubsubsection{\texorpdfstring{scene\_get\_vis\_rows()}{scene\_get\_vis\_rows()}}
+{\footnotesize\ttfamily \label{scene_8h_af213493d9d4212e50735603954a9fd54} 
+int scene\+\_\+get\+\_\+vis\+\_\+rows (\begin{DoxyParamCaption}{}{}\end{DoxyParamCaption})}
+
+
+
+Returns the number of visible text rows in the editor area. 
+
+\begin{DoxyReturn}{Returns}
+Visible row count 
+\end{DoxyReturn}
+\Hypertarget{scene_8h_ab48b73a2c786acdd606ac6e209711136}\index{scene.h@{scene.h}!scene\_init@{scene\_init}}
+\index{scene\_init@{scene\_init}!scene.h@{scene.h}}
+\doxysubsubsection{\texorpdfstring{scene\_init()}{scene\_init()}}
+{\footnotesize\ttfamily \label{scene_8h_ab48b73a2c786acdd606ac6e209711136} 
+int scene\+\_\+init (\begin{DoxyParamCaption}\item[{\doxymbox{\hyperlink{scene_8h_a7c532973d0a015d853c7b7a9d3b61e57}{Scene\+ID}}}]{id}{}\end{DoxyParamCaption})}
+
+
+
+Initializes the scene, layout, and mouse cursor. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em id} & The scene to display. \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+0 on success. Non-\/zero on failure. 
+\end{DoxyReturn}
+\Hypertarget{scene_8h_a5ce9a7144b4355e750bfac7af3dd0c26}\index{scene.h@{scene.h}!scene\_px\_to\_filetree@{scene\_px\_to\_filetree}}
+\index{scene\_px\_to\_filetree@{scene\_px\_to\_filetree}!scene.h@{scene.h}}
+\doxysubsubsection{\texorpdfstring{scene\_px\_to\_filetree()}{scene\_px\_to\_filetree()}}
+{\footnotesize\ttfamily \label{scene_8h_a5ce9a7144b4355e750bfac7af3dd0c26} 
+bool scene\+\_\+px\+\_\+to\+\_\+filetree (\begin{DoxyParamCaption}\item[{int}]{px}{, }\item[{int}]{py}{, }\item[{int \texorpdfstring{$\ast$}{*}}]{out\+\_\+index}{}\end{DoxyParamCaption})}
+
+
+
+Converts a pixel coordinate to a file tree entry index. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em px} & Pixel x coordinate \\
+\hline
+{\em py} & Pixel y coordinate \\
+\hline
+{\em out\+\_\+index} & Output entry index, or -\/1 if below all entries \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+true if the pixel falls inside the file tree. False otherwise 
+\end{DoxyReturn}
+\Hypertarget{scene_8h_a0574606f438f060b952840ebbd4214f6}\index{scene.h@{scene.h}!scene\_px\_to\_text@{scene\_px\_to\_text}}
+\index{scene\_px\_to\_text@{scene\_px\_to\_text}!scene.h@{scene.h}}
+\doxysubsubsection{\texorpdfstring{scene\_px\_to\_text()}{scene\_px\_to\_text()}}
+{\footnotesize\ttfamily \label{scene_8h_a0574606f438f060b952840ebbd4214f6} 
+bool scene\+\_\+px\+\_\+to\+\_\+text (\begin{DoxyParamCaption}\item[{int}]{px}{, }\item[{int}]{py}{, }\item[{int \texorpdfstring{$\ast$}{*}}]{out\+\_\+row}{, }\item[{int \texorpdfstring{$\ast$}{*}}]{out\+\_\+col}{}\end{DoxyParamCaption})}
+
+
+
+Screen coordinates to text position mapping. Converts pixel coordinates to editor row and column. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em px} & Pixel x coordinate \\
+\hline
+{\em py} & Pixel y coordinate \\
+\hline
+{\em out\+\_\+row} & Output row index (0-\/based) \\
+\hline
+{\em out\+\_\+col} & Output column index (0-\/based), clamped to line length \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+true if the pixel falls inside the editor text area, false otherwise 
+\end{DoxyReturn}
+\Hypertarget{scene_8h_ac4005623c1b9079fc0312c5e3262394e}\index{scene.h@{scene.h}!scene\_set\_language@{scene\_set\_language}}
+\index{scene\_set\_language@{scene\_set\_language}!scene.h@{scene.h}}
+\doxysubsubsection{\texorpdfstring{scene\_set\_language()}{scene\_set\_language()}}
+{\footnotesize\ttfamily \label{scene_8h_ac4005623c1b9079fc0312c5e3262394e} 
+void scene\+\_\+set\+\_\+language (\begin{DoxyParamCaption}\item[{\doxymbox{\hyperlink{syntax_8h_a85c9a23a5eedbf98a8e829326a7bf93a}{Syntax\+Language}}}]{lang}{}\end{DoxyParamCaption})}
+
+
+
+Sets the syntax highlighting language for the current file. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em lang} & The language to use. \\
+\hline
+\end{DoxyParams}
+\Hypertarget{scene_8h_a937874eec6821c1cd29456eec9c207b9}\index{scene.h@{scene.h}!view\_render@{view\_render}}
+\index{view\_render@{view\_render}!scene.h@{scene.h}}
+\doxysubsubsection{\texorpdfstring{view\_render()}{view\_render()}}
+{\footnotesize\ttfamily \label{scene_8h_a937874eec6821c1cd29456eec9c207b9} 
+void view\+\_\+render (\begin{DoxyParamCaption}{}{}\end{DoxyParamCaption})}
+
+
+
+Renders the current scene and flips changed regions to the screen. 
+

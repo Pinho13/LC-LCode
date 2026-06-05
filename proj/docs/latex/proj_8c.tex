@@ -1,0 +1,66 @@
+\doxysection{/\+home/\+pinho/\+\+Classes/\+\+LCOM/\+shared/\+proj/\+code/\+proj.c File Reference}
+\hypertarget{proj_8c}{}\label{proj_8c}\index{/home/pinho/Classes/LCOM/shared/proj/code/proj.c@{/home/pinho/Classes/LCOM/shared/proj/code/proj.c}}
+{\ttfamily \+\#include $<$lcom/\+lcf.\+h$>$}\newline
+{\ttfamily \+\#include "{}fw/\+common/\+utils.\+h"{}}\newline
+{\ttfamily \+\#include $<$unistd.\+h$>$}\newline
+{\ttfamily \+\#include $<$sys/\+stat.\+h$>$}\newline
+{\ttfamily \+\#include "{}fw/\+drivers/\+video.\+h"{}}\newline
+{\ttfamily \+\#include "{}fw/\+drivers/\+serial\+\_\+port.\+h"{}}\newline
+{\ttfamily \+\#include "{}controller/\+ih/\+ih.\+h"{}}\newline
+{\ttfamily \+\#include "{}controller/\+commands/\+commands.\+h"{}}\newline
+{\ttfamily \+\#include "{}controller/\+input/\+events.\+h"{}}\newline
+{\ttfamily \+\#include "{}view/\+renderer/\+scene.\+h"{}}\newline
+{\ttfamily \+\#include "{}view/\+editor/\+syntax.\+h"{}}\newline
+{\ttfamily \+\#include "{}model/\+editor/\+editor.\+h"{}}\newline
+{\ttfamily \+\#include "{}model/\+command\+\_\+bar/\+command\+\_\+bar.\+h"{}}\newline
+{\ttfamily \+\#include "{}model/\+filetree/\+filetree.\+h"{}}\newline
+{\ttfamily \+\#include "{}model/\+render\+\_\+state.\+h"{}}\newline
+{\ttfamily \+\#include "{}fw/\+hw/\+vbe.\+h"{}}\newline
+\doxysubsubsection*{Macros}
+\begin{DoxyCompactItemize}
+\item 
+\+\#define \doxymbox{\hyperlink{proj_8c_a38021eaad3f0b24deeb5b290fbba7235}{WORK\+\_\+\+DIR}}~"{}/\+home/\+lcom/\+labs/\+"{}
+\item 
+\+\#define \doxymbox{\hyperlink{proj_8c_a3c5cde2577e877adb5f9827014079dde}{VIDEO\+\_\+\+MODE}}~VBE\+\_\+864p\+\_\+\+DC
+\end{DoxyCompactItemize}
+\doxysubsubsection*{Functions}
+\begin{DoxyCompactItemize}
+\item 
+int \doxymbox{\hyperlink{proj_8c_a7a72220d8366dd84709e79ce415862e5}{proj\+\_\+main\+\_\+loop}} (int argc, char \texorpdfstring{$\ast$}{*}argv\+[$\,$]\+)
+\item 
+int \doxymbox{\hyperlink{proj_8c_a0ddf1224851353fc92bfbff6f499fa97}{main}} (int argc, char \texorpdfstring{$\ast$}{*}argv\+[$\,$]\+)
+\end{DoxyCompactItemize}
+
+
+\label{doc-define-members}
+\Hypertarget{proj_8c_doc-define-members}
+\doxysubsection{Macro Definition Documentation}
+\Hypertarget{proj_8c_a3c5cde2577e877adb5f9827014079dde}\index{proj.c@{proj.c}!VIDEO\_MODE@{VIDEO\_MODE}}
+\index{VIDEO\_MODE@{VIDEO\_MODE}!proj.c@{proj.c}}
+\doxysubsubsection{\texorpdfstring{VIDEO\_MODE}{VIDEO\_MODE}}
+{\footnotesize\ttfamily \label{proj_8c_a3c5cde2577e877adb5f9827014079dde} 
+\+\#define VIDEO\+\_\+\+MODE~VBE\+\_\+864p\+\_\+\+DC}
+
+\Hypertarget{proj_8c_a38021eaad3f0b24deeb5b290fbba7235}\index{proj.c@{proj.c}!WORK\_DIR@{WORK\_DIR}}
+\index{WORK\_DIR@{WORK\_DIR}!proj.c@{proj.c}}
+\doxysubsubsection{\texorpdfstring{WORK\_DIR}{WORK\_DIR}}
+{\footnotesize\ttfamily \label{proj_8c_a38021eaad3f0b24deeb5b290fbba7235} 
+\+\#define WORK\+\_\+\+DIR~"{}/\+home/\+lcom/\+labs/\+"{}}
+
+
+
+\label{doc-func-members}
+\Hypertarget{proj_8c_doc-func-members}
+\doxysubsection{Function Documentation}
+\Hypertarget{proj_8c_a0ddf1224851353fc92bfbff6f499fa97}\index{proj.c@{proj.c}!main@{main}}
+\index{main@{main}!proj.c@{proj.c}}
+\doxysubsubsection{\texorpdfstring{main()}{main()}}
+{\footnotesize\ttfamily \label{proj_8c_a0ddf1224851353fc92bfbff6f499fa97} 
+int main (\begin{DoxyParamCaption}\item[{int}]{argc}{, }\item[{char \texorpdfstring{$\ast$}{*}}]{argv}{\+[$\,$]\+}\end{DoxyParamCaption})}
+
+\Hypertarget{proj_8c_a7a72220d8366dd84709e79ce415862e5}\index{proj.c@{proj.c}!proj\_main\_loop@{proj\_main\_loop}}
+\index{proj\_main\_loop@{proj\_main\_loop}!proj.c@{proj.c}}
+\doxysubsubsection{\texorpdfstring{proj\_main\_loop()}{proj\_main\_loop()}}
+{\footnotesize\ttfamily \label{proj_8c_a7a72220d8366dd84709e79ce415862e5} 
+int proj\+\_\+main\+\_\+loop (\begin{DoxyParamCaption}\item[{int}]{argc}{, }\item[{char \texorpdfstring{$\ast$}{*}}]{argv}{\+[$\,$]\+}\end{DoxyParamCaption})}
+

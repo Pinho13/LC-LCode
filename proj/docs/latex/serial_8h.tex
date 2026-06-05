@@ -1,0 +1,34 @@
+\doxysection{/\+home/\+pinho/\+\+Classes/\+\+LCOM/\+shared/\+proj/\+code/\+controller/\+serial.h File Reference}
+\hypertarget{serial_8h}{}\label{serial_8h}\index{/home/pinho/Classes/LCOM/shared/proj/code/controller/serial.h@{/home/pinho/Classes/LCOM/shared/proj/code/controller/serial.h}}
+{\ttfamily \+\#include $<$lcom/\+lcf.\+h$>$}\newline
+\doxysubsubsection*{Classes}
+\begin{DoxyCompactItemize}
+\item 
+struct \doxymbox{\hyperlink{structSerialEvent}{Serial\+Event}}
+\begin{DoxyCompactList}\small\item\em Structure representing a fully assembled serial packet (event). \end{DoxyCompactList}\end{DoxyCompactItemize}
+\doxysubsubsection*{Macros}
+\begin{DoxyCompactItemize}
+\item 
+\+\#define \doxymbox{\hyperlink{group__Serial_gafee60f9afa160785b54be923ad4642ea}{PKT\+\_\+\+START\+\_\+\+BYTE}}~0x\+FE
+\begin{DoxyCompactList}\small\item\em Synchronization byte used to identify the start of a serial packet. \end{DoxyCompactList}\end{DoxyCompactItemize}
+\doxysubsubsection*{Enumerations}
+\begin{DoxyCompactItemize}
+\item 
+enum \doxymbox{\hyperlink{group__Serial_gad3fd96d1dee1731337015b1bea6f96db}{Serial\+Command}} \{ \newline
+\doxymbox{\hyperlink{group__Serial_ggad3fd96d1dee1731337015b1bea6f96dba85ca3315e33831bc2b1c65f8c1de1dd0}{CMD\+\_\+\+INSERT\+\_\+\+CHAR}} = 0x01
+, \doxymbox{\hyperlink{group__Serial_ggad3fd96d1dee1731337015b1bea6f96dbaf56024446eafcb400bf4985e8a034d1c}{CMD\+\_\+\+DELETE\+\_\+\+CHAR}} = 0x02
+, \doxymbox{\hyperlink{group__Serial_ggad3fd96d1dee1731337015b1bea6f96dbad3455fa1951ef7d4b0ccb7f1873c585e}{CMD\+\_\+\+MOVE\+\_\+\+CURSOR}} = 0x03
+, \doxymbox{\hyperlink{group__Serial_ggad3fd96d1dee1731337015b1bea6f96dba033e0928d083aa899d4c4c0abcf64e07}{CMD\+\_\+\+REPLACE\+\_\+\+BLOCK}} = 0x05
+, \newline
+\doxymbox{\hyperlink{group__Serial_ggad3fd96d1dee1731337015b1bea6f96dbab61b969a37ff27d1afd3de116116c6aa}{CMD\+\_\+\+UPDATE\+\_\+\+LINE}} = 0x06
+, \doxymbox{\hyperlink{group__Serial_ggad3fd96d1dee1731337015b1bea6f96dba3b5e130846bae4c73bbde29b38e12a96}{CMD\+\_\+\+FILE\+\_\+\+START}} = 0x10
+, \doxymbox{\hyperlink{group__Serial_ggad3fd96d1dee1731337015b1bea6f96dbacfef94226536c2a57c0840a89a938f00}{CMD\+\_\+\+FILE\+\_\+\+LINE}} = 0x11
+ \}
+\begin{DoxyCompactList}\small\item\em Enumeration of all supported serial commands for Delta Sync. \end{DoxyCompactList}\end{DoxyCompactItemize}
+\doxysubsubsection*{Functions}
+\begin{DoxyCompactItemize}
+\item 
+void \doxymbox{\hyperlink{group__Serial_ga72ebc9c8b6ee1b881cfa1497b89de292}{serial\+\_\+process}} ()
+\begin{DoxyCompactList}\small\item\em Processes incoming bytes from the serial port. \end{DoxyCompactList}\item 
+void \doxymbox{\hyperlink{group__Serial_ga380bf8b50ebd3fcb0c08334f64cdec9c}{build\+\_\+packet\+\_\+serial}} (\doxymbox{\hyperlink{group__Serial_gad3fd96d1dee1731337015b1bea6f96db}{Serial\+Command}} cmd, uint8\+\_\+t \texorpdfstring{$\ast$}{*}payload, int len, uint16\+\_\+t num\+\_\+lines)
+\begin{DoxyCompactList}\small\item\em Builds and transmits a serial packet over the UART. \end{DoxyCompactList}\end{DoxyCompactItemize}

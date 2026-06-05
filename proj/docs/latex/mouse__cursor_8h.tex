@@ -1,0 +1,139 @@
+\doxysection{/\+home/\+pinho/\+\+Classes/\+\+LCOM/\+shared/\+proj/\+code/\+view/\+renderer/\+mouse\+\_\+cursor.h File Reference}
+\hypertarget{mouse__cursor_8h}{}\label{mouse__cursor_8h}\index{/home/pinho/Classes/LCOM/shared/proj/code/view/renderer/mouse\_cursor.h@{/home/pinho/Classes/LCOM/shared/proj/code/view/renderer/mouse\_cursor.h}}
+
+
+Mouse cursor rendering over the back buffer.  
+
+
+{\ttfamily \+\#include $<$lcom/\+lcf.\+h$>$}\newline
+\doxysubsubsection*{Functions}
+\begin{DoxyCompactItemize}
+\item 
+int \doxymbox{\hyperlink{mouse__cursor_8h_ae4d509205c42ac2cc373824832d381b7}{mouse\+\_\+cursor\+\_\+init}} ()
+\begin{DoxyCompactList}\small\item\em Loads the cursor sprite and initializes the back-\/buffer save area. \end{DoxyCompactList}\item 
+void \doxymbox{\hyperlink{mouse__cursor_8h_a0962b65078be6b71aa18fb913a06c8e7}{mouse\+\_\+cursor\+\_\+cleanup}} ()
+\begin{DoxyCompactList}\small\item\em Releases all resources owned by the cursor. \end{DoxyCompactList}\item 
+void \doxymbox{\hyperlink{mouse__cursor_8h_a44f38e9aa00bcabb9ae23ee86275d06f}{mouse\+\_\+cursor\+\_\+hide}} ()
+\begin{DoxyCompactList}\small\item\em Restores the pixels under the cursor\textquotesingle{}s previous position. \end{DoxyCompactList}\item 
+void \doxymbox{\hyperlink{mouse__cursor_8h_a9c7ac18eb1f57ab1057219e688597353}{mouse\+\_\+cursor\+\_\+show}} (int x, int y)
+\begin{DoxyCompactList}\small\item\em Saves the pixels under the cursor and draws at (x, y). \end{DoxyCompactList}\item 
+int \doxymbox{\hyperlink{mouse__cursor_8h_a77c91f622d18527df4d4963d8517d06e}{mouse\+\_\+cursor\+\_\+prev\+\_\+x}} ()
+\begin{DoxyCompactList}\small\item\em Returns the x coordinate where the cursor was last shown. \end{DoxyCompactList}\item 
+int \doxymbox{\hyperlink{mouse__cursor_8h_aa73b0b090480daa8be3ef86dc7fa5157}{mouse\+\_\+cursor\+\_\+prev\+\_\+y}} ()
+\begin{DoxyCompactList}\small\item\em Returns the y coordinate where the cursor was last shown. \end{DoxyCompactList}\item 
+int \doxymbox{\hyperlink{mouse__cursor_8h_ae7e6f8a94be61289026c698681f78645}{mouse\+\_\+cursor\+\_\+width}} ()
+\begin{DoxyCompactList}\small\item\em Returns the cursor sprite width in pixels. \end{DoxyCompactList}\item 
+int \doxymbox{\hyperlink{mouse__cursor_8h_abef5103a81d6217e4ba1c94c8e94de43}{mouse\+\_\+cursor\+\_\+height}} ()
+\begin{DoxyCompactList}\small\item\em Returns the cursor sprite height in pixels. \end{DoxyCompactList}\end{DoxyCompactItemize}
+
+
+\doxysubsection{Detailed Description}
+Mouse cursor rendering over the back buffer. 
+
+
+
+\label{doc-func-members}
+\Hypertarget{mouse__cursor_8h_doc-func-members}
+\doxysubsection{Function Documentation}
+\Hypertarget{mouse__cursor_8h_a0962b65078be6b71aa18fb913a06c8e7}\index{mouse\_cursor.h@{mouse\_cursor.h}!mouse\_cursor\_cleanup@{mouse\_cursor\_cleanup}}
+\index{mouse\_cursor\_cleanup@{mouse\_cursor\_cleanup}!mouse\_cursor.h@{mouse\_cursor.h}}
+\doxysubsubsection{\texorpdfstring{mouse\_cursor\_cleanup()}{mouse\_cursor\_cleanup()}}
+{\footnotesize\ttfamily \label{mouse__cursor_8h_a0962b65078be6b71aa18fb913a06c8e7} 
+void mouse\+\_\+cursor\+\_\+cleanup (\begin{DoxyParamCaption}{}{}\end{DoxyParamCaption})}
+
+
+
+Releases all resources owned by the cursor. 
+
+\Hypertarget{mouse__cursor_8h_abef5103a81d6217e4ba1c94c8e94de43}\index{mouse\_cursor.h@{mouse\_cursor.h}!mouse\_cursor\_height@{mouse\_cursor\_height}}
+\index{mouse\_cursor\_height@{mouse\_cursor\_height}!mouse\_cursor.h@{mouse\_cursor.h}}
+\doxysubsubsection{\texorpdfstring{mouse\_cursor\_height()}{mouse\_cursor\_height()}}
+{\footnotesize\ttfamily \label{mouse__cursor_8h_abef5103a81d6217e4ba1c94c8e94de43} 
+int mouse\+\_\+cursor\+\_\+height (\begin{DoxyParamCaption}{}{}\end{DoxyParamCaption})}
+
+
+
+Returns the cursor sprite height in pixels. 
+
+\begin{DoxyReturn}{Returns}
+Cursor height 
+\end{DoxyReturn}
+\Hypertarget{mouse__cursor_8h_a44f38e9aa00bcabb9ae23ee86275d06f}\index{mouse\_cursor.h@{mouse\_cursor.h}!mouse\_cursor\_hide@{mouse\_cursor\_hide}}
+\index{mouse\_cursor\_hide@{mouse\_cursor\_hide}!mouse\_cursor.h@{mouse\_cursor.h}}
+\doxysubsubsection{\texorpdfstring{mouse\_cursor\_hide()}{mouse\_cursor\_hide()}}
+{\footnotesize\ttfamily \label{mouse__cursor_8h_a44f38e9aa00bcabb9ae23ee86275d06f} 
+void mouse\+\_\+cursor\+\_\+hide (\begin{DoxyParamCaption}{}{}\end{DoxyParamCaption})}
+
+
+
+Restores the pixels under the cursor\textquotesingle{}s previous position. 
+
+\Hypertarget{mouse__cursor_8h_ae4d509205c42ac2cc373824832d381b7}\index{mouse\_cursor.h@{mouse\_cursor.h}!mouse\_cursor\_init@{mouse\_cursor\_init}}
+\index{mouse\_cursor\_init@{mouse\_cursor\_init}!mouse\_cursor.h@{mouse\_cursor.h}}
+\doxysubsubsection{\texorpdfstring{mouse\_cursor\_init()}{mouse\_cursor\_init()}}
+{\footnotesize\ttfamily \label{mouse__cursor_8h_ae4d509205c42ac2cc373824832d381b7} 
+int mouse\+\_\+cursor\+\_\+init (\begin{DoxyParamCaption}{}{}\end{DoxyParamCaption})}
+
+
+
+Loads the cursor sprite and initializes the back-\/buffer save area. 
+
+\begin{DoxyReturn}{Returns}
+0 on success. Non-\/zero on failure 
+\end{DoxyReturn}
+\Hypertarget{mouse__cursor_8h_a77c91f622d18527df4d4963d8517d06e}\index{mouse\_cursor.h@{mouse\_cursor.h}!mouse\_cursor\_prev\_x@{mouse\_cursor\_prev\_x}}
+\index{mouse\_cursor\_prev\_x@{mouse\_cursor\_prev\_x}!mouse\_cursor.h@{mouse\_cursor.h}}
+\doxysubsubsection{\texorpdfstring{mouse\_cursor\_prev\_x()}{mouse\_cursor\_prev\_x()}}
+{\footnotesize\ttfamily \label{mouse__cursor_8h_a77c91f622d18527df4d4963d8517d06e} 
+int mouse\+\_\+cursor\+\_\+prev\+\_\+x (\begin{DoxyParamCaption}{}{}\end{DoxyParamCaption})}
+
+
+
+Returns the x coordinate where the cursor was last shown. 
+
+\begin{DoxyReturn}{Returns}
+Previous x coordinate. -\/1 if the cursor has not been shown yet 
+\end{DoxyReturn}
+\Hypertarget{mouse__cursor_8h_aa73b0b090480daa8be3ef86dc7fa5157}\index{mouse\_cursor.h@{mouse\_cursor.h}!mouse\_cursor\_prev\_y@{mouse\_cursor\_prev\_y}}
+\index{mouse\_cursor\_prev\_y@{mouse\_cursor\_prev\_y}!mouse\_cursor.h@{mouse\_cursor.h}}
+\doxysubsubsection{\texorpdfstring{mouse\_cursor\_prev\_y()}{mouse\_cursor\_prev\_y()}}
+{\footnotesize\ttfamily \label{mouse__cursor_8h_aa73b0b090480daa8be3ef86dc7fa5157} 
+int mouse\+\_\+cursor\+\_\+prev\+\_\+y (\begin{DoxyParamCaption}{}{}\end{DoxyParamCaption})}
+
+
+
+Returns the y coordinate where the cursor was last shown. 
+
+\begin{DoxyReturn}{Returns}
+Previous y coordinate. -\/1 if the cursor has not been shown yet 
+\end{DoxyReturn}
+\Hypertarget{mouse__cursor_8h_a9c7ac18eb1f57ab1057219e688597353}\index{mouse\_cursor.h@{mouse\_cursor.h}!mouse\_cursor\_show@{mouse\_cursor\_show}}
+\index{mouse\_cursor\_show@{mouse\_cursor\_show}!mouse\_cursor.h@{mouse\_cursor.h}}
+\doxysubsubsection{\texorpdfstring{mouse\_cursor\_show()}{mouse\_cursor\_show()}}
+{\footnotesize\ttfamily \label{mouse__cursor_8h_a9c7ac18eb1f57ab1057219e688597353} 
+void mouse\+\_\+cursor\+\_\+show (\begin{DoxyParamCaption}\item[{int}]{x}{, }\item[{int}]{y}{}\end{DoxyParamCaption})}
+
+
+
+Saves the pixels under the cursor and draws at (x, y). 
+
+
+\begin{DoxyParams}{Parameters}
+{\em x} & Pixel x coordinate \\
+\hline
+{\em y} & Pixel y coordinate \\
+\hline
+\end{DoxyParams}
+\Hypertarget{mouse__cursor_8h_ae7e6f8a94be61289026c698681f78645}\index{mouse\_cursor.h@{mouse\_cursor.h}!mouse\_cursor\_width@{mouse\_cursor\_width}}
+\index{mouse\_cursor\_width@{mouse\_cursor\_width}!mouse\_cursor.h@{mouse\_cursor.h}}
+\doxysubsubsection{\texorpdfstring{mouse\_cursor\_width()}{mouse\_cursor\_width()}}
+{\footnotesize\ttfamily \label{mouse__cursor_8h_ae7e6f8a94be61289026c698681f78645} 
+int mouse\+\_\+cursor\+\_\+width (\begin{DoxyParamCaption}{}{}\end{DoxyParamCaption})}
+
+
+
+Returns the cursor sprite width in pixels. 
+
+\begin{DoxyReturn}{Returns}
+Cursor width 
+\end{DoxyReturn}

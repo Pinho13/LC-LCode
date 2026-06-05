@@ -1,0 +1,124 @@
+\doxysection{/\+home/\+pinho/\+\+Classes/\+\+LCOM/\+shared/\+proj/\+code/\+view/\+editor/\+highlight\+\_\+cache.h File Reference}
+\hypertarget{highlight__cache_8h}{}\label{highlight__cache_8h}\index{/home/pinho/Classes/LCOM/shared/proj/code/view/editor/highlight\_cache.h@{/home/pinho/Classes/LCOM/shared/proj/code/view/editor/highlight\_cache.h}}
+
+
+Per-\/line syntax color cache.  
+
+
+{\ttfamily \+\#include $<$lcom/\+lcf.\+h$>$}\newline
+{\ttfamily \+\#include "{}view/\+editor/\+syntax.\+h"{}}\newline
+\doxysubsubsection*{Functions}
+\begin{DoxyCompactItemize}
+\item 
+const uint32\+\_\+t \texorpdfstring{$\ast$}{*} \doxymbox{\hyperlink{highlight__cache_8h_ae78b97e86768258427860fa5a1078c92}{highlight\+\_\+cache\+\_\+get\+\_\+line}} (int row)
+\begin{DoxyCompactList}\small\item\em Returns the cached color array for a row. \end{DoxyCompactList}\item 
+void \doxymbox{\hyperlink{highlight__cache_8h_a1efc98715eb6720b67b67bb73249e5d5}{highlight\+\_\+cache\+\_\+set\+\_\+language}} (\doxymbox{\hyperlink{syntax_8h_a85c9a23a5eedbf98a8e829326a7bf93a}{Syntax\+Language}} lang)
+\begin{DoxyCompactList}\small\item\em Sets the active language, invalidates all cached colors, and rebuilds block-\/comment state for the whole file. \end{DoxyCompactList}\item 
+void \doxymbox{\hyperlink{highlight__cache_8h_a501d99ed20831593ed201127e3c503f8}{highlight\+\_\+cache\+\_\+sync}} (int new\+\_\+count, int cursor\+\_\+row)
+\begin{DoxyCompactList}\small\item\em Updates the cache with a new row count after an edit. \end{DoxyCompactList}\item 
+void \doxymbox{\hyperlink{highlight__cache_8h_af90ff9cde50abb44a6982b9e6fc0a943}{highlight\+\_\+cache\+\_\+free\+\_\+row}} (int row)
+\begin{DoxyCompactList}\small\item\em Clears cached colors for a row. \end{DoxyCompactList}\item 
+void \doxymbox{\hyperlink{highlight__cache_8h_aec6c1315d10fd8892b0873d68a139d45}{highlight\+\_\+cache\+\_\+rebuild\+\_\+from}} (int row)
+\begin{DoxyCompactList}\small\item\em Re-\/calculates from row to propagate block-\/comment state changes, stopping once the state stabilizes. \end{DoxyCompactList}\item 
+void \doxymbox{\hyperlink{highlight__cache_8h_af1573d272bd252bc5fb05d6fc1638384}{highlight\+\_\+cache\+\_\+cleanup}} (void)
+\begin{DoxyCompactList}\small\item\em Clears cache. \end{DoxyCompactList}\end{DoxyCompactItemize}
+
+
+\doxysubsection{Detailed Description}
+Per-\/line syntax color cache. 
+
+Parses each line once via \doxylink{syntax_8c_a29aa28d7f6b03b5cc98a9426d6456a55}{syntax\+\_\+highlight\+\_\+line()} and caches the result, tracking multi-\/line block-\/comment so edits recolor only what changed. 
+
+\label{doc-func-members}
+\Hypertarget{highlight__cache_8h_doc-func-members}
+\doxysubsection{Function Documentation}
+\Hypertarget{highlight__cache_8h_af1573d272bd252bc5fb05d6fc1638384}\index{highlight\_cache.h@{highlight\_cache.h}!highlight\_cache\_cleanup@{highlight\_cache\_cleanup}}
+\index{highlight\_cache\_cleanup@{highlight\_cache\_cleanup}!highlight\_cache.h@{highlight\_cache.h}}
+\doxysubsubsection{\texorpdfstring{highlight\_cache\_cleanup()}{highlight\_cache\_cleanup()}}
+{\footnotesize\ttfamily \label{highlight__cache_8h_af1573d272bd252bc5fb05d6fc1638384} 
+void highlight\+\_\+cache\+\_\+cleanup (\begin{DoxyParamCaption}\item[{void}]{}{}\end{DoxyParamCaption})}
+
+
+
+Clears cache. 
+
+\Hypertarget{highlight__cache_8h_af90ff9cde50abb44a6982b9e6fc0a943}\index{highlight\_cache.h@{highlight\_cache.h}!highlight\_cache\_free\_row@{highlight\_cache\_free\_row}}
+\index{highlight\_cache\_free\_row@{highlight\_cache\_free\_row}!highlight\_cache.h@{highlight\_cache.h}}
+\doxysubsubsection{\texorpdfstring{highlight\_cache\_free\_row()}{highlight\_cache\_free\_row()}}
+{\footnotesize\ttfamily \label{highlight__cache_8h_af90ff9cde50abb44a6982b9e6fc0a943} 
+void highlight\+\_\+cache\+\_\+free\+\_\+row (\begin{DoxyParamCaption}\item[{int}]{row}{}\end{DoxyParamCaption})}
+
+
+
+Clears cached colors for a row. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em row} & \doxylink{structLine}{Line} index (0-\/based) \\
+\hline
+\end{DoxyParams}
+\Hypertarget{highlight__cache_8h_ae78b97e86768258427860fa5a1078c92}\index{highlight\_cache.h@{highlight\_cache.h}!highlight\_cache\_get\_line@{highlight\_cache\_get\_line}}
+\index{highlight\_cache\_get\_line@{highlight\_cache\_get\_line}!highlight\_cache.h@{highlight\_cache.h}}
+\doxysubsubsection{\texorpdfstring{highlight\_cache\_get\_line()}{highlight\_cache\_get\_line()}}
+{\footnotesize\ttfamily \label{highlight__cache_8h_ae78b97e86768258427860fa5a1078c92} 
+const uint32\+\_\+t \texorpdfstring{$\ast$}{*} highlight\+\_\+cache\+\_\+get\+\_\+line (\begin{DoxyParamCaption}\item[{int}]{row}{}\end{DoxyParamCaption})}
+
+
+
+Returns the cached color array for a row. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em row} & \doxylink{structLine}{Line} index (0-\/based) \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+One uint32\+\_\+t per character. NULL for empty lines or allocation failure 
+\end{DoxyReturn}
+\Hypertarget{highlight__cache_8h_aec6c1315d10fd8892b0873d68a139d45}\index{highlight\_cache.h@{highlight\_cache.h}!highlight\_cache\_rebuild\_from@{highlight\_cache\_rebuild\_from}}
+\index{highlight\_cache\_rebuild\_from@{highlight\_cache\_rebuild\_from}!highlight\_cache.h@{highlight\_cache.h}}
+\doxysubsubsection{\texorpdfstring{highlight\_cache\_rebuild\_from()}{highlight\_cache\_rebuild\_from()}}
+{\footnotesize\ttfamily \label{highlight__cache_8h_aec6c1315d10fd8892b0873d68a139d45} 
+void highlight\+\_\+cache\+\_\+rebuild\+\_\+from (\begin{DoxyParamCaption}\item[{int}]{row}{}\end{DoxyParamCaption})}
+
+
+
+Re-\/calculates from row to propagate block-\/comment state changes, stopping once the state stabilizes. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em row} & Start line index (0-\/based) \\
+\hline
+\end{DoxyParams}
+\Hypertarget{highlight__cache_8h_a1efc98715eb6720b67b67bb73249e5d5}\index{highlight\_cache.h@{highlight\_cache.h}!highlight\_cache\_set\_language@{highlight\_cache\_set\_language}}
+\index{highlight\_cache\_set\_language@{highlight\_cache\_set\_language}!highlight\_cache.h@{highlight\_cache.h}}
+\doxysubsubsection{\texorpdfstring{highlight\_cache\_set\_language()}{highlight\_cache\_set\_language()}}
+{\footnotesize\ttfamily \label{highlight__cache_8h_a1efc98715eb6720b67b67bb73249e5d5} 
+void highlight\+\_\+cache\+\_\+set\+\_\+language (\begin{DoxyParamCaption}\item[{\doxymbox{\hyperlink{syntax_8h_a85c9a23a5eedbf98a8e829326a7bf93a}{Syntax\+Language}}}]{lang}{}\end{DoxyParamCaption})}
+
+
+
+Sets the active language, invalidates all cached colors, and rebuilds block-\/comment state for the whole file. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em lang} & The syntax language to use for highlights \\
+\hline
+\end{DoxyParams}
+\Hypertarget{highlight__cache_8h_a501d99ed20831593ed201127e3c503f8}\index{highlight\_cache.h@{highlight\_cache.h}!highlight\_cache\_sync@{highlight\_cache\_sync}}
+\index{highlight\_cache\_sync@{highlight\_cache\_sync}!highlight\_cache.h@{highlight\_cache.h}}
+\doxysubsubsection{\texorpdfstring{highlight\_cache\_sync()}{highlight\_cache\_sync()}}
+{\footnotesize\ttfamily \label{highlight__cache_8h_a501d99ed20831593ed201127e3c503f8} 
+void highlight\+\_\+cache\+\_\+sync (\begin{DoxyParamCaption}\item[{int}]{new\+\_\+count}{, }\item[{int}]{cursor\+\_\+row}{}\end{DoxyParamCaption})}
+
+
+
+Updates the cache with a new row count after an edit. 
+
+Shifts cached color rows to match a single-\/line insertion or deletion at cursor\+\_\+row. Full rebuild on multi-\/line edits 
+\begin{DoxyParams}{Parameters}
+{\em new\+\_\+count} & New total row count \\
+\hline
+{\em cursor\+\_\+row} & Row where the insertion or deletion occurred \\
+\hline
+\end{DoxyParams}
