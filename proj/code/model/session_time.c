@@ -2,14 +2,15 @@
 
 #include "fw/drivers/timer.h"
 
-static uint64_t start_ticks = 0;
+static uint64_t start_ticks = 0; // 0 until session_time_reset() is first called
 
 void session_time_reset() {
   start_ticks = get_int_counter();
 }
 
 uint64_t session_time_get_seconds() {
-  return (get_int_counter() - start_ticks) / TIMER_HZ;
+  // integer division converts ticks to seconds
+  return (get_int_counter() - start_ticks) / TIMER_HZ; 
 }
 
 void session_time_format(char *buf, size_t n) {
