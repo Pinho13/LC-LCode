@@ -1,4 +1,5 @@
 #include "model/command_bar.h"
+#include "proj.h"
 #include <string.h>
 
 static EditorMode mode = MODE_EDITOR;
@@ -6,10 +7,13 @@ static char filename[CMD_BUF_SIZE] = "untitled";
 static char input[CMD_BUF_SIZE] = {0};
 static int input_len = 0;
 static char status_msg[CMD_BUF_SIZE] = {0};
+
+//Countdown timer
 static int status_ticks = 0;
 
+
 void command_bar_init(const char *name) {
-  if (name) strncpy(filename, name, CMD_BUF_SIZE - 1);
+  if (name) strncpy(filename, name, CMD_BUF_SIZE - 1); 
   mode = MODE_EDITOR;
 }
 
@@ -57,11 +61,13 @@ const char *command_bar_commit() {
 void command_bar_set_status(const char *msg) {
   strncpy(status_msg, msg, CMD_BUF_SIZE - 1);
   status_msg[CMD_BUF_SIZE - 1] = '\0';
-  status_ticks = 60;
+  status_ticks = TIMER_HZ; /* 1 second */
 }
 
 bool command_bar_tick() {
   if (status_ticks <= 0) return false;
+  
+  // Decrease and clear on expiry. Return true for caller to redraw
   if (--status_ticks == 0) { status_msg[0] = '\0'; return true; }
   return false;
 }
