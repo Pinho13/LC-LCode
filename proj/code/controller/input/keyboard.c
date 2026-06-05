@@ -80,6 +80,7 @@ static char translate_char(uint8_t code) {
   if (code >= 58)
     return 0;
 
+  // altgr takes priority over shift
   if (kb.altgr)
     return sc_altgr[code];
   if (kb.shift)
@@ -89,6 +90,7 @@ static char translate_char(uint8_t code) {
 }
 
 static void handle_extended(packet_scancode ps) {
+  // mask break bit to get the base scancode
   uint8_t code = ps.bytes[1] & 0x7F;
 
   if (code == SCANCODE_RCTRL) {
@@ -101,6 +103,7 @@ static void handle_extended(packet_scancode ps) {
     return;
   }
 
+  // only process key-press for navigation keys, not key-release
   if (!ps.make)
     return;
 
@@ -136,11 +139,13 @@ static void handle_extended(packet_scancode ps) {
 
 void keyboard_process(packet_scancode ps) {
 
+  // two-byte packets are extended scancodes (arrows, rctrl, ralt)
   if (ps.size == 2) {
     handle_extended(ps);
     return;
   }
 
+  // mask break bit to get the base scancode
   uint8_t code = ps.bytes[0] & 0x7F;
 
   if (code == SCANCODE_LCTRL) {
@@ -153,6 +158,7 @@ void keyboard_process(packet_scancode ps) {
     return;
   }
 
+  // ignore key-release for non-modifier keys
   if (!ps.make)
     return;
 
@@ -176,6 +182,7 @@ void keyboard_process(packet_scancode ps) {
       break;
   }
 
+  // discard empty events (unrecognized or unmapped scancodes)
   if (ev.escape || ev.backspace || ev.enter || ev.dir != DIR_NONE || ev.c) {
     push_event(ev);
   }
