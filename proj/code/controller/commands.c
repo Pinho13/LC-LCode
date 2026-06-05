@@ -75,7 +75,6 @@ static void execute_sync() {
     build_packet_serial(CMD_FILE_LINE, (uint8_t*)line, editor_get_line_len(i), 0);
   }
     
-  //optional
   uint8_t load[4];
   int r = editor_get_cursor_row();
   int c = editor_get_cursor_col();
@@ -94,6 +93,7 @@ static void execute_sync() {
  * @param args Arguments passed in the command bar (unused).
  */
 static void cmd_sync(const char *args) {
+  (void)args;
   remote = true; 
   execute_sync();
   command_bar_set_status("Ficheiro Partilhado!");
