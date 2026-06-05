@@ -2,6 +2,7 @@
 #include "fw/common/utils.h"
 #include "fw/hw/uart.h"
 #include "fw/common/queue.h"
+#include <lcom/lcf.h>
 
 #define BIT_RATE     115200
 #define CONF_FCR     FCR_ENABLE_FIFOS | FCR_CLEAR_RX_FIFO | FCR_CLEAR_TX_FIFO | FCR_TRIGGER_8_BYTES 
@@ -57,11 +58,16 @@ bool (serial_read_char)(uint8_t *data) {
 int (serial_write_char)(uint8_t data) {
   uint8_t lsr_val;
   
-  if (util_sys_inb(COM1_BASE + LSR, &lsr_val) != OK) return 1;
-  
-  if (lsr_val & LSR_TX_READY) {
-    if (sys_outb(COM1_BASE + THR, data) != OK) return 1;
-    return 0;
+  for (int i = 0; i < 100; i++){
+    
+    if (util_sys_inb(COM1_BASE + LSR, &lsr_val) != OK) return 1;
+    
+    if (lsr_val & LSR_TX_READY) {
+      if (sys_outb(COM1_BASE + THR, data) != OK) return 1;
+      return 0;
+    }
+
+    tickdelay(micros_to_ticks(50));
   }
   
   return 1; 
