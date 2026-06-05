@@ -8,6 +8,7 @@
 
 typedef struct {
   bool left_clicked;
+  bool left_holding;
   int click_x, click_y;
   int scroll;
 } MouseEvent;

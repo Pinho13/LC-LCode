@@ -276,7 +276,11 @@ void commands_dispatch(KeyEvent ev) {
 }
 
 void commands_dispatch_mouse(MouseEvent me) {
-  if (!me.left_clicked && me.scroll == 0) return;
+  if (!me.left_holding) {
+    editor_sel_clear();
+  }
+
+  if (!me.left_clicked && me.scroll == 0 && !me.left_holding) return;
 
   if (scene_click_scrollbar(me.click_x, me.click_y)) return;
   
@@ -289,10 +293,13 @@ void commands_dispatch_mouse(MouseEvent me) {
   }
 
   int row, col;
-  if (scene_px_to_text(me.click_x, me.click_y, &row, &col)) {
+  if (scene_px_to_text(me.click_x, me.click_y, &row, &col) && me.left_clicked) {
     editor_sel_clear();
     editor_set_cursor(row, col);
     set_render_ex(RENDER_CHAR);
+    if (!editor_sel_is_active()) editor_sel_set_anchor();
+  } else if (scene_px_to_text(me.click_x, me.click_y, &row, &col) && me.left_holding){
+    editor_set_cursor(row, col);
   }
 
 }
