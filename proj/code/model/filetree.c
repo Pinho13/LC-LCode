@@ -16,7 +16,7 @@ static FileEntry entries[FILETREE_MAX_ENTRIES];
 static int entry_count = 0;
 static int cursor = 0;
 static int scroll = 0;
-static bool visible = false;
+static bool visible = true;
 static bool focused = false;
 static char error_msg[128] = {0};
 
