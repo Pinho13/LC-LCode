@@ -33,6 +33,7 @@ LCode is a code editor built for Minix, providing an interactive environment for
 - **Ctrl + o:** Opens file
 - **Ctrl + c:** Copies selected text
 - **Ctrl + v:** Pastes selected text
+- **Ctrl + x:** Cut selected text
 - **Ctrl + q:** Leave LCode
 
 ## Environment
