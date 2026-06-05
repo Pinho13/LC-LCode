@@ -16,7 +16,7 @@
 #include "view/editor/syntax.h"
 #include "model/editor.h"
 #include "model/command_bar.h"
-#include "model/filetree.h"
+#include "model/filetree/filetree.h"
 #include "model/render_state.h"
 
 int(proj_main_loop)(int argc, char *argv[]) {

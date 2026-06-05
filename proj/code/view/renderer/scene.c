@@ -5,7 +5,7 @@
 #include "model/render_state.h"
 #include "model/editor.h"
 #include "model/command_bar.h"
-#include "model/filetree.h"
+#include "model/filetree/filetree.h"
 #include "controller/ih/ih.h"
 #include "view/editor/highlight_cache.h"
 #include "controller/input/mouse.h"

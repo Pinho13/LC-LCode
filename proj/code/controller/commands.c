@@ -1,6 +1,6 @@
 #include "controller/commands.h"
 #include "controller/filetree_commands.h"
-#include "model/filetree.h"
+#include "model/filetree/filetree.h"
 #include "model/editor.h"
 #include "model/command_bar.h"
 #include "view/renderer/scene.h"
