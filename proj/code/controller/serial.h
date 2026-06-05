@@ -16,8 +16,8 @@ typedef enum {
   CMD_MOVE_CURSOR   = 0x03,  // Payload: 4 bytes (coordinates)
   CMD_REPLACE_BLOCK = 0x05,  // Payload: 6 bytes (2 start, 2 deleted, 2 inserted)
   CMD_UPDATE_LINE   = 0x06,  // Payload: 2 bytes (row_index) + String (line content)
-  CMD_FILE_START   = 0x10,   // Payload: 2 bytes (number of lines) + String (filename)
-  CMD_FILE_LINE    = 0x11,   // Payload: String (line content)
+  CMD_FILE_START    = 0x10,  // Payload: 2 bytes (number of lines) + String (filename)
+  CMD_FILE_LINE     = 0x11,  // Payload: String (line content)
 } SerialCommand;
 
 void serial_process();

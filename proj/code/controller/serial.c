@@ -124,6 +124,7 @@ void build_packet_serial(SerialCommand cmd, uint8_t* payload, int len, uint16_t 
       break;
     }
     case CMD_UPDATE_LINE:{
+      if (len>250) len=250;
       uint8_t buf[5+len];
       buf[1] = CMD_UPDATE_LINE;
       buf[2] = len+2;
@@ -136,6 +137,7 @@ void build_packet_serial(SerialCommand cmd, uint8_t* payload, int len, uint16_t 
       break;
     }
     case CMD_FILE_START: {
+      if (len>250) len=250;
       uint8_t buf[5 + len]; 
       buf[1] = CMD_FILE_START;
       buf[2] = len + 2; 
@@ -148,6 +150,7 @@ void build_packet_serial(SerialCommand cmd, uint8_t* payload, int len, uint16_t 
       break;
     }
     case CMD_FILE_LINE: {
+      if (len>252) len=252;
       uint8_t buf[3 + len];
       buf[1] = CMD_FILE_LINE;
       buf[2] = len;

@@ -459,7 +459,8 @@ static uint16_t file_num_lines = 0;
 static uint16_t lines_contador = 0;
 
 void commands_dispatch_serial(SerialEvent se) {
-  if (se.payload_len == 0 && se.cmd != CMD_DELETE_CHAR) return;
+  if (se.payload_len == 0 && se.cmd != CMD_DELETE_CHAR && se.cmd != CMD_FILE_LINE) return;
+
   EditorResult r;
   
   switch (se.cmd) {
@@ -521,7 +522,7 @@ void commands_dispatch_serial(SerialEvent se) {
       break;
     }
     case CMD_FILE_START:{
-      editor_init();//Para já limpo a memoria toda
+      editor_init();//clean the screen to receive the new file
       
       file_num_lines = (se.payload_buf[0] << 8) | se.payload_buf[1];
       lines_contador = 0; 
