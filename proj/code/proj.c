@@ -12,7 +12,7 @@
 #include "controller/ih/ih.h"
 #include "controller/commands.h"
 #include "controller/input/events.h"
-#include "view/scene.h"
+#include "view/renderer/scene.h"
 #include "view/syntax.h"
 #include "model/editor.h"
 #include "model/command_bar.h"

@@ -3,7 +3,7 @@
 #include "model/filetree.h"
 #include "model/command_bar.h"
 #include "model/time/session_time.h"
-#include "view/scene.h"
+#include "view/renderer/scene.h"
 #include "model/render_state.h"
 #include <string.h>
 

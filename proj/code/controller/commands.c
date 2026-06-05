@@ -3,7 +3,7 @@
 #include "model/filetree.h"
 #include "model/editor.h"
 #include "model/command_bar.h"
-#include "view/scene.h"
+#include "view/renderer/scene.h"
 #include "view/syntax.h"
 #include "model/render_state.h"
 #include "controller/serial.h"

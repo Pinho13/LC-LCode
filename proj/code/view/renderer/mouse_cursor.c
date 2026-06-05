@@ -1,4 +1,4 @@
-#include "view/mouse_cursor.h"
+#include "view/renderer/mouse_cursor.h"
 #include "view/cursor.xpm.h"
 #include "fw/drivers/video.h"
 #include <stdlib.h>
