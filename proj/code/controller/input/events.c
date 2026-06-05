@@ -12,6 +12,7 @@ static int tail = 0;
 static int count = 0;
 
 bool input_event_push(InputEvent ev) {
+  // queue full: drop oldest event to make room
   if (count >= INPUT_EVENT_QUEUE_SIZE) {
     head = (head + 1) % INPUT_EVENT_QUEUE_SIZE;
     count--;
@@ -24,6 +25,7 @@ bool input_event_push(InputEvent ev) {
 
 bool input_event_pop(InputEvent *out) {
   if (count == 0) return false;
+  // write to out only if provided; passing NULL discards the event
   if (out != NULL) *out = queue[head];
   head = (head + 1) % INPUT_EVENT_QUEUE_SIZE;
   count--;
