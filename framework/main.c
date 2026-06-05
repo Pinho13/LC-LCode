@@ -36,7 +36,6 @@ int rtc_example();
 void test_rtc_date();
 
 // Timer
-#define TIMER_HZ 60
 int timer_example();
 
 // Keyboard
