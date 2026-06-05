@@ -47,9 +47,11 @@ static void serial_handle_byte(uint8_t byte) {
       break;
 
     case STATE_READ_LEN:
-      payload_len = byte;
+      // O payload_len dita quantos bytes vamos ter de acumular de seguida
+      payload_len = byte; 
       payload_idx = 0;
       if (payload_len == 0) {
+        // If empty, push the event ex: DELETE_CHAR
         InputEvent ev;
         ev.type = INPUT_EVENT_SERIAL;
         ev.data.serial.cmd = current_cmd;
@@ -65,8 +67,11 @@ static void serial_handle_byte(uint8_t byte) {
       break;
 
     case STATE_READ_PAYLOAD:
+      // Accumulates the bytes in the buffer  
       payload_buf[payload_idx] = byte;
       payload_idx++;
+      
+      //When complete, push the event to the event queue
       if (payload_idx >= payload_len) {
         InputEvent ev;
         ev.type = INPUT_EVENT_SERIAL;
@@ -110,6 +115,7 @@ void serial_process() {
 static void send_packet(uint8_t* buf, int len){
   buf[0]=PKT_START_BYTE;
   for (int i=0 ; i<len ; i++){
+    // Timeout/Polling is in  serial_write_char from the Driver
     serial_write_char(buf[i]);
   }
 }

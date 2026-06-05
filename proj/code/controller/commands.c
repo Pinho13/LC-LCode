@@ -69,12 +69,13 @@ static void execute_sync() {
 
   build_packet_serial(CMD_FILE_START, (uint8_t*)filename, filename_len, total_lines);
 
-    
+  //Send line by line
   for (int i = 0; i < total_lines; i++) {
     const char *line = editor_get_line(i);
     build_packet_serial(CMD_FILE_LINE, (uint8_t*)line, editor_get_line_len(i), 0);
   }
     
+  //Send the cursor position
   uint8_t load[4];
   int r = editor_get_cursor_row();
   int c = editor_get_cursor_col();
