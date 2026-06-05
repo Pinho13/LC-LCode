@@ -97,6 +97,7 @@ void timer_handler() {
 
   if (get_int_counter() % TIMER_HZ == 0) {
     time_update();
+    set_render(RENDER_STATUS);
   }
 }
 
