@@ -18,9 +18,8 @@ static uint8_t payload_len;
 static uint8_t payload_buf[256];
 static int payload_idx = 0;
 
-/**
- * @brief Handles a single byte received from the UART.
- * 
+/*
+ * Handles a single byte received from the UART.
  * Advances the state machine used to decode the serial protocol.
  * The states are:
  * - STATE_WAIT_START: Waits for the PKT_START_BYTE (0xFE).
@@ -29,8 +28,6 @@ static int payload_idx = 0;
  * - STATE_READ_PAYLOAD: Accumulates the payload bytes into a buffer.
  * 
  * When a packet is fully received, it pushes an INPUT_EVENT_SERIAL to the event queue.
- * 
- * @param byte The received byte.
  */
 static void serial_handle_byte(uint8_t byte) {
   switch (state) {
@@ -92,9 +89,8 @@ static void serial_handle_byte(uint8_t byte) {
 }
 
 
-/**
- * @brief Reads all available bytes from the serial port and processes them.
- * 
+/*
+ * Reads all available bytes from the serial port and processes them.
  * Calls the UART interrupt handler to fetch hardware FIFO data into the software FIFO,
  * then pops bytes from the software FIFO and feeds them to the state machine.
  */
@@ -107,13 +103,9 @@ void serial_process() {
   }
 }
 
-/**
- * @brief Sends a fully assembled packet over the UART.
- * 
+/*
+ * Sends a fully assembled packet over the UART.
  * Appends the PKT_START_BYTE at the beginning and transmits the array.
- * 
- * @param buf Array containing the packet (excluding the start byte, which is added at index 0).
- * @param len Total length of the packet to send.
  */
 static void send_packet(uint8_t* buf, int len){
   buf[0]=PKT_START_BYTE;
@@ -123,16 +115,10 @@ static void send_packet(uint8_t* buf, int len){
   }
 }
 
-/**
- * @brief Constructs a specific serial packet and sends it.
- * 
+/*
+ * Constructs a specific serial packet and sends it.
  * Encapsulates the specific payload structures for each command defined in the protocol.
  * Also implements maximum payload constraints (MTU) to avoid UART FIFO overflow.
- * 
- * @param cmd The command to execute (SerialCommand).
- * @param payload Raw payload data to include.
- * @param len Length of the payload.
- * @param num_lines 16-bit integer used for row indexes or line counts (if applicable).
  */
 void build_packet_serial(SerialCommand cmd, uint8_t* payload, int len, uint16_t num_lines) {
   switch(cmd) {
