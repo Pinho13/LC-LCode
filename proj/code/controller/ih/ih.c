@@ -36,6 +36,12 @@ int subscribe_interrupts() {
     keyboard_unsubscribe_int();
     return fail(ERR_MOUSE, "subscribe_interrupts: unable to subscribe mouse interrupt");
   }
+  if (mouse_enable_wheel_mode() != OK) {
+    timer_unsubscribe_int();
+    keyboard_unsubscribe_int();
+    mouse_unsubscribe_int();
+    return fail(ERR_MOUSE, "subscribe_interrupts: unable to enable wheel mode");
+  }
   if (my_mouse_enable_data_reporting() != OK) {
     timer_unsubscribe_int();
     keyboard_unsubscribe_int();
@@ -108,7 +114,7 @@ void mouse_handler() {
   mouse_ih();
 
   if (is_packet_ready()) {
-    struct packet pp;
+    mouse_packet pp;
   
     if (build_packet(&pp) != OK) {
       fail(ERR_MOUSE, "mouse_handler: unable to build packet");

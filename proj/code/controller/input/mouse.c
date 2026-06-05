@@ -9,7 +9,7 @@ static int mouse_x = 0, mouse_y = 0;
 static bool mouse_initialized = false;
 static bool prev_lb = false;
 
-void mouse_process(struct packet pp) {
+void mouse_process(mouse_packet pp) {
   if (!mouse_initialized) {
     mouse_x = (int)vg_get_h_res() / 2;
     mouse_y = (int)vg_get_v_res() / 2;
@@ -27,10 +27,27 @@ void mouse_process(struct packet pp) {
   if (moved) set_render(RENDER_MOUSE);
 
   if (pp.lb && !prev_lb) {
-    MouseEvent me = {.left_clicked = true, .click_x = mouse_x, .click_y = mouse_y};
-    InputEvent iev = {.type = INPUT_EVENT_MOUSE, .data.mouse = me};
+    MouseEvent me = { .left_clicked = true, .click_x = mouse_x, .click_y = mouse_y, .scroll = pp.delta_z};
+
+    InputEvent iev = {
+      .type = INPUT_EVENT_MOUSE,
+      .data.mouse = me
+    };
+
     input_event_push(iev);
   }
+
+  if (pp.delta_z != 0) {
+    MouseEvent me = { .left_clicked = false, .click_x = mouse_x, .click_y = mouse_y, .scroll = pp.delta_z };
+
+    InputEvent iev = {
+      .type = INPUT_EVENT_MOUSE,
+      .data.mouse = me
+    };
+
+    input_event_push(iev);
+  }
+
   prev_lb = pp.lb;
 }
 
