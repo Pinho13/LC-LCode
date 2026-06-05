@@ -29,6 +29,7 @@ static int block_comment_open_grow(int needed) {
   if (!p) return -1;
   memcpy(p, block_comment_open, block_comment_open_cap * sizeof(bool));
 
+  // new slots default to false, rows beyond allocated range are assumed clean
   memset(p + block_comment_open_cap, 0, (new_cap - block_comment_open_cap) * sizeof(bool));
 
   free(block_comment_open);
@@ -50,6 +51,7 @@ static bool block_comment_open_at(int row) {
 
 static void rebuild_block_comment_open_full(void) {
   int total = editor_get_row_count();
+  // total +1 in case last line inside comment block
   if (block_comment_open_grow(total + 1) != 0) return;
 
   //before first line can't be commented
@@ -58,7 +60,9 @@ static void rebuild_block_comment_open_full(void) {
   for (int r = 0; r < total; r++) {
     //check state before reading line
     block_comment_open[r] = in_block_comment;
+
     bool out_bc;
+    // NULL for colors. Only want comment state
     syntax_highlight_line(editor_get_line(r), editor_get_line_len(r), in_block_comment, current_lang, NULL, &out_bc);
     in_block_comment = out_bc;
   }
@@ -89,7 +93,7 @@ static int line_colors_cache_grow(int needed) {
     memcpy(q, line_colors_cache_cap, line_colors_cache_count * sizeof(int));
   }
 
-  //zero-out mem
+  // 0 in new slots to signal "not yet computed"
   memset(p + line_colors_cache_count, 0, (new_count - line_colors_cache_count) * sizeof(uint32_t *));
   memset(q + line_colors_cache_count, 0, (new_count - line_colors_cache_count) * sizeof(int));
 
@@ -108,15 +112,16 @@ void highlight_cache_free_row(int row) {
   line_colors_cache_cap[row] = 0;
 }
 
-// bulk clear
 static void line_colors_cache_invalidate_all(void) {
   for (int r = 0; r < line_colors_cache_count; r++) {
     highlight_cache_free_row(r);
   }
+  // Reset so highlight_cache_sync skips row_shift logic
   line_colors_last_row_count = 0;
 }
 
-/* Ensures row's cache buffer holds at least len colors and returns it. NULL on error or empty lines */
+// Returns row's color buffer, growing it to fit len colors
+// Never shrinks existing buffer. Returns NULL on alloc failure or len <= 0.
 static uint32_t *ensure_row_cap(int row, int len) {
   if (len <= 0) return NULL;
 
@@ -138,7 +143,9 @@ static uint32_t *ensure_row_cap(int row, int len) {
 // ---------------
 
 void highlight_cache_cleanup(void) {
+  //free inner buffer before outer array
   line_colors_cache_invalidate_all();
+
   free(line_colors_cache);
   line_colors_cache = NULL;
   free(line_colors_cache_cap);
@@ -159,6 +166,7 @@ void highlight_cache_sync(int new_count, int cursor_row) {
 
   //one line inserted
   if (new_count == old_count + 1) {
+    // Line inserted pushed cursor down, so split row is cursor -1
     int split_row = cursor_row - 1;
     if (split_row >= 0 && line_colors_cache_grow(new_count) == 0) {
       int shift = old_count - split_row - 1;
@@ -167,7 +175,7 @@ void highlight_cache_sync(int new_count, int cursor_row) {
         memmove(&line_colors_cache_cap[split_row + 2], &line_colors_cache_cap[split_row + 1], shift * sizeof(int));
       }
 
-      //top half stale
+      // Both halves of split line changed
       highlight_cache_free_row(split_row);
       line_colors_cache[split_row + 1] = NULL;
       line_colors_cache_cap[split_row + 1] = 0;
@@ -189,7 +197,7 @@ void highlight_cache_sync(int new_count, int cursor_row) {
         memmove(&line_colors_cache_cap[merge_row + 1], &line_colors_cache_cap[merge_row + 2], shift * sizeof(int));
       }
 
-      //null the vacated last slot
+      //clear duplicate pointer
       int vacated = eff_old - 1;
       if (vacated >= 0 && vacated < line_colors_cache_count) {
         line_colors_cache[vacated] = NULL;
@@ -216,7 +224,7 @@ const uint32_t *highlight_cache_get_line(int row) {
   uint32_t *dst = ensure_row_cap(row, len);
   if (!dst) return NULL;
 
-  //parse line and store result;
+  //parse line and store result; block_commentt_open_at must be current
   bool out_bc;
   syntax_highlight_line(editor_get_line(row), len, block_comment_open_at(row), current_lang, dst, &out_bc);
   return dst;
@@ -245,7 +253,7 @@ void highlight_cache_rebuild_from(int row) {
     syntax_highlight_line(editor_get_line(r), len, in_block_comment, current_lang, dst, &out_bc);
 
     if (r + 1 < block_comment_open_cap) {
-      // next lines state already correct
+      // next lines state already correct, so all following lines are correct too. Stop.
       if (block_comment_open[r + 1] == out_bc) break;
 
       highlight_cache_free_row(r + 1);

@@ -45,17 +45,21 @@ static struct {
 } layout;
 
 // --- Layout ---
+
 static void scene_update_layout(void);
 
 // --- Coordinate Mapping ---
+
 static int  model_to_px(int model_col);
 static int  model_to_py(int model_row);
 
 // --- Draw Primitives ---
+
 static void draw_cursor(int model_col, int model_row);
 static void draw_line_colored(int x, int y, const char *line, int scroll_col, const uint32_t *colors, int line_len);
 
 // --- Widget Draws ---
+
 static void draw_selection_bg(int end_r);
 static void draw_filetree(int vrows);
 static void draw_gutter(int scroll_row, int end_r);
@@ -64,6 +68,7 @@ static void draw_text_lines(int scroll_row, int end_r, int scroll_col);
 static void render_status_bar(void);
 
 // --- Render & Flip Pipeline ---
+
 static void render_editor_ui(int mode, int col, int row, int scroll_row, int scroll_col);
 static void flip_editor_ui(int mode, int col, int row, int scroll_row, int scroll_col);
 static void flip_status_bar(void);
@@ -76,23 +81,25 @@ static int vis_rows = 0;
 static int vis_cols = 0;
 static int gutter_w = 0;
 
-// Public API
 
 static void scene_update_layout(void) {
   int h_res = (int)vg_get_h_res();
   int v_res = (int)vg_get_v_res();
   int fw = filetree_is_visible() ? FILETREE_W_PX : 0;
 
+  // gutter width grows dynamically based on line count
   int digits = 1;
   for (int n = editor_get_row_count(); n >= 10; n /= 10) digits++;
   if (digits < GUTTER_DIGITS_MIN) digits = GUTTER_DIGITS_MIN;
   gutter_w = FONT_W * (digits + GUTTER_PAD);
 
   layout.status_bar = (Rect){0, v_res - FONT_H, h_res, FONT_H};
-  layout.filetree   = (Rect){0, 0, fw, v_res};
-  layout.gutter     = (Rect){fw, EDITOR_Y, gutter_w, v_res - EDITOR_Y - FONT_H};
-  layout.scrollbar  = (Rect){h_res - SCROLLBAR_W, EDITOR_Y, SCROLLBAR_W, layout.gutter.h};
-  layout.editor     = (Rect){fw + gutter_w, EDITOR_Y, layout.scrollbar.x - (fw + gutter_w), layout.gutter.h};
+  layout.filetree = (Rect){0, 0, fw, v_res};
+  layout.gutter = (Rect){fw, EDITOR_Y, gutter_w, v_res - EDITOR_Y - FONT_H};
+  layout.scrollbar = (Rect){h_res - SCROLLBAR_W, EDITOR_Y, SCROLLBAR_W, layout.gutter.h};
+  //Editor fills space available
+  layout.editor = (Rect){fw + gutter_w, EDITOR_Y, layout.scrollbar.x - (fw + gutter_w), layout.gutter.h};
+
   vis_cols = layout.editor.w / FONT_W;
   vis_rows = layout.editor.h / FONT_H;
 }
@@ -102,6 +109,8 @@ int scene_init(SceneID id) {
   scene_update_layout();
   editor_set_viewport(vis_rows, vis_cols);
   if (mouse_cursor_init() != 0) return 1;
+
+  //Full redraw on first frame
   set_render(RENDER_FULL);
   return 0;
 }
@@ -125,12 +134,15 @@ static int model_to_px(int model_col) {
 }
 
 static int model_to_py(int model_row) {
-  return EDITOR_Y + (model_row - editor_get_scroll_row()) * FONT_H;
+  return layout.editor.y + (model_row - editor_get_scroll_row()) * FONT_H;
 }
 
-// Draw primitives
+
+
+// Draw
 
 static void draw_cursor(int model_col, int model_row) {
+  //dont draw cursor if filetree focused
   if (filetree_is_focused()) return;
 
   int x = model_to_px(model_col);
@@ -155,40 +167,48 @@ static void draw_selection_bg(int end_r) {
   int scroll_row = editor_get_scroll_row();
   int scroll_col = editor_get_scroll_col();
 
-  //Clamp visible
+  //Intersects selection with visible rows
   int first_row = sel_start_row > scroll_row ? sel_start_row : scroll_row;
   int last_row = sel_end_row < end_r - 1 ? sel_end_row : end_r - 1;
 
   //Per line draw background rectangle on visible part
   for (int r = first_row; r <= last_row; r++) {
-    int y = EDITOR_Y + (r - scroll_row) * FONT_H;
+    int y = layout.editor.y + (r - scroll_row) * FONT_H;
     int col_start = (r == sel_start_row) ? sel_start_col : 0;
     int line_len = editor_get_line_len(r);
     int col_end = (r == sel_end_row) ? sel_end_col : line_len;
+
+    //Clamp edges to horizontal viewport
     int pixel_start = layout.editor.x + (col_start > scroll_col ? col_start - scroll_col : 0) * FONT_W;
     int pixel_end = layout.editor.x + (col_end < scroll_col + vis_cols ? col_end - scroll_col : vis_cols) * FONT_W;
 
+    //Skip rows where selected is outside visible viewport
     if (pixel_end > pixel_start) {
       bb_draw_rect(pixel_start, y, pixel_end - pixel_start, FONT_H, COLOR_SEL_BG);
     }
   }
 }
 
-//Blue status bar at the bottom
+//Renders blue status bar at the bottom
 static void render_status_bar() {
   bb_draw_rect(layout.status_bar.x, layout.status_bar.y, layout.status_bar.w, layout.status_bar.h, COLOR_STATUS_BG);
   int sy = layout.status_bar.y;
 
+  // Priority: command bar > status message > filename
   if (command_bar_get_mode() == MODE_COMMAND) {
     const char *input = command_bar_get_input();
     draw_string(4, sy, ":", COLOR_STATUS_FG);
     int px = 4 + FONT_W;
     draw_string(px, sy, input, COLOR_STATUS_FG);
+
+    //draw cursor after last input char
     int cx = px + (int)strlen(input) * FONT_W;
     bb_draw_rect(cx, sy, FONT_W, FONT_H, COLOR_STATUS_FG);
-  } else if (command_bar_get_status()[0] != '\0') {
+  }
+  else if (command_bar_get_status()[0] != '\0') {
     draw_string(4, sy, command_bar_get_status(), 0xFFCC00);
-  } else {
+  } 
+  else {
     draw_string(4, sy, command_bar_get_filename(), COLOR_STATUS_FG);
   }
 
@@ -222,10 +242,11 @@ static void draw_filetree(int vrows) {
     const FileEntry *e = filetree_get_entry(i);
     int y = EDITOR_Y + (i - ft_scroll) * FONT_H;
 
+    //dims highlight if editor has focus
     if (i == ft_cursor)
       bb_draw_rect(0, y, layout.filetree.w - 1, FONT_H, focused ? COLOR_FILETREE_SEL : COLOR_GUTTER_BG);
 
-    /* Truncate name to fit, leaving 1 char of left padding. */
+    /* Truncate name to fit, leaving 4px left padding. */
     char buf[FILETREE_COLS];
     strncpy(buf, e->name, FILETREE_COLS - 1);
     buf[FILETREE_COLS - 1] = '\0';
@@ -239,14 +260,19 @@ static void draw_gutter(int scroll_row, int end_r) {
   bb_draw_rect(layout.gutter.x, layout.gutter.y, layout.gutter.w, layout.gutter.h, COLOR_GUTTER_BG);
   int digits = layout.gutter.w / FONT_W - GUTTER_PAD;
   char buf[9];
+
+  // pre terminate
   buf[digits] = '\0';
+
   for (int r = scroll_row; r < end_r; r++) {
-    int y = EDITOR_Y + (r - scroll_row) * FONT_H;
+    int y = layout.editor.y + (r - scroll_row) * FONT_H;
     /* Format line number right-to-left, then skip leading zeros. */
     int n = r + 1;
     for (int i = digits - 1; i >= 0; i--) { buf[i] = '0' + n % 10; n /= 10; }
     const char *p = buf;
     while (*p == '0' && *(p + 1)) p++;
+
+    //gutter pad used as pixel offset
     int x = layout.gutter.x + layout.gutter.w - GUTTER_PAD - (int)strlen(p) * FONT_W;
     draw_string(x, y, p, COLOR_GUTTER_FG);
   }
@@ -261,9 +287,12 @@ static void draw_scrollbar() {
   // Proportionality sizing
   int track_h = layout.scrollbar.h;
   int handle_h = (row_count <= vis_rows) ? track_h : vis_rows * track_h / row_count;
+
+  //avoids invisible handle on huge files
   if (handle_h < SCROLLBAR_HANDLE_MIN) {handle_h = SCROLLBAR_HANDLE_MIN;}
   if (handle_h > track_h) {handle_h = track_h;}
 
+  // clamp to 1 to aboid div by zero 
   int max_scroll = row_count > vis_rows ? row_count - vis_rows : 1;
   int max_handle_y = layout.scrollbar.y + track_h - handle_h;
   int handle_y = layout.scrollbar.y + editor_get_scroll_row() * (max_handle_y - layout.scrollbar.y) / max_scroll;
@@ -286,6 +315,8 @@ static void draw_text_lines(int scroll_row, int end_r, int scroll_col) {
     int len = editor_get_line_len(r);
     if (len <= scroll_col) continue;
     const uint32_t *colors = highlight_cache_get_line(r);
+    
+    //Silent skip on cache allocation faulure
     if (!colors) continue;
     draw_line_colored(layout.editor.x, y, editor_get_line(r), scroll_col, colors, len);
   }
@@ -306,6 +337,7 @@ static void render_editor_ui(int mode, int col, int row, int scroll_row, int scr
       editor_set_viewport(vis_rows, vis_cols);
       bb_clear(COLOR_BG);
 
+      // recompute end_r: scene_update_layout may have changed vis_rows
       end_r = scroll_row + vis_rows;
       if (end_r > editor_get_row_count()){end_r = editor_get_row_count();}
 
@@ -321,9 +353,10 @@ static void render_editor_ui(int mode, int col, int row, int scroll_row, int scr
       break;
 
     case RENDER_LINE: {
+      // free before rebuild so oversized buffer from now shorter line gets released
       highlight_cache_free_row(row);
       highlight_cache_rebuild_from(row);
-      int y = EDITOR_Y + (row - scroll_row) * FONT_H;
+      int y = layout.editor.y + (row - scroll_row) * FONT_H;
 
       //reset line
       bb_draw_rect(layout.editor.x, y, layout.editor.w, FONT_H, COLOR_BG);
@@ -341,7 +374,7 @@ static void render_editor_ui(int mode, int col, int row, int scroll_row, int scr
     case RENDER_REMOTE_LINE:{
       int r_row = editor_get_remote_cursor_row();
       int r_col = editor_get_remote_cursor_col();
-      int y = EDITOR_Y + (r_row - scroll_row) * FONT_H;
+      int y = layout.editor.y + (r_row - scroll_row) * FONT_H;
 
       //reset line
       bb_draw_rect(layout.editor.x, y, layout.editor.w, FONT_H, COLOR_BG);
@@ -355,6 +388,7 @@ static void render_editor_ui(int mode, int col, int row, int scroll_row, int scr
     }
 
     case RENDER_WORD: {
+      // cursor moved left: prev_col is the old position; col new one
       highlight_cache_rebuild_from(prev_row);
       const char *line = editor_get_line(prev_row);
       int len = editor_get_line_len(prev_row);
@@ -442,6 +476,8 @@ void view_render() {
   int col = editor_get_cursor_col(), row = editor_get_cursor_row();
   int scroll_row = editor_get_scroll_row(), scroll_col = editor_get_scroll_col();
 
+
+  // Order matters: hide erases sprite from bb; show redraws it after.
   mouse_cursor_hide();
 
   if (current_scene == SCENE_EDITOR)
@@ -463,6 +499,8 @@ void view_render() {
     prev_row = row;
   }
 }
+
+
 
 /* ── Mouse ──────────────────────────────────────────────────────────────── */
 

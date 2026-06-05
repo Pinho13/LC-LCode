@@ -11,6 +11,7 @@ int mouse_cursor_init() {
   uint8_t *pixels = xpm_load((xpm_map_t)cursor_xpm, XPM_8_8_8_8, &img);
   if (!pixels) return 1;
 
+  //saves background for efficiency
   bg_buf = malloc(img.width * img.height * sizeof(uint32_t));
   if (!bg_buf) return 1;
 
@@ -24,8 +25,11 @@ void mouse_cursor_cleanup() {
   img.bytes = NULL;
 }
 
-// Restores the previous background (from buffer) before cursor appeared, effectively hiding the cursor.
+
 void mouse_cursor_hide() {
+  // Restores the previous background (from buffer) before cursor appeared, effectively hiding the cursor.
+  
+  // show was never called
   if (prev_x < 0 || !bg_buf) return;
 
   int h_res = (int)vg_get_h_res(), v_res = (int)vg_get_v_res();
@@ -48,6 +52,7 @@ void mouse_cursor_show(int x, int y) {
       int px = x + i, py = y + j;
       uint32_t sprite_px = sprite[j * img.width + i];
 
+      //out of bound. zero the slot. Hide wont draw it either
       if (px < 0 || px >= h_res || py < 0 || py >= v_res) {
         bg_buf[j * img.width + i] = 0;
         continue;
@@ -55,6 +60,7 @@ void mouse_cursor_show(int x, int y) {
 
       bg_buf[j * img.width + i] = bb_get_pixel(px, py);
 
+      //mask alpha
       if (sprite_px != transparent)
         bb_draw_pixel(px, py, sprite_px & 0x00FFFFFF);
     }
