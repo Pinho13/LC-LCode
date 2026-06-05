@@ -29,6 +29,8 @@ static int remote_cursor_col = -1;
 
 static char *clipboard = NULL;
 
+
+
 static int line_ensure_cap(Line *ln, int needed) {
   // already enough linesize, nothing to do
   if (ln->cap > needed) return 0;
@@ -40,16 +42,20 @@ static int line_ensure_cap(Line *ln, int needed) {
   char *new_buf = malloc(new_cap);
   if (!new_buf) return -1;
   if (ln->buf) {
+    // +1 to copy null terminator
     memcpy(new_buf, ln->buf, ln->len + 1);
   } 
   else {
+    //fresh line, no buffer to copy
     new_buf[0] = '\0';
   }
+
   free(ln->buf);
   ln->buf = new_buf;
   ln->cap = new_cap;
   return 0;
 }
+
 
 
 static int lines_ensure_cap(int needed) {
@@ -62,8 +68,10 @@ static int lines_ensure_cap(int needed) {
   Line *new_arr = malloc(new_cap * sizeof(Line));
   if (!new_arr) return -1;
   if (lines) {
+    // only row_count slots are valid
     memcpy(new_arr, lines, row_count * sizeof(Line));
   }
+
   free(lines);
   lines = new_arr;
   row_cap = new_cap;
@@ -84,11 +92,15 @@ void editor_cleanup() {
 }
 
 int editor_init() {
+  // safe to call on first init; frees nothing if already clean
   editor_cleanup();
 
   row_count = 1;
-  if (lines_ensure_cap(LINES_INIT_CAP) != 0) return -1;
+  // 0 passed. Min value handled inside funct
+  if (lines_ensure_cap(0) != 0) return -1;
   lines[0] = (Line){NULL, 0, 0};
+
+  // 0 passed. Min value handled inside funct
   if (line_ensure_cap(&lines[0], 0) != 0) return -1;
 
   cursor_row = 0;
@@ -145,6 +157,7 @@ void editor_scroll_by(int drow, int dcol) {
 }
 
 void editor_set_cursor(int row, int col) {
+  // block same row
   if (remote_cursor_row == row) return;
   if (row < 0) row = 0;
   if (row >= row_count) row = row_count - 1;
@@ -477,7 +490,7 @@ void editor_copy_selection() {
 EditorResult editor_paste() {
   if (clipboard == NULL) return EDITOR_ERR_NO_CLIPBOARD;
 
-  // save tail
+  // save tail, re-attached after the paste is inserted
   int tail_len = lines[cursor_row].len - cursor_col;
   char *tail = malloc(tail_len + 1);
   if (!tail) return EDITOR_ERR_ALLOC_FAILED;
@@ -563,6 +576,7 @@ EditorResult editor_load_line(const char *text, int len) {
 }
 
 void editor_load_finalize() {
+  // editor_load_line creates a trailing empty row, remove it here
   if (row_count > 1 && lines[row_count - 1].len == 0)
     row_count--;
 }
@@ -608,7 +622,8 @@ EditorResult editor_remote_insert_char(char c) {
     remote_cursor_col = 0;
     
     if (cursor_row > old_remote_row) {
-      cursor_row++;
+      cursor_row++;  
+      // line inserted above local cursor: shift row index to stay on same content
     } 
     
     clamp_scroll(); 

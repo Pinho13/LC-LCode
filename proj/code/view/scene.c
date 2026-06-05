@@ -212,14 +212,12 @@ static void render_status_bar() {
     draw_string(4, sy, command_bar_get_filename(), COLOR_STATUS_FG);
   }
 
-  // Here current time is being drawn
   const char *t = time_get_string();
   int len = strlen(t);
   int x = layout.status_bar.w - (len * FONT_W) - 4;
-
   draw_string(x, sy, t, COLOR_STATUS_FG);
 
-  // Session time 
+  // Session time centered in the status bar (8 chars * FONT_W / 2 = 32px offset)
   char st[16];
   session_time_format(st, 16);
   draw_string(layout.status_bar.x + layout.status_bar.w/2 - 32, layout.status_bar.y, st, COLOR_STATUS_FG);
