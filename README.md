@@ -6,6 +6,7 @@ A framework developed from the labs that enables testing of each driver based on
 
 ### Features
 
+- **Errors:** Introduced a fail function that accepts an error type and message, improving error reporting and simplifying logging
 - **RTC:** Provides access to the current date and time, from year down to seconds
 - **Timer:** Enables precise time measurement and interval tracking
 - **Keyboard:** Captures and interprets keyboard scancodes
