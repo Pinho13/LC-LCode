@@ -80,3 +80,8 @@ LCOM Project for group GRUPO_2LEIC14_2.
 - Pedro Teixeira (up202404987@up.pt)
 - Rafael Silva (up202406334@up.pt)
 
+<p align = "center" >
+  <h2 align = "center" >
+    Grade: 20/20
+  </h2>
+</p>
