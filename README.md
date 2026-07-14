@@ -1,5 +1,9 @@
 # LCOM Project - LCode
 
+![Grade](https://img.shields.io/badge/Grade-20%2F20-1E90FF?style=for-the-badge&labelColor=21262d)
+![Course](https://img.shields.io/badge/Course-LC-1E90FF?style=for-the-badge&labelColor=21262d)
+![Year](https://img.shields.io/badge/Year-2025%2F26-1E90FF?style=for-the-badge&labelColor=21262d)
+
 ## Framework
 
 A framework developed from the labs that enables testing of each driver based on the parameter provided at runtime.
@@ -80,8 +84,3 @@ LCOM Project for group GRUPO_2LEIC14_2.
 - Pedro Teixeira (up202404987@up.pt)
 - Rafael Silva (up202406334@up.pt)
 
-<p align = "center" >
-  <h2 align = "center" >
-    Grade: 20/20
-  </h2>
-</p>
