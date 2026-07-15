@@ -1,5 +1,9 @@
 # LCOM Project - LCode
 
+![Grade](https://img.shields.io/badge/Grade-20%2F20-1E90FF?style=for-the-badge&labelColor=21262d)
+![Course](https://img.shields.io/badge/Course-LCOM-1E90FF?style=for-the-badge&labelColor=21262d)
+![Semester](https://img.shields.io/badge/Semester-2024%2F25-1E90FF?style=for-the-badge&labelColor=21262d)
+
 ## Framework
 
 A framework developed from the labs that enables testing of each driver based on the parameter provided at runtime.
