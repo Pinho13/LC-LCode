@@ -22,6 +22,30 @@ A framework developed from the labs that enables testing of each driver based on
 
 LCode is a code editor built for Minix, providing an interactive environment for navigating the file tree and editing files.
 
+![Scrolling and selecting text in LCode](assets/gifs/scroll-and-select.gif)
+
+### Demo
+
+**Building and launching LCode with `./run.sh proj`**
+
+![Launching LCode](assets/gifs/launch.gif)
+
+**Writing C with live syntax highlighting**
+
+![Syntax highlighting](assets/gifs/syntax-highlighting.gif)
+
+**Saving from the status bar and browsing the file tree**
+
+![Saving and file tree](assets/gifs/save-and-file-tree.gif)
+
+**Copy, cut and paste**
+
+![Copy, cut and paste](assets/gifs/copy-cut-paste.gif)
+
+**Files written in LCode compile and run in Minix**
+
+![Compiling and running](assets/gifs/compile-and-run.gif)
+
 ### Features
 
 - **File editor:** Supports writing, text selection, and page scrolling
